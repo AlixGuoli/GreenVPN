@@ -6,14 +6,67 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		6922F0927AA98D840557FF08 /* Pods_GreenVPN.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D167502C74CA9C34AEEC119F /* Pods_GreenVPN.framework */; };
+		B04FB1AE2EF008C1003C5621 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B04FB1AD2EF008C1003C5621 /* NetworkExtension.framework */; };
+		B04FB1B62EF008C1003C5621 /* fire.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = B04FB1AC2EF008C1003C5621 /* fire.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		B04FB1B42EF008C1003C5621 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B04FB1022EF00785003C5621 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B04FB1AB2EF008C1003C5621;
+			remoteInfo = fire;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		B04FB1B72EF008C1003C5621 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				B04FB1B62EF008C1003C5621 /* fire.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		345929A1F8845969A88A6DCC /* Pods-GreenVPN.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GreenVPN.debug.xcconfig"; path = "Target Support Files/Pods-GreenVPN/Pods-GreenVPN.debug.xcconfig"; sourceTree = "<group>"; };
+		3E420AADAE78F0846824C8DF /* Pods-GreenVPN.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GreenVPN.release.xcconfig"; path = "Target Support Files/Pods-GreenVPN/Pods-GreenVPN.release.xcconfig"; sourceTree = "<group>"; };
 		B04FB10A2EF00785003C5621 /* GreenVPN.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GreenVPN.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B04FB1AC2EF008C1003C5621 /* fire.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = fire.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		B04FB1AD2EF008C1003C5621 /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
+		D167502C74CA9C34AEEC119F /* Pods_GreenVPN.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GreenVPN.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		B04FB1BA2EF008C1003C5621 /* Exceptions for "fire" folder in "fire" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = B04FB1AB2EF008C1003C5621 /* fire */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		B04FB10C2EF00785003C5621 /* GreenVPN */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = GreenVPN;
+			sourceTree = "<group>";
+		};
+		B04FB1AF2EF008C1003C5621 /* fire */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				B04FB1BA2EF008C1003C5621 /* Exceptions for "fire" folder in "fire" target */,
+			);
+			path = fire;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -23,17 +76,38 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6922F0927AA98D840557FF08 /* Pods_GreenVPN.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B04FB1A92EF008C1003C5621 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B04FB1AE2EF008C1003C5621 /* NetworkExtension.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7DB3D711C64909CC68C43D28 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				345929A1F8845969A88A6DCC /* Pods-GreenVPN.debug.xcconfig */,
+				3E420AADAE78F0846824C8DF /* Pods-GreenVPN.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		B04FB1012EF00785003C5621 = {
 			isa = PBXGroup;
 			children = (
 				B04FB10C2EF00785003C5621 /* GreenVPN */,
+				B04FB1AF2EF008C1003C5621 /* fire */,
 				B04FB10B2EF00785003C5621 /* Products */,
+				7DB3D711C64909CC68C43D28 /* Pods */,
+				E8F1AD29EB13E248756DEB45 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -41,8 +115,18 @@
 			isa = PBXGroup;
 			children = (
 				B04FB10A2EF00785003C5621 /* GreenVPN.app */,
+				B04FB1AC2EF008C1003C5621 /* fire.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		E8F1AD29EB13E248756DEB45 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B04FB1AD2EF008C1003C5621 /* NetworkExtension.framework */,
+				D167502C74CA9C34AEEC119F /* Pods_GreenVPN.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -52,23 +136,45 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B04FB1152EF00785003C5621 /* Build configuration list for PBXNativeTarget "GreenVPN" */;
 			buildPhases = (
+				D1379BAED64F76DB181AC1D0 /* [CP] Check Pods Manifest.lock */,
 				B04FB1062EF00785003C5621 /* Sources */,
 				B04FB1072EF00785003C5621 /* Frameworks */,
 				B04FB1082EF00785003C5621 /* Resources */,
+				B04FB1B72EF008C1003C5621 /* Embed Foundation Extensions */,
+				B9DB73A2BE6C98745A8B55AA /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B04FB1B52EF008C1003C5621 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				B04FB10C2EF00785003C5621 /* GreenVPN */,
+			);
+			name = GreenVPN;
+			productName = GreenVPN;
+			productReference = B04FB10A2EF00785003C5621 /* GreenVPN.app */;
+			productType = "com.apple.product-type.application";
+		};
+		B04FB1AB2EF008C1003C5621 /* fire */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B04FB1BB2EF008C1003C5621 /* Build configuration list for PBXNativeTarget "fire" */;
+			buildPhases = (
+				B04FB1A82EF008C1003C5621 /* Sources */,
+				B04FB1A92EF008C1003C5621 /* Frameworks */,
+				B04FB1AA2EF008C1003C5621 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				B04FB10C2EF00785003C5621 /* GreenVPN */,
+				B04FB1AF2EF008C1003C5621 /* fire */,
 			);
-			name = GreenVPN;
-			packageProductDependencies = (
-			);
-			productName = GreenVPN;
-			productReference = B04FB10A2EF00785003C5621 /* GreenVPN.app */;
-			productType = "com.apple.product-type.application";
+			name = fire;
+			productName = fire;
+			productReference = B04FB1AC2EF008C1003C5621 /* fire.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -81,6 +187,9 @@
 				LastUpgradeCheck = 2600;
 				TargetAttributes = {
 					B04FB1092EF00785003C5621 = {
+						CreatedOnToolsVersion = 26.0.1;
+					};
+					B04FB1AB2EF008C1003C5621 = {
 						CreatedOnToolsVersion = 26.0.1;
 					};
 				};
@@ -100,6 +209,7 @@
 			projectRoot = "";
 			targets = (
 				B04FB1092EF00785003C5621 /* GreenVPN */,
+				B04FB1AB2EF008C1003C5621 /* fire */,
 			);
 		};
 /* End PBXProject section */
@@ -112,7 +222,60 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B04FB1AA2EF008C1003C5621 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		B9DB73A2BE6C98745A8B55AA /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-GreenVPN/Pods-GreenVPN-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-GreenVPN/Pods-GreenVPN-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-GreenVPN/Pods-GreenVPN-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D1379BAED64F76DB181AC1D0 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-GreenVPN-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		B04FB1062EF00785003C5621 /* Sources */ = {
@@ -122,7 +285,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B04FB1A82EF008C1003C5621 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		B04FB1B52EF008C1003C5621 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B04FB1AB2EF008C1003C5621 /* fire */;
+			targetProxy = B04FB1B42EF008C1003C5621 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		B04FB1132EF00785003C5621 /* Debug */ = {
@@ -248,65 +426,151 @@
 		};
 		B04FB1162EF00785003C5621 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 345929A1F8845969A88A6DCC /* Pods-GreenVPN.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = GreenVPN/GreenVPN.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 9GJ4SNWC24;
+				DEVELOPMENT_TEAM = 3R5QL63397;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.green.fire.vpn.rfy.GreenVPN;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.green.fire.vpn.bird;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
 		B04FB1172EF00785003C5621 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3E420AADAE78F0846824C8DF /* Pods-GreenVPN.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = GreenVPN/GreenVPN.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 9GJ4SNWC24;
+				DEVELOPMENT_TEAM = 3R5QL63397;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.green.fire.vpn.rfy.GreenVPN;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.green.fire.vpn.bird;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		B04FB1B82EF008C1003C5621 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = fire/fire.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3R5QL63397;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = fire/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = fire;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.green.fire.vpn.bird.fly;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		B04FB1B92EF008C1003C5621 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = fire/fire.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3R5QL63397;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = fire/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = fire;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.green.fire.vpn.bird.fly;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -327,6 +591,15 @@
 			buildConfigurations = (
 				B04FB1162EF00785003C5621 /* Debug */,
 				B04FB1172EF00785003C5621 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B04FB1BB2EF008C1003C5621 /* Build configuration list for PBXNativeTarget "fire" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B04FB1B82EF008C1003C5621 /* Debug */,
+				B04FB1B92EF008C1003C5621 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
