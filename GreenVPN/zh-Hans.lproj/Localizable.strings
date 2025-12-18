@@ -1,0 +1,70 @@
+/* 启动引导页 */
+"gv_intro_title" = "Green VPN";
+"gv_intro_subtitle" = "安全 · 稳定 · 低调";
+"gv_intro_progress" = "正在准备连接环境 %d%%";
+
+/* 隐私协议页 */
+"gv_policy_title" = "隐私保护与数据使用说明";
+"gv_policy_preamble" = "为了在保障隐私安全的前提下，为您提供稳定顺畅的网络服务，我们仅在必要范围内收集和使用相关信息。";
+"gv_policy_section_intro" = "我们可能涉及的数据类型包括：";
+
+"gv_policy_point_device" = "· 设备相关信息：例如操作系统版本、硬件型号、系统语言等，用于适配不同设备并优化连接表现；";
+"gv_policy_point_records" = "· 连接统计信息：如连接成功率、错误类型等，采用汇总方式分析，用于排查问题并提升稳定性；";
+"gv_policy_point_duration" = "· 使用时长与带宽占用：用于容量规划和资源调度，帮助我们维持服务的流畅与可用性；";
+"gv_policy_point_ads" = "· 广告服务相关数据：如使用第三方广告服务时，由第三方根据其隐私政策处理的必要信息。";
+
+"gv_policy_more_link" = "了解详情，请查看完整《隐私政策》与《用户协议》";
+"gv_policy_decline" = "不同意并退出";
+"gv_policy_accept" = "同意并继续使用";
+
+/* 首页 / 断开弹窗 / 结果页 / 连接中 */
+"gv_home_title" = "GreenVPN";
+
+"gv_home_status_connected" = "已连接";
+"gv_home_status_connecting" = "连接中...";
+"gv_home_status_disconnected" = "未连接";
+"gv_home_status_failed" = "连接失败";
+
+"gv_home_detail_connected" = "VPN 已成功连接";
+"gv_home_detail_connecting" = "正在建立连接...";
+"gv_home_detail_idle" = "点击下方按钮开始连接";
+"gv_home_detail_failed" = "连接失败，请重试";
+
+"gv_home_button_disconnect" = "断开连接";
+"gv_home_button_connecting" = "连接中...";
+"gv_home_button_connect" = "连接 VPN";
+
+"gv_node_list_title" = "节点列表";
+
+"gv_disconnect_title" = "确认断开连接？";
+"gv_disconnect_message" = "断开后需要重新连接才能使用 VPN。";
+"gv_disconnect_action" = "断开";
+"gv_disconnect_nav_title" = "断开连接";
+
+"gv_common_cancel" = "取消";
+"gv_common_close" = "关闭";
+
+"gv_result_nav_title" = "连接结果";
+"gv_result_title_connect_success" = "连接成功";
+"gv_result_title_connect_fail" = "连接失败";
+"gv_result_title_disconnect_success" = "断开成功";
+
+"gv_result_body_connect_success" = "VPN 已成功连接，可以开始使用。";
+"gv_result_body_connect_fail" = "连接失败，请检查网络或稍后再试。";
+"gv_result_body_disconnect_success" = "VPN 已断开连接。";
+
+"gv_connecting_nav_title" = "连接中";
+"gv_connecting_message" = "正在连接 VPN ...";
+
+/* 语言设置页 */
+"gv_lang_nav_title" = "语言设置";
+"gv_lang_system" = "跟随系统";
+"gv_lang_system_desc" = "使用系统当前语言显示界面";
+"gv_lang_zh" = "简体中文";
+"gv_lang_zh_desc" = "始终以简体中文显示界面";
+"gv_lang_en" = "English";
+"gv_lang_en_desc" = "Always display the interface in English";
+
+"gv_lang_switching" = "正在切换语言，请稍候…";
+
+

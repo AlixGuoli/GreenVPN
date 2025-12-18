@@ -1,0 +1,89 @@
+/* Intro curtain */
+"gv_intro_title" = "Green VPN";
+"gv_intro_subtitle" = "Secure · Stable · Quiet";
+"gv_intro_progress" = "Preparing connection environment %d%%";
+
+/* Privacy gate */
+"gv_policy_title" = "Privacy Protection & Data Usage Statement";
+"gv_policy_preamble" = "To provide a smooth VPN experience while protecting your privacy, we only collect and use information within a necessary and limited scope.";
+"gv_policy_section_intro" = "We may process the following categories of data:";
+
+"gv_policy_point_device" = "· Device-related information: such as operating system version, hardware model, and system language, used to adapt to different devices and optimize connection performance;";
+"gv_policy_point_records" = "· Connection statistics: for example, connection success rate and error types, analyzed in aggregate to troubleshoot issues and improve stability;";
+"gv_policy_point_duration" = "· Usage duration and bandwidth usage: used for capacity planning and resource allocation to keep the service smooth and available;";
+"gv_policy_point_ads" = "· Advertising service data: when third-party ad services are used, they may process necessary information under their own privacy policies.";
+
+"gv_policy_more_link" = "For more details, please read the full Privacy Policy and User Agreement.";
+"gv_policy_decline" = "Decline and Exit";
+"gv_policy_accept" = "Accept and Continue";
+
+/* Home / disconnect dialog / result / connecting */
+"gv_home_title" = "GreenVPN";
+
+"gv_home_status_connected" = "Connected";
+"gv_home_status_connecting" = "Connecting...";
+"gv_home_status_disconnected" = "Disconnected";
+"gv_home_status_failed" = "Connection Failed";
+
+"gv_home_detail_connected" = "VPN is connected successfully.";
+"gv_home_detail_connecting" = "Establishing connection...";
+"gv_home_detail_idle" = "Tap the button below to start connecting.";
+"gv_home_detail_failed" = "Connection failed, please try again.";
+
+"gv_home_button_disconnect" = "Disconnect";
+"gv_home_button_connecting" = "Connecting...";
+"gv_home_button_connect" = "Connect VPN";
+
+"gv_node_list_title" = "Node List";
+
+"gv_disconnect_title" = "Disconnect from VPN?";
+"gv_disconnect_message" = "After disconnecting, you will need to reconnect to continue using VPN.";
+"gv_disconnect_action" = "Disconnect";
+"gv_disconnect_nav_title" = "Disconnect";
+
+"gv_common_cancel" = "Cancel";
+"gv_common_close" = "Close";
+
+"gv_result_nav_title" = "Connection Result";
+"gv_result_title_connect_success" = "Connected";
+"gv_result_title_connect_fail" = "Connection Failed";
+"gv_result_title_disconnect_success" = "Disconnected";
+
+"gv_result_body_connect_success" = "VPN connection is established. You can start using it now.";
+"gv_result_body_connect_fail" = "Connection failed. Please check your network or try again later.";
+"gv_result_body_disconnect_success" = "VPN connection has been disconnected.";
+
+"gv_connecting_nav_title" = "Connecting";
+"gv_connecting_message" = "Connecting to VPN ...";
+
+/* Language settings */
+"gv_lang_nav_title" = "Language";
+"gv_lang_system" = "Follow System";
+"gv_lang_system_desc" = "Use the system language for the interface";
+"gv_lang_zh" = "Simplified Chinese";
+"gv_lang_zh_desc" = "Always display the interface in Simplified Chinese";
+"gv_lang_en" = "English";
+"gv_lang_en_desc" = "Always display the interface in English";
+
+"gv_lang_switching" = "Switching language, please wait…";
+
+/* Intro curtain */
+"gv_intro_title" = "Green VPN";
+"gv_intro_subtitle" = "Secure · Stable · Quiet";
+"gv_intro_progress" = "Preparing connection environment %d%%";
+
+/* Privacy gate */
+"gv_policy_title" = "Privacy Protection & Data Usage Statement";
+"gv_policy_preamble" = "To provide a smooth VPN experience while protecting your privacy, we only collect and use information within a necessary and limited scope.";
+"gv_policy_section_intro" = "We may process the following categories of data:";
+
+"gv_policy_point_device" = "· Device-related information: such as operating system version, hardware model, and system language, used to adapt to different devices and optimize connection performance;";
+"gv_policy_point_records" = "· Connection statistics: for example, connection success rate and error types, analyzed in aggregate to troubleshoot issues and improve stability;";
+"gv_policy_point_duration" = "· Usage duration and bandwidth usage: used for capacity planning and resource allocation to keep the service smooth and available;";
+"gv_policy_point_ads" = "· Advertising service data: when third-party ad services are used, they may process necessary information under their own privacy policies.";
+
+"gv_policy_more_link" = "For more details, please read the full Privacy Policy and User Agreement.";
+"gv_policy_decline" = "Decline and Exit";
+"gv_policy_accept" = "Accept and Continue";
+
+

@@ -10,6 +10,7 @@ import SwiftUI
 struct ResultView: View {
     let result: SessionOutcome
     let onClose: () -> Void
+    @EnvironmentObject private var appLanguage: GVAppLanguage
     
     var body: some View {
         VStack(spacing: 20) {
@@ -23,7 +24,7 @@ struct ResultView: View {
             Button(action: {
                 onClose()
             }) {
-                Text("关闭")
+                Text(appLanguage.localized("gv_common_close", comment: "Close button"))
                     .font(.headline)
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
@@ -35,27 +36,33 @@ struct ResultView: View {
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .background(Color(.systemBackground))
-        .navigationTitle("连接结果")
+        .navigationTitle(appLanguage.localized("gv_result_nav_title", comment: "Result nav title"))
     }
     
     private var title: String {
         switch result {
-        case .connectSuccess: return "连接成功"
-        case .connectFail: return "连接失败"
-        case .disconnectSuccess: return "断开成功"
+        case .connectSuccess:
+            return appLanguage.localized("gv_result_title_connect_success", comment: "Connect success title")
+        case .connectFail:
+            return appLanguage.localized("gv_result_title_connect_fail", comment: "Connect fail title")
+        case .disconnectSuccess:
+            return appLanguage.localized("gv_result_title_disconnect_success", comment: "Disconnect success title")
         }
     }
     
     private var message: String {
         switch result {
-        case .connectSuccess: return "VPN 已成功连接，可以开始使用。"
-        case .connectFail: return "连接失败，请检查网络或稍后再试。"
-        case .disconnectSuccess: return "VPN 已断开连接。"
+        case .connectSuccess:
+            return appLanguage.localized("gv_result_body_connect_success", comment: "Connect success body")
+        case .connectFail:
+            return appLanguage.localized("gv_result_body_connect_fail", comment: "Connect fail body")
+        case .disconnectSuccess:
+            return appLanguage.localized("gv_result_body_disconnect_success", comment: "Disconnect success body")
         }
     }
     
     private var primaryText: String {
-        return "关闭"
+        return appLanguage.localized("gv_common_close", comment: "Close button")
     }
     
     private var primaryColor: Color {

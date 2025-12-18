@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject private var homeSession: GVHomeSessionModel
     @EnvironmentObject private var routeCoordinator: GVRouteCoordinator
+    @EnvironmentObject private var appLanguage: GVAppLanguage
     
     var body: some View {
         NavigationStack(path: $routeCoordinator.path) {
@@ -29,7 +30,7 @@ struct ContentView: View {
                     )
                 case .nodeList:
                     // 预留节点列表页面，占位实现
-                    Text("Node List")
+                    Text(appLanguage.localized("gv_node_list_title", comment: "Node list placeholder"))
                 }
             }
             // 根据 ViewModel 状态自动跳转
@@ -45,6 +46,15 @@ struct ContentView: View {
                     routeCoordinator.showResult(r)
                 }
             }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    NavigationLink {
+                        GVLanguageView()
+                    } label: {
+                        Image(systemName: "globe")
+                    }
+                }
+            }
         }
     }
 }
@@ -53,6 +63,7 @@ struct ContentView: View {
 
 private struct HomeView: View {
     @EnvironmentObject private var homeSession: GVHomeSessionModel
+    @EnvironmentObject private var appLanguage: GVAppLanguage
     
     var body: some View {
         ZStack {
@@ -121,7 +132,7 @@ private struct HomeView: View {
                 .padding(.horizontal, 24)
             }
         }
-        .navigationTitle("GreenVPN")
+        .navigationTitle(appLanguage.localized("gv_home_title", comment: "Home navigation title"))
     }
     
     // 状态颜色
@@ -156,13 +167,13 @@ private struct HomeView: View {
     private var statusText: String {
         switch homeSession.phase {
         case .online:
-            return "已连接"
+            return appLanguage.localized("gv_home_status_connected", comment: "Status connected")
         case .inProgress:
-            return "连接中..."
+            return appLanguage.localized("gv_home_status_connecting", comment: "Status connecting")
         case .idle:
-            return "未连接"
+            return appLanguage.localized("gv_home_status_disconnected", comment: "Status disconnected")
         case .failed:
-            return "连接失败"
+            return appLanguage.localized("gv_home_status_failed", comment: "Status failed")
         }
     }
     
@@ -170,13 +181,13 @@ private struct HomeView: View {
     private var detailText: String {
         switch homeSession.phase {
         case .online:
-            return "VPN 已成功连接"
+            return appLanguage.localized("gv_home_detail_connected", comment: "Detail text connected")
         case .inProgress:
-            return "正在建立连接..."
+            return appLanguage.localized("gv_home_detail_connecting", comment: "Detail text connecting")
         case .idle:
-            return "点击下方按钮开始连接"
+            return appLanguage.localized("gv_home_detail_idle", comment: "Detail text idle")
         case .failed:
-            return "连接失败，请重试"
+            return appLanguage.localized("gv_home_detail_failed", comment: "Detail text failed")
         }
     }
     
@@ -184,11 +195,11 @@ private struct HomeView: View {
     private var buttonText: String {
         switch homeSession.phase {
         case .online:
-            return "断开连接"
+            return appLanguage.localized("gv_home_button_disconnect", comment: "Button disconnect")
         case .inProgress:
-            return "连接中..."
+            return appLanguage.localized("gv_home_button_connecting", comment: "Button connecting")
         case .idle, .failed:
-            return "连接 VPN"
+            return appLanguage.localized("gv_home_button_connect", comment: "Button connect")
         }
     }
     
@@ -213,18 +224,19 @@ private struct HomeView: View {
 private struct DisconnectConfirmView: View {
     let onCancel: () -> Void
     let onConfirm: () -> Void
+    @EnvironmentObject private var appLanguage: GVAppLanguage
     
     var body: some View {
         VStack(spacing: 20) {
-            Text("确认断开连接？")
+            Text(appLanguage.localized("gv_disconnect_title", comment: "Disconnect confirm title"))
                 .font(.title2)
                 .fontWeight(.semibold)
-            Text("断开后需要重新连接才能使用 VPN。")
+            Text(appLanguage.localized("gv_disconnect_message", comment: "Disconnect confirm message"))
                 .font(.subheadline)
                 .foregroundColor(.secondary)
             
             HStack(spacing: 16) {
-                Button("取消") {
+                Button(appLanguage.localized("gv_common_cancel", comment: "Cancel")) {
                     onCancel()
                 }
                 .frame(maxWidth: .infinity)
@@ -232,7 +244,7 @@ private struct DisconnectConfirmView: View {
                 .background(Color.gray.opacity(0.2))
                 .cornerRadius(22)
                 
-                Button("断开") {
+                Button(appLanguage.localized("gv_disconnect_action", comment: "Disconnect action")) {
                     onConfirm()
                 }
                 .foregroundColor(.white)
@@ -245,7 +257,7 @@ private struct DisconnectConfirmView: View {
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .background(Color(.systemBackground))
-        .navigationTitle("断开连接")
+        .navigationTitle(appLanguage.localized("gv_disconnect_nav_title", comment: "Disconnect nav title"))
     }
 }
 
