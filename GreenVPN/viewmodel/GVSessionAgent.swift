@@ -36,6 +36,18 @@ class GVSessionAgent : ObservableObject {
     // UI 绑定：断开确认
     @Published var showDisconnectConfirm: Bool = false
     
+    // UI 绑定：连接时长（秒）
+    @Published var connectionDuration: TimeInterval = 0
+    
+    // 连接开始时间
+    private var connectionStartTime: Date?
+    
+    // 连接时长计时器
+    private var durationTimer: Timer?
+    
+    // UserDefaults key 用于保存连接开始时间
+    private let connectionTimestampKey = "GreenVPNConnectionStartTime"
+    
     init() {
         backendState = systemGV.driver.connection.status
         NotificationCenter.default.addObserver(self, selector: #selector(vpnStatusDidChange(_:)), name: .NEVPNStatusDidChange, object: nil)
@@ -44,6 +56,9 @@ class GVSessionAgent : ObservableObject {
     
     deinit{
         NotificationCenter.default.removeObserver(self)
+        // 应用退出时只停止计时器，不清除 UserDefaults（VPN 可能还在连接）
+        durationTimer?.invalidate()
+        durationTimer = nil
     }
     
     @objc private func vpnStatusDidChange(_ notification: Notification) {
@@ -80,6 +95,10 @@ class GVSessionAgent : ObservableObject {
                 agent.performPostCheck()      // 仅用户主动流程触发结果页/广告
             } else {
                 agent.phase = .online
+                // 如果计时器未启动，则恢复或启动（可能是从系统恢复的状态）
+                if agent.connectionStartTime == nil {
+                    agent.restoreOrStartConnectionTimer()
+                }
             }
         }
         map[.connected] = connected
@@ -87,8 +106,11 @@ class GVSessionAgent : ObservableObject {
         // 断开 / 无效
         let disconnected: BackendReducer = { agent in
             GVLogger.log("SessionAgent", "NEVPNStatus 更新为 disconnected / invalid")
+            // 只在真正断开时清除计时器和 UserDefaults
+            agent.stopConnectionTimer()
             agent.phase = .idle
-            if agent.pendingUserStop {
+            // 防止重复设置 outcome（如果已经设置过，就不再设置）
+            if agent.pendingUserStop && agent.outcome == nil {
                 agent.outcome = .disconnectSuccess
                 agent.showingProgress = false
                 agent.pendingUserStop = false
@@ -96,7 +118,16 @@ class GVSessionAgent : ObservableObject {
             agent.awaitingPostCheck = false
         }
         map[ .disconnected ] = disconnected
-        map[ .invalid ]      = disconnected
+        // 注意：.invalid 不应该触发断开成功结果页，只在 .disconnected 时触发
+        let invalid: BackendReducer = { agent in
+            GVLogger.log("SessionAgent", "NEVPNStatus 更新为 invalid")
+            agent.stopConnectionTimer()
+            agent.phase = .idle
+            // invalid 状态不设置断开成功结果页
+            agent.pendingUserStop = false
+            agent.awaitingPostCheck = false
+        }
+        map[ .invalid ] = invalid
         
         // 连接中
         let connecting: BackendReducer = { agent in
@@ -240,6 +271,8 @@ class GVSessionAgent : ObservableObject {
         pendingUserStop = true
         showingProgress = true
         phase = .inProgress
+        // 清除之前的结果页状态，避免重复显示
+        outcome = nil
         haltTunnel()
     }
     
@@ -255,6 +288,92 @@ class GVSessionAgent : ObservableObject {
         showingProgress = false
         outcome = .connectSuccess
         awaitingPostCheck = false
+        startConnectionTimer()
+        // 记录连接次数
+        GVConnectionStatsManager.shared.recordConnection()
+    }
+    
+    // MARK: - 连接时长追踪
+    
+    /// 恢复或启动连接计时器（优先从 UserDefaults 恢复开始时间）
+    private func restoreOrStartConnectionTimer() {
+        // 只停止计时器，不清除 UserDefaults（因为 VPN 可能还在连接）
+        durationTimer?.invalidate()
+        durationTimer = nil
+        
+        // 尝试从 UserDefaults 恢复开始时间
+        let savedTimestamp = UserDefaults.standard.double(forKey: connectionTimestampKey)
+        if savedTimestamp > 0 {
+            let savedStartTime = Date(timeIntervalSince1970: savedTimestamp)
+            // 如果保存的时间在合理范围内（不超过7天前），则恢复
+            let daysSince = Date().timeIntervalSince(savedStartTime) / 86400
+            if daysSince >= 0 && daysSince < 7 {
+                connectionStartTime = savedStartTime
+                GVLogger.log("SessionAgent", "从 UserDefaults 恢复连接开始时间，已过时长：\(Int(Date().timeIntervalSince(savedStartTime)))秒")
+            } else {
+                // 时间不合理，重新开始
+                connectionStartTime = Date()
+                UserDefaults.standard.set(connectionStartTime!.timeIntervalSince1970, forKey: connectionTimestampKey)
+                GVLogger.log("SessionAgent", "保存的开始时间不合理，重新开始计时")
+            }
+        } else {
+            // 没有保存的时间，重新开始
+            connectionStartTime = Date()
+            UserDefaults.standard.set(connectionStartTime!.timeIntervalSince1970, forKey: connectionTimestampKey)
+            GVLogger.log("SessionAgent", "没有保存的开始时间，开始新计时")
+        }
+        
+        // 立即计算一次当前时长
+        if let startTime = connectionStartTime {
+            connectionDuration = Date().timeIntervalSince(startTime)
+        }
+        
+        // 启动定时器
+        durationTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            guard let self = self, let startTime = self.connectionStartTime else { return }
+            self.connectionDuration = Date().timeIntervalSince(startTime)
+        }
+        if let timer = durationTimer {
+            RunLoop.main.add(timer, forMode: .common)
+        }
+    }
+    
+    /// 启动新的连接计时器（用于新连接）
+    private func startConnectionTimer() {
+        stopConnectionTimer()
+        connectionStartTime = Date()
+        connectionDuration = 0
+        
+        // 保存到 UserDefaults
+        UserDefaults.standard.set(connectionStartTime!.timeIntervalSince1970, forKey: connectionTimestampKey)
+        GVLogger.log("SessionAgent", "开始新连接计时，保存开始时间")
+        
+        durationTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            guard let self = self, let startTime = self.connectionStartTime else { return }
+            self.connectionDuration = Date().timeIntervalSince(startTime)
+        }
+        if let timer = durationTimer {
+            RunLoop.main.add(timer, forMode: .common)
+        }
+    }
+    
+    private func stopConnectionTimer() {
+        durationTimer?.invalidate()
+        durationTimer = nil
+        
+        // 记录连接时长到统计管理器
+        if let startTime = connectionStartTime {
+            let duration = Date().timeIntervalSince(startTime)
+            if duration > 0 {
+                GVConnectionStatsManager.shared.recordDuration(duration)
+            }
+        }
+        
+        // 清除保存的开始时间
+        UserDefaults.standard.removeObject(forKey: connectionTimestampKey)
+        
+        connectionStartTime = nil
+        connectionDuration = 0
     }
     
     private func markConnectFailed() {

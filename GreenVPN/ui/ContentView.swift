@@ -12,6 +12,9 @@ struct ContentView: View {
     @EnvironmentObject private var routeCoordinator: GVRouteCoordinator
     @EnvironmentObject private var appLanguage: GVAppLanguage
     
+    // 防止同一个结果被重复展示造成“闪一下又回来”的现象
+    @State private var lastOutcomeShown: SessionOutcome? = nil
+    
     var body: some View {
         NavigationStack(path: $routeCoordinator.path) {
             HomeScreen()
@@ -30,6 +33,10 @@ struct ContentView: View {
                     )
                 case .nodeList:
                     GVNodeListView()
+                case .settings:
+                    GVSettingsView()
+                case .toolbox:
+                    GVToolboxView()
                 }
             }
             // 根据 ViewModel 状态自动跳转
@@ -42,7 +49,14 @@ struct ContentView: View {
             }
             .onChange(of: homeSession.outcome) { result in
                 if let r = result {
-                    routeCoordinator.showResult(r)
+                    // 只在“本轮第一次”结果变化时跳转，避免重复 push 同一个结果页
+                    if lastOutcomeShown != r {
+                        lastOutcomeShown = r
+                        routeCoordinator.showResult(r)
+                    }
+                } else {
+                    // 结果被清空（例如在结果页点击关闭）后，重置标记，下一轮可以再次展示
+                    lastOutcomeShown = nil
                 }
             }
             .toolbar {
@@ -65,6 +79,7 @@ private struct HomeScreen: View {
     @EnvironmentObject private var appLanguage: GVAppLanguage
     @EnvironmentObject private var nodeManager: GVNodeManager
     @EnvironmentObject private var routeCoordinator: GVRouteCoordinator
+    @EnvironmentObject private var statsManager: GVConnectionStatsManager
     
     var body: some View {
         ZStack {
@@ -87,145 +102,88 @@ private struct HomeScreen: View {
                     .opacity(0.10)
             }
             
-            VStack(spacing: 32) {
-                // 自定义顶部栏：Logo + 标题 + 语言按钮
-                HStack(spacing: 12) {
-                    Image("logo")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 34, height: 34)
-                        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-                        .shadow(color: Color.black.opacity(0.35), radius: 8, x: 0, y: 5)
-                    
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(appLanguage.localized("gv_home_title", comment: "Home title"))
-                            .font(.system(size: 20, weight: .semibold, design: .rounded))
-                            .foregroundColor(.white)
-                        Text(statusText)
-                            .font(.system(size: 13, weight: .medium))
-                            .foregroundColor(Color.white.opacity(0.85))
-                    }
-                    
-                    Spacer()
-                    
-                    HStack(spacing: 10) {
-                        // 节点选择按钮
-                        Button {
-                            routeCoordinator.showNodeList()
-                        } label: {
-                            HStack(spacing: 6) {
-                                if let selected = nodeManager.selectedNode {
-                                    if selected.id == -1 {
-                                        // Auto 节点：显示地球图标 + "A"
-                                        Image(systemName: "globe.asia.australia.fill")
-                                            .font(.system(size: 13, weight: .medium))
-                                        Text("A")
-                                            .font(.system(size: 11, weight: .bold))
-                                    } else {
-                                        // 普通节点：显示国旗图标
-                                        GVFlagIcon(countryCode: selected.countryCode, size: 16)
-                                    }
-                                } else {
-                                    // 未选择：显示地球图标 + "A"
-                                    Image(systemName: "globe.asia.australia.fill")
-                                        .font(.system(size: 13, weight: .medium))
-                                    Text("A")
-                                        .font(.system(size: 11, weight: .bold))
-                                }
-                            }
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 6)
-                            .background(Color.white.opacity(0.12))
-                            .cornerRadius(16)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 16)
-                                    .stroke(Color.white.opacity(0.25), lineWidth: 0.5)
-                            )
-                        }
+            ScrollView {
+                VStack(spacing: 20) {
+                    // 顶部栏：Logo + 标题 + 右侧设置入口
+                    HStack(spacing: 12) {
+                        Image("logo")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 34, height: 34)
+                            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                            .shadow(color: Color.black.opacity(0.35), radius: 8, x: 0, y: 5)
                         
-                        // 语言切换按钮
-                        NavigationLink {
-                            GVLanguageView()
-                        } label: {
-                            LanguageGlyphView()
-                                .frame(width: 16, height: 16)
-                                .padding(.horizontal, 10)
-                                .padding(.vertical, 6)
-                                .background(Color.white.opacity(0.12))
-                                .cornerRadius(16)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 16)
-                                        .stroke(Color.white.opacity(0.25), lineWidth: 0.5)
-                                )
-                        }
-                    }
-                }
-                .padding(.horizontal, 20)
-                .padding(.top, 10)
-                
-                Spacer()
-                
-                // 中央连接图标：立体能量圆，后续可由 UI 替换内部图标
-                CoreOrbView(phase: homeSession.phase)
-                    .frame(width: 210, height: 210)
-                    .offset(y: -20)
-                
-                // 文案说明区
-                VStack(spacing: 8) {
-                    Text(detailText)
-                        .font(.system(size: 15))
-                        .foregroundColor(Color.white.opacity(0.9))
-                    
-                    // 预留：可以后续放 fake 延迟/带宽的小 pill
-                }
-                .padding(.horizontal, 32)
-                .multilineTextAlignment(.center)
-                
-                Spacer()
-                
-                // 底部主按钮
-                Button {
-                    homeSession.handlePrimaryAction()
-                } label: {
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 30, style: .continuous)
-                            .fill(
-                                LinearGradient(
-                                    colors: homeSession.phase == .online
-                                    ? [Color.red, Color.orange]
-                                    : [Color(red: 0/255, green: 180/255, blue: 120/255),
-                                       Color(red: 0/255, green: 210/255, blue: 150/255)],
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                )
-                            )
-                            .shadow(color: Color.black.opacity(0.25), radius: 12, x: 0, y: 8)
-                        
-                        HStack(spacing: 10) {
-                            if homeSession.phase == .inProgress {
-                                ProgressView()
-                                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                                    .scaleEffect(0.9)
-                            } else {
-                                KeyGlyphView(isOn: homeSession.phase == .online)
-                                    .frame(width: 20, height: 20)
-                                    .foregroundColor(.white)
-                            }
-                            
-                            Text(buttonText)
-                                .font(.system(size: 17, weight: .semibold))
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(GVAppInfo.displayName)
+                                .font(.system(size: 20, weight: .semibold, design: .rounded))
                                 .foregroundColor(.white)
+                            Text(statusText)
+                                .font(.system(size: 13, weight: .medium))
+                                .foregroundColor(Color.white.opacity(0.85))
                         }
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 14)
+                        
+                        Spacer()
+                        
+                        // 右上角设置按钮（小入口）
+                        Button {
+                            routeCoordinator.showSettings()
+                        } label: {
+                            Image(systemName: "gearshape.fill")
+                                .font(.system(size: 20, weight: .semibold))
+                                .foregroundColor(.white.opacity(0.9))
+                                .frame(width: 32, height: 32)
+                                .background(
+                                    Circle()
+                                        .fill(Color.white.opacity(0.10))
+                                )
+                        }
                     }
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 60)
+                    .padding(.horizontal, 20)
+                    .padding(.top, 10)
+                    .padding(.bottom, 8)
+                    
+                    // 卡片1：连接状态卡片（大卡片，包含圆环和按钮）
+                    ConnectionStatusCard(
+                        phase: homeSession.phase,
+                        connectionDuration: homeSession.connectionDuration,
+                        detailText: detailText,
+                        buttonText: buttonText,
+                        onButtonTap: {
+                            homeSession.handlePrimaryAction()
+                        }
+                    )
+                    .padding(.horizontal, 20)
+                    
+                    // 卡片2：当前节点卡片
+                    if let selectedNode = nodeManager.selectedNode {
+                        CurrentNodeCard(node: selectedNode)
+                            .padding(.horizontal, 20)
+                    }
+                    
+                    // 卡片3：功能入口（2x2 网格）
+                    FunctionGridCard(
+                        onNodeListTap: {
+                            routeCoordinator.showNodeList()
+                        }
+                    )
+                    .padding(.horizontal, 20)
+                    
+                    // 卡片4：工具箱入口卡片
+                    ToolboxEntryCard()
+                        .padding(.horizontal, 20)
+                    
+                    // 卡片5：连接统计卡片（直接展示总时长 / 次数 / 今日时长）
+                    ConnectionStatsCard(
+                        totalDuration: statsManager.totalDuration,
+                        totalConnections: statsManager.totalConnections,
+                        todayDuration: statsManager.todayDuration
+                    )
+                    .padding(.horizontal, 20)
+                                        
+                    // 底部留白，避免被系统手势栏遮挡
+                    Spacer()
+                        .frame(height: 40)
                 }
-                .disabled(homeSession.phase == .inProgress)
-                .padding(.horizontal, 32)
-                .padding(.bottom, 26)
             }
             
             // 覆盖在主页上的断开确认视图（不是单独页面）
@@ -325,6 +283,20 @@ private struct HomeScreen: View {
             return .blue
         }
     }
+    
+    // 格式化连接时长
+    private func formatDuration(_ duration: TimeInterval) -> String {
+        let totalSeconds = Int(duration)
+        let hours = totalSeconds / 3600
+        let minutes = (totalSeconds % 3600) / 60
+        let seconds = totalSeconds % 60
+        
+        if hours > 0 {
+            return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+        } else {
+            return String(format: "%02d:%02d", minutes, seconds)
+        }
+    }
 }
 
 // MARK: - 连接页 / 结果页
@@ -338,37 +310,91 @@ private struct DisconnectConfirmView: View {
     @EnvironmentObject private var appLanguage: GVAppLanguage
     
     var body: some View {
-        VStack(spacing: 20) {
-            Text(appLanguage.localized("gv_disconnect_title", comment: "Disconnect confirm title"))
-                .font(.title2)
-                .fontWeight(.semibold)
-            Text(appLanguage.localized("gv_disconnect_message", comment: "Disconnect confirm message"))
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-            
-            HStack(spacing: 16) {
-                Button(appLanguage.localized("gv_common_cancel", comment: "Cancel")) {
-                    onCancel()
+        ZStack {
+            VStack(spacing: 18) {
+                // 顶部图标：用更克制的红色点缀，保持整体偏冷的深色风格
+                ZStack {
+                    Circle()
+                        .fill(Color(red: 0.5, green: 0.1, blue: 0.1).opacity(0.28))
+                        .frame(width: 60, height: 60)
+                    Image(systemName: "power")
+                        .font(.system(size: 24, weight: .bold))
+                        .foregroundColor(Color(red: 0.98, green: 0.36, blue: 0.36))
                 }
-                .frame(maxWidth: .infinity)
-                .frame(height: 44)
-                .background(Color.gray.opacity(0.2))
-                .cornerRadius(22)
                 
-                Button(appLanguage.localized("gv_disconnect_action", comment: "Disconnect action")) {
-                    onConfirm()
+                // 标题 & 文案
+                VStack(spacing: 8) {
+                    Text(appLanguage.localized("gv_disconnect_title", comment: "Disconnect confirm title"))
+                        .font(.system(size: 18, weight: .semibold))
+                        .foregroundColor(.white)
+                    
+                    Text(appLanguage.localized("gv_disconnect_message", comment: "Disconnect confirm message"))
+                        .font(.system(size: 14))
+                        .foregroundColor(Color.white.opacity(0.8))
+                        .multilineTextAlignment(.center)
                 }
-                .foregroundColor(.white)
-                .frame(maxWidth: .infinity)
-                .frame(height: 44)
-                .background(Color.red)
-                .cornerRadius(22)
+                .padding(.horizontal, 8)
+                
+                // 按钮：上下排列
+                VStack(spacing: 10) {
+                    Button {
+                        onConfirm()
+                    } label: {
+                        Text(appLanguage.localized("gv_disconnect_action", comment: "Disconnect action"))
+                            .font(.system(size: 16, weight: .semibold))
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 46)
+                            .background(
+                                LinearGradient(
+                                    colors: [
+                                        Color(red: 0.95, green: 0.32, blue: 0.32),
+                                        Color(red: 0.82, green: 0.12, blue: 0.24)
+                                    ],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
+                            )
+                            .foregroundColor(.white)
+                            .cornerRadius(12)
+                    }
+                    
+                    Button {
+                        onCancel()
+                    } label: {
+                        Text(appLanguage.localized("gv_common_cancel", comment: "Cancel"))
+                            .font(.system(size: 16, weight: .medium))
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 44)
+                            .background(Color.white.opacity(0.08))
+                            .foregroundColor(Color.white.opacity(0.92))
+                            .cornerRadius(12)
+                    }
+                }
+                .padding(.top, 4)
             }
+            .padding(.vertical, 20)
+            .padding(.horizontal, 18)
+            .background(
+                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                    .fill(
+                        LinearGradient(
+                            colors: [
+                                Color(red: 9/255, green: 48/255, blue: 54/255).opacity(0.96),
+                                Color(red: 3/255, green: 18/255, blue: 24/255).opacity(0.96)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 18, style: .continuous)
+                            .stroke(Color.white.opacity(0.10), lineWidth: 0.6)
+                    )
+            )
+            .shadow(color: Color.black.opacity(0.55), radius: 18, x: 0, y: 10)
         }
-        .padding()
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        .background(Color(.systemBackground))
-        .navigationTitle(appLanguage.localized("gv_disconnect_nav_title", comment: "Disconnect nav title"))
+        // 居中弹窗，由外层遮罩负责全屏对齐
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
     }
 }
 
@@ -376,7 +402,7 @@ private struct DisconnectConfirmView: View {
 
 
 /// 简化版钥匙图形（头部圆 + 柄 + 齿）
-private struct KeyGlyphView: View {
+struct KeyGlyphView: View {
     let isOn: Bool
     
     var body: some View {
@@ -463,8 +489,8 @@ private struct LaurelRingView: Shape {
 }
 
 
-/// 中央连接图标：立体圆形能量核心（简洁版本，方便后续替换为 UI 图标）
-private struct CoreOrbView: View {
+/// 中央连接图标：立体圆形能量核心（中间灰圆预留给状态图标）
+struct CoreOrbView: View {
     let phase: SessionPhase
     
     @State private var glowStrength: Double = 0.3
@@ -494,7 +520,7 @@ private struct CoreOrbView: View {
                     .frame(width: size * 1.15, height: size * 1.15)
                     .blur(radius: 26)
                 
-                // 立体圆环（中空，为后续图标和文字预留空间）
+                // 立体圆环（中空，为后续图标预留空间）
                 ZStack {
                     Circle()
                         .fill(
@@ -524,10 +550,20 @@ private struct CoreOrbView: View {
                 .shadow(color: coreColors[0].opacity(0.9), radius: 20, x: 0, y: 10)
                 .compositingGroup()
                 
-                // 中心预留区：以后由 UI 放自定义图标 / 状态 / 时间
-                Circle()
-                    .fill(Color.white.opacity(0.08))
-                    .frame(width: innerRadius * 1.4, height: innerRadius * 1.4)
+                // 中心灰圆 + 状态图标
+                ZStack {
+                    Circle()
+                        .fill(Color.white.opacity(0.08))
+                    
+                    if let iconName = centerIconName {
+                        Image(iconName)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: innerRadius * 0.95, height: innerRadius * 0.95)
+                            .opacity(centerIconOpacity)
+                    }
+                }
+                .frame(width: innerRadius * 1.4, height: innerRadius * 1.4)
             }
             .frame(width: geo.size.width, height: geo.size.height)
             .offset(x: phase == .failed ? sin(shakePhase) * 4 : 0)
@@ -558,6 +594,30 @@ private struct CoreOrbView: View {
                 Color(red: 245/255, green: 120/255, blue: 110/255),
                 Color(red: 160/255, green: 40/255, blue: 40/255)
             ]
+        }
+    }
+    
+    /// 中心图标名称：对应三个状态图标资源
+    private var centerIconName: String? {
+        switch phase {
+        case .online:
+            return "connected"
+        case .inProgress:
+            return "connecting"
+        case .idle, .failed:
+            return "disconnect"
+        }
+    }
+    
+    /// 中心图标透明度：未连接时略微降低亮度
+    private var centerIconOpacity: Double {
+        switch phase {
+        case .online, .inProgress:
+            return 0.95
+        case .idle:
+            return 0.7
+        case .failed:
+            return 0.8
         }
     }
     
@@ -709,7 +769,8 @@ private struct MountainLayer: Shape {
 }
 
 /// 细粒度噪点覆盖，用于给深色背景增加一点质感
-private struct NoiseOverlay: View {
+/// 注意：不要设为 private，其他页面（启动页、隐私页等）也会共用
+struct NoiseOverlay: View {
     var body: some View {
         Canvas { context, size in
             let cols = Int(size.width / 8)

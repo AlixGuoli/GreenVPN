@@ -133,6 +133,8 @@ private struct NodeRowView: View {
                     Text(appLanguage.localized("gv_node_auto_desc", comment: "Auto node description"))
                         .font(.system(size: 13))
                         .foregroundColor(.white.opacity(0.7))
+                        .multilineTextAlignment(.leading)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
             }
             

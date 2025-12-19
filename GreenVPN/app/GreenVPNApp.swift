@@ -37,6 +37,7 @@ struct GreenVPNApp: App {
                     .environmentObject(routeCoordinator)
                     .environmentObject(appLanguage)
                     .environmentObject(GVNodeManager.shared)
+                    .environmentObject(GVConnectionStatsManager.shared)
                     .environment(\.locale, appLanguage.locale)
                 
                 // 启动引导（只在首次进入期间覆盖）

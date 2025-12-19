@@ -18,7 +18,7 @@
 "gv_policy_accept" = "Accept and Continue";
 
 /* Home / disconnect dialog / result / connecting */
-"gv_home_title" = "GreenVPN";
+"gv_home_title" = "App";
 
 "gv_home_status_connected" = "Connected";
 "gv_home_status_connecting" = "Connecting...";
@@ -36,6 +36,26 @@
 
 "gv_node_list_title" = "Node List";
 "gv_node_auto_desc" = "Automatically select the best node";
+
+/* Settings */
+"gv_settings_title" = "Settings";
+"gv_settings_stats" = "Connection Statistics";
+"gv_settings_other" = "Other";
+"gv_settings_about" = "About";
+"gv_settings_clear_data" = "Clear All Data";
+
+"gv_settings_privacy" = "Privacy Policy";
+"gv_settings_privacy_subtitle" = "See how we handle and protect your data.";
+"gv_settings_terms" = "Terms of Service";
+"gv_settings_terms_subtitle" = "Read the Apple Standard EULA used by this app.";
+"gv_settings_about_subtitle" = "Visit the GreenShield VPN website to learn more.";
+"gv_settings_language_subtitle" = "Change only the display language of this app.";
+
+/* Statistics */
+"gv_stats_total_duration" = "Total Duration";
+"gv_stats_total_connections" = "Total Connections";
+"gv_stats_today_duration" = "Today Duration";
+"gv_stats_less_than_minute" = "< 1 min";
 
 /* Node names */
 "gv_node_auto" = "Auto Select";
@@ -71,6 +91,13 @@
 "gv_result_body_connect_fail" = "Connection failed. Please check your network or try again later.";
 "gv_result_body_disconnect_success" = "VPN connection has been disconnected.";
 
+/* Result page actions */
+"gv_result_share_title" = "Share this app";
+"gv_result_share_subtitle" = "Share the app with your friends for a more stable connection experience.";
+"gv_result_join_title" = "Join Us";
+"gv_result_join_subtitle" = "Join our Telegram channel for updates and tips.";
+"gv_result_share_default_text" = "I’m using this app and it works pretty well. You can try it here:";
+
 "gv_connecting_nav_title" = "Connecting";
 "gv_connecting_message" = "Connecting to VPN ...";
 
@@ -83,7 +110,41 @@
 "gv_lang_en" = "English";
 "gv_lang_en_desc" = "Always display the interface in English";
 
+"gv_lang_page_desc" = "This only changes the display language of this app, not the system or other apps.";
+
 "gv_lang_switching" = "Switching language, please wait…";
+
+/* Toolbox */
+"gv_toolbox_title" = "Toolbox";
+"gv_toolbox_subtitle" = "Network lab · Text utilities";
+"gv_toolbox_desc" = "A few small utilities that run entirely on-device, including basic network tests and text helpers. Nothing is uploaded.";
+
+"gv_toolbox_ping_title" = "Ping Test";
+"gv_toolbox_ping_subtitle" = "Roughly measure latency to a target host";
+"gv_toolbox_ping_hint" = "Enter a domain or IP, such as example.com, then run several simple TCP connects to estimate latency.";
+"gv_toolbox_ping_start" = "Start Test";
+"gv_toolbox_ping_running" = "Running multiple connection attempts…";
+"gv_toolbox_ping_done" = "Test Finished";
+"gv_toolbox_ping_error" = "Unable to establish connection. Please check the host.";
+"gv_toolbox_ping_latest" = "Latest";
+"gv_toolbox_ping_min" = "Min";
+"gv_toolbox_ping_max" = "Max";
+"gv_toolbox_ping_avg" = "Avg";
+
+"gv_toolbox_port_title" = "Port Reachability";
+"gv_toolbox_port_subtitle" = "Check whether a port is reachable";
+"gv_toolbox_port_hint" = "Enter a host and port, for example example.com and 443. We will attempt a TCP connection.";
+"gv_toolbox_port_start" = "Start Check";
+"gv_toolbox_port_running" = "Trying to connect…";
+"gv_toolbox_port_open" = "✅ Port is reachable";
+"gv_toolbox_port_closed" = "❌ Cannot connect to this port";
+
+"gv_toolbox_base64_title" = "Base64 Text Tool";
+"gv_toolbox_base64_subtitle" = "Quickly encode/decode text";
+"gv_toolbox_base64_hint" = "Enter plain text or Base64 above, then tap the buttons to encode or decode. All operations are local.";
+"gv_toolbox_base64_encode" = "Encode";
+"gv_toolbox_base64_decode" = "Decode";
+"gv_toolbox_base64_error" = "Decode failed: please input valid Base64 text.";
 
 /* Intro curtain */
 "gv_intro_title" = "Green VPN";

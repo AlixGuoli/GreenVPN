@@ -15,6 +15,7 @@ final class GVHomeSessionModel: ObservableObject {
     @Published private(set) var showingProgress: Bool = false
     @Published private(set) var outcome: SessionOutcome? = nil
     @Published private(set) var showDisconnectConfirm: Bool = false
+    @Published private(set) var connectionDuration: TimeInterval = 0
     
     private let agent: GVSessionAgent
     private var cancellables = Set<AnyCancellable>()
@@ -40,6 +41,10 @@ final class GVHomeSessionModel: ObservableObject {
         agent.$showDisconnectConfirm
             .receive(on: RunLoop.main)
             .assign(to: &$showDisconnectConfirm)
+        
+        agent.$connectionDuration
+            .receive(on: RunLoop.main)
+            .assign(to: &$connectionDuration)
     }
     
     // MARK: - UI 交互入口

@@ -18,8 +18,24 @@ struct GVIntroCurtain: View {
     
     var body: some View {
         ZStack {
-            Color.black
+            // 与主页统一的深色径向渐变 + 噪点
+            ZStack {
+                RadialGradient(
+                    colors: [
+                        Color(red: 6/255, green: 40/255, blue: 45/255),
+                        Color(red: 2/255, green: 10/255, blue: 16/255)
+                    ],
+                    center: .center,
+                    startRadius: 0,
+                    endRadius: UIScreen.main.bounds.height * 0.9
+                )
                 .ignoresSafeArea()
+                
+                NoiseOverlay()
+                    .ignoresSafeArea()
+                    .blendMode(.overlay)
+                    .opacity(0.10)
+            }
             
             VStack(spacing: 16) {
                 Image("logo")
