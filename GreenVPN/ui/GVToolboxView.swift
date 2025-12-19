@@ -121,9 +121,11 @@ private struct ToolboxRow: View {
             
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 8) {
-                    Image(systemName: icon)
-                        .font(.system(size: 18, weight: .semibold))
-                        .foregroundColor(.white)
+                    if !icon.isEmpty {
+                        Image(systemName: icon)
+                            .font(.system(size: 18, weight: .semibold))
+                            .foregroundColor(.white)
+                    }
                     
                     Text(title)
                         .font(.system(size: 16, weight: .semibold))
@@ -136,6 +138,7 @@ private struct ToolboxRow: View {
                     .multilineTextAlignment(.leading)
                     .lineLimit(2)
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
             
             Spacer()
             

@@ -1,0 +1,163 @@
+/* Intro curtain */
+"gv_intro_title" = "Green VPN";
+"gv_intro_subtitle" = "Seguro · Estable · Discreto";
+"gv_intro_progress" = "Preparando el entorno de conexión %d%%";
+
+/* Privacy gate */
+"gv_policy_title" = "Protección de privacidad y uso de datos";
+"gv_policy_preamble" = "Para ofrecer una experiencia de VPN fluida y a la vez proteger tu privacidad, solo recopilamos y usamos la información mínima necesaria.";
+"gv_policy_section_intro" = "Podemos procesar las siguientes categorías de datos:";
+
+"gv_policy_point_device" = "· Información del dispositivo: como versión del sistema operativo, modelo de hardware e idioma del sistema, usada para adaptar la aplicación y optimizar el rendimiento.";
+"gv_policy_point_records" = "· Estadísticas de conexión: por ejemplo, tasa de éxito y tipos de errores, analizados de forma agregada para mejorar la estabilidad.";
+"gv_policy_point_duration" = "· Tiempo de uso y ancho de banda: utilizados para planificar la capacidad y distribuir la carga.";
+"gv_policy_point_ads" = "· Datos de servicios publicitarios de terceros (si se usan): procesados por ellos de acuerdo con sus propias políticas de privacidad.";
+
+"gv_policy_more_link" = "Para más detalles, consulta la Política de privacidad completa y el Acuerdo de usuario.";
+"gv_policy_decline" = "Rechazar y salir";
+"gv_policy_accept" = "Aceptar y continuar";
+
+/* Home / disconnect dialog / result / connecting */
+"gv_home_title" = "App";
+
+"gv_home_status_connected" = "Conectado";
+"gv_home_status_connecting" = "Conectando...";
+"gv_home_status_disconnected" = "Desconectado";
+"gv_home_status_failed" = "Error de conexión";
+
+"gv_home_detail_connected" = "El VPN se ha conectado correctamente.";
+"gv_home_detail_connecting" = "Estableciendo conexión...";
+"gv_home_detail_idle" = "Toca el botón de abajo para empezar a conectar.";
+"gv_home_detail_failed" = "La conexión ha fallado, inténtalo de nuevo.";
+
+"gv_home_button_disconnect" = "Desconectar";
+"gv_home_button_connecting" = "Conectando...";
+"gv_home_button_connect" = "Conectar VPN";
+
+"gv_node_list_title" = "Lista de nodos";
+"gv_node_auto_desc" = "Seleccionar automáticamente el mejor nodo";
+
+/* Settings */
+"gv_settings_title" = "Ajustes";
+"gv_settings_stats" = "Estadísticas de conexión";
+"gv_settings_other" = "Otros";
+"gv_settings_about" = "Acerca de";
+"gv_settings_clear_data" = "Borrar todos los datos";
+
+"gv_settings_privacy" = "Política de privacidad";
+"gv_settings_privacy_subtitle" = "Consulta cómo tratamos y protegemos tus datos.";
+"gv_settings_terms" = "Términos de servicio";
+"gv_settings_terms_subtitle" = "Lee el EULA estándar de Apple utilizado por esta app.";
+"gv_settings_about_subtitle" = "Visita el sitio web de GreenShield VPN para saber más.";
+"gv_settings_language_subtitle" = "Solo cambia el idioma de esta app, no del sistema ni de otras apps.";
+
+/* Statistics */
+"gv_stats_total_duration" = "Duración total";
+"gv_stats_total_connections" = "Conexiones totales";
+"gv_stats_today_duration" = "Duración de hoy";
+"gv_stats_less_than_minute" = "< 1 min";
+
+/* Node names */
+"gv_node_auto" = "Selección automática";
+"gv_node_us" = "Estados Unidos";
+"gv_node_de" = "Alemania";
+"gv_node_fr" = "Francia";
+"gv_node_gb" = "Reino Unido";
+"gv_node_jp" = "Japón";
+"gv_node_ca" = "Canadá";
+"gv_node_sg" = "Singapur";
+"gv_node_au" = "Australia";
+"gv_node_kr" = "Corea del Sur";
+
+/* Node load status */
+"gv_node_load_low" = "Baja carga";
+"gv_node_load_medium" = "Carga media";
+"gv_node_load_high" = "Alta carga";
+
+"gv_disconnect_title" = "¿Desconectar del VPN?";
+"gv_disconnect_message" = "Después de desconectarte, tendrás que volver a conectar para usar el VPN.";
+"gv_disconnect_action" = "Desconectar";
+"gv_disconnect_nav_title" = "Desconexión";
+
+"gv_common_cancel" = "Cancelar";
+"gv_common_close" = "Cerrar";
+
+"gv_result_nav_title" = "Resultado de la conexión";
+"gv_result_title_connect_success" = "Conectado";
+"gv_result_title_connect_fail" = "Error de conexión";
+"gv_result_title_disconnect_success" = "Desconectado";
+
+"gv_result_body_connect_success" = "La conexión VPN está establecida. Ya puedes usarla.";
+"gv_result_body_connect_fail" = "La conexión ha fallado. Revisa tu red o inténtalo más tarde.";
+"gv_result_body_disconnect_success" = "La conexión VPN se ha desconectado.";
+
+/* Result page actions */
+"gv_result_share_title" = "Compartir esta app";
+"gv_result_share_subtitle" = "Comparte la app con tus amigos para disfrutar de una conexión más estable.";
+"gv_result_join_title" = "Únete";
+"gv_result_join_subtitle" = "Únete a nuestro canal de Telegram para recibir novedades y consejos.";
+"gv_result_share_default_text" = "Estoy usando esta app y funciona bastante bien. Pruébala tú también:";
+
+"gv_connecting_nav_title" = "Conectando";
+"gv_connecting_message" = "Conectando al VPN ...";
+
+/* Language settings */
+"gv_lang_nav_title" = "Idioma";
+"gv_lang_system" = "Seguir sistema";
+"gv_lang_system_desc" = "Usar el idioma del sistema para la interfaz";
+"gv_lang_zh" = "Chino simplificado";
+"gv_lang_zh_desc" = "Mostrar siempre la interfaz en chino simplificado.";
+"gv_lang_en" = "Inglés";
+"gv_lang_en_desc" = "Mostrar siempre la interfaz en inglés.";
+"gv_lang_ru" = "Ruso";
+"gv_lang_ru_desc" = "Mostrar siempre la interfaz en ruso.";
+"gv_lang_es" = "Español";
+"gv_lang_es_desc" = "Mostrar siempre la interfaz en español.";
+"gv_lang_ptbr" = "Portugués (Brasil)";
+"gv_lang_ptbr_desc" = "Mostrar siempre la interfaz en portugués de Brasil.";
+"gv_lang_de" = "Alemán";
+"gv_lang_de_desc" = "Mostrar siempre la interfaz en alemán.";
+"gv_lang_fr" = "Francés";
+"gv_lang_fr_desc" = "Mostrar siempre la interfaz en francés.";
+"gv_lang_ja" = "Japonés";
+"gv_lang_ja_desc" = "Mostrar siempre la interfaz en japonés.";
+"gv_lang_ko" = "Coreano";
+"gv_lang_ko_desc" = "Mostrar siempre la interfaz en coreano.";
+
+"gv_lang_page_desc" = "Solo cambia el idioma de esta app, no del sistema ni de otras aplicaciones.";
+
+"gv_lang_switching" = "Cambiando idioma, espera un momento…";
+
+/* Toolbox */
+"gv_toolbox_title" = "Caja de herramientas";
+"gv_toolbox_subtitle" = "Pruebas de red · Utilidades de texto";
+"gv_toolbox_desc" = "Pequeñas utilidades que se ejecutan totalmente en el dispositivo: pruebas de red sencillas y utilidades de texto. Nada se envía a servidores.";
+
+"gv_toolbox_ping_title" = "Prueba de ping";
+"gv_toolbox_ping_subtitle" = "Medir aproximadamente la latencia hacia un host";
+"gv_toolbox_ping_hint" = "Introduce un dominio o IP, por ejemplo example.com, y realiza varias conexiones TCP sencillas para estimar la latencia.";
+"gv_toolbox_ping_start" = "Iniciar prueba";
+"gv_toolbox_ping_running" = "Realizando varias conexiones…";
+"gv_toolbox_ping_done" = "Prueba finalizada";
+"gv_toolbox_ping_error" = "No se pudo establecer la conexión. Verifica que la dirección sea correcta.";
+"gv_toolbox_ping_latest" = "Último";
+"gv_toolbox_ping_min" = "Mínimo";
+"gv_toolbox_ping_max" = "Máximo";
+"gv_toolbox_ping_avg" = "Media";
+
+"gv_toolbox_port_title" = "Comprobación de puerto";
+"gv_toolbox_port_subtitle" = "Verificar si un puerto es accesible";
+"gv_toolbox_port_hint" = "Introduce host y puerto, por ejemplo example.com y 443. Intentaremos establecer una conexión TCP.";
+"gv_toolbox_port_start" = "Iniciar comprobación";
+"gv_toolbox_port_running" = "Intentando conectar…";
+"gv_toolbox_port_open" = "✅ El puerto es accesible";
+"gv_toolbox_port_closed" = "❌ No se puede conectar a este puerto";
+
+"gv_toolbox_base64_title" = "Herramienta Base64";
+"gv_toolbox_base64_subtitle" = "Codificar/decodificar texto rápidamente";
+"gv_toolbox_base64_hint" = "Introduce texto plano o Base64 arriba y pulsa los botones para codificar o decodificar. Todas las operaciones se realizan localmente.";
+"gv_toolbox_base64_encode" = "Codificar";
+"gv_toolbox_base64_decode" = "Decodificar";
+"gv_toolbox_base64_error" = "Error al decodificar: introduce un texto Base64 válido.";
+
+

@@ -1,0 +1,163 @@
+/* Intro curtain */
+"gv_intro_title" = "Green VPN";
+"gv_intro_subtitle" = "安全 · 安定 · さりげなく";
+"gv_intro_progress" = "接続環境を準備中 %d%%";
+
+/* Privacy gate */
+"gv_policy_title" = "プライバシー保護とデータ利用について";
+"gv_policy_preamble" = "VPN 体験を快適に保ちつつプライバシーを守るため、必要最小限の情報のみを収集・利用します。";
+"gv_policy_section_intro" = "当社が取り扱う可能性のあるデータの種類は次のとおりです：";
+
+"gv_policy_point_device" = "· デバイス情報：OS バージョン、ハードウェアモデル、システム言語など。アプリの最適化と動作改善のために利用します。";
+"gv_policy_point_records" = "· 接続統計：接続成功率やエラー種別などを集約した情報で、安定性向上のために利用します。";
+"gv_policy_point_duration" = "· 利用時間や帯域使用量：容量計画やリソース配分のために利用します。";
+"gv_policy_point_ads" = "· サードパーティ広告サービスのデータ（利用する場合）：各社のプライバシーポリシーに従って処理されます。";
+
+"gv_policy_more_link" = "詳細は、完全版のプライバシーポリシーおよび利用規約をご覧ください。";
+"gv_policy_decline" = "同意せず終了";
+"gv_policy_accept" = "同意して続行";
+
+/* Home / disconnect dialog / result / connecting */
+"gv_home_title" = "App";
+
+"gv_home_status_connected" = "接続済み";
+"gv_home_status_connecting" = "接続中...";
+"gv_home_status_disconnected" = "未接続";
+"gv_home_status_failed" = "接続エラー";
+
+"gv_home_detail_connected" = "VPN が正常に接続されました。";
+"gv_home_detail_connecting" = "接続を確立しています…";
+"gv_home_detail_idle" = "下のボタンをタップして接続を開始します。";
+"gv_home_detail_failed" = "接続に失敗しました。もう一度お試しください。";
+
+"gv_home_button_disconnect" = "切断";
+"gv_home_button_connecting" = "接続中...";
+"gv_home_button_connect" = "VPN に接続";
+
+"gv_node_list_title" = "ノード一覧";
+"gv_node_auto_desc" = "最適なノードを自動的に選択";
+
+/* Settings */
+"gv_settings_title" = "設定";
+"gv_settings_stats" = "接続統計";
+"gv_settings_other" = "その他";
+"gv_settings_about" = "このアプリについて";
+"gv_settings_clear_data" = "すべてのデータを削除";
+
+"gv_settings_privacy" = "プライバシーポリシー";
+"gv_settings_privacy_subtitle" = "データの取り扱いと保護方法をご確認ください。";
+"gv_settings_terms" = "利用規約";
+"gv_settings_terms_subtitle" = "このアプリに適用される Apple 標準 EULA をお読みください。";
+"gv_settings_about_subtitle" = "GreenShield VPN の公式サイトで詳細を確認できます。";
+"gv_settings_language_subtitle" = "このアプリの表示言語のみ変更します。システムや他のアプリには影響しません。";
+
+/* Statistics */
+"gv_stats_total_duration" = "総接続時間";
+"gv_stats_total_connections" = "総接続回数";
+"gv_stats_today_duration" = "本日の接続時間";
+"gv_stats_less_than_minute" = "< 1 分";
+
+/* Node names */
+"gv_node_auto" = "自動選択";
+"gv_node_us" = "アメリカ";
+"gv_node_de" = "ドイツ";
+"gv_node_fr" = "フランス";
+"gv_node_gb" = "イギリス";
+"gv_node_jp" = "日本";
+"gv_node_ca" = "カナダ";
+"gv_node_sg" = "シンガポール";
+"gv_node_au" = "オーストラリア";
+"gv_node_kr" = "韓国";
+
+/* Node load status */
+"gv_node_load_low" = "低負荷";
+"gv_node_load_medium" = "中負荷";
+"gv_node_load_high" = "高負荷";
+
+"gv_disconnect_title" = "VPN を切断しますか？";
+"gv_disconnect_message" = "切断すると、再度接続しない限り VPN を利用できません。";
+"gv_disconnect_action" = "切断する";
+"gv_disconnect_nav_title" = "切断";
+
+"gv_common_cancel" = "キャンセル";
+"gv_common_close" = "閉じる";
+
+"gv_result_nav_title" = "接続結果";
+"gv_result_title_connect_success" = "接続成功";
+"gv_result_title_connect_fail" = "接続失敗";
+"gv_result_title_disconnect_success" = "切断完了";
+
+"gv_result_body_connect_success" = "VPN 接続が確立されました。すぐに利用できます。";
+"gv_result_body_connect_fail" = "接続に失敗しました。ネットワークを確認するか、しばらくしてから再試行してください。";
+"gv_result_body_disconnect_success" = "VPN 接続は切断されました。";
+
+/* Result page actions */
+"gv_result_share_title" = "このアプリを共有";
+"gv_result_share_subtitle" = "友だちとアプリを共有して、より安定した接続を一緒に体験しましょう。";
+"gv_result_join_title" = "参加する";
+"gv_result_join_subtitle" = "最新情報とヒントのために、Telegram チャンネルに参加してください。";
+"gv_result_share_default_text" = "このアプリを使っていますが、なかなか良い感じです。あなたも試してみてください：";
+
+"gv_connecting_nav_title" = "接続中";
+"gv_connecting_message" = "VPN に接続しています ...";
+
+/* Language settings */
+"gv_lang_nav_title" = "言語";
+"gv_lang_system" = "システムに従う";
+"gv_lang_system_desc" = "システム言語をインターフェースに使用します";
+"gv_lang_zh" = "簡体字中国語";
+"gv_lang_zh_desc" = "常に簡体字中国語でインターフェースを表示します。";
+"gv_lang_en" = "英語";
+"gv_lang_en_desc" = "常に英語でインターフェースを表示します。";
+"gv_lang_ru" = "ロシア語";
+"gv_lang_ru_desc" = "常にロシア語でインターフェースを表示します。";
+"gv_lang_es" = "スペイン語";
+"gv_lang_es_desc" = "常にスペイン語でインターフェースを表示します。";
+"gv_lang_ptbr" = "ポルトガル語 (ブラジル)";
+"gv_lang_ptbr_desc" = "常にブラジルポルトガル語でインターフェースを表示します。";
+"gv_lang_de" = "ドイツ語";
+"gv_lang_de_desc" = "常にドイツ語でインターフェースを表示します。";
+"gv_lang_fr" = "フランス語";
+"gv_lang_fr_desc" = "常にフランス語でインターフェースを表示します。";
+"gv_lang_ja" = "日本語";
+"gv_lang_ja_desc" = "常に日本語でインターフェースを表示します。";
+"gv_lang_ko" = "韓国語";
+"gv_lang_ko_desc" = "常に韓国語でインターフェースを表示します。";
+
+"gv_lang_page_desc" = "このアプリの表示言語のみ変更し、システムや他のアプリには影響しません。";
+
+"gv_lang_switching" = "言語を切り替えています。しばらくお待ちください…";
+
+/* Toolbox */
+"gv_toolbox_title" = "ツールボックス";
+"gv_toolbox_subtitle" = "ネットワークテスト · テキストツール";
+"gv_toolbox_desc" = "完全にローカルで動作する小さなツール群です。簡単なネットワークテストやテキスト処理を行い、いかなるデータもサーバーには送信しません。";
+
+"gv_toolbox_ping_title" = "Ping テスト";
+"gv_toolbox_ping_subtitle" = "対象ホストへのおおよそのレイテンシを測定";
+"gv_toolbox_ping_hint" = "example.com などのドメインまたは IP を入力し、複数回の簡易 TCP 接続でレイテンシを推定します。";
+"gv_toolbox_ping_start" = "テスト開始";
+"gv_toolbox_ping_running" = "複数回の接続を試行中…";
+"gv_toolbox_ping_done" = "テスト完了";
+"gv_toolbox_ping_error" = "接続を確立できませんでした。アドレスが正しいか確認してください。";
+"gv_toolbox_ping_latest" = "最新";
+"gv_toolbox_ping_min" = "最小";
+"gv_toolbox_ping_max" = "最大";
+"gv_toolbox_ping_avg" = "平均";
+
+"gv_toolbox_port_title" = "ポートチェック";
+"gv_toolbox_port_subtitle" = "ポートが到達可能かを確認";
+"gv_toolbox_port_hint" = "example.com と 443 のようにホストとポートを入力します。TCP 接続を試行します。";
+"gv_toolbox_port_start" = "チェック開始";
+"gv_toolbox_port_running" = "接続を試行中…";
+"gv_toolbox_port_open" = "✅ ポートに接続できます";
+"gv_toolbox_port_closed" = "❌ このポートに接続できません";
+
+"gv_toolbox_base64_title" = "Base64 ツール";
+"gv_toolbox_base64_subtitle" = "テキストを素早くエンコード / デコード";
+"gv_toolbox_base64_hint" = "上に平文または Base64 テキストを入力し、ボタンを押してエンコードまたはデコードします。すべての処理はローカルで実行されます。";
+"gv_toolbox_base64_encode" = "エンコード";
+"gv_toolbox_base64_decode" = "デコード";
+"gv_toolbox_base64_error" = "デコードに失敗しました。正しい Base64 テキストを入力してください。";
+
+

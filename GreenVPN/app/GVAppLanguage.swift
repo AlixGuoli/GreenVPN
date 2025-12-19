@@ -13,8 +13,15 @@ final class GVAppLanguage: ObservableObject {
     
     enum Option: String, CaseIterable, Identifiable {
         case system = "system"
-        case zhHans = "zh-Hans"
-        case en = "en"
+        case en      = "en"
+        case ru      = "ru"
+        case zhHans  = "zh-Hans"   // 开发阶段自用，上线前可移除
+        case es      = "es"
+        case ptBR    = "pt-BR"
+        case de      = "de"
+        case fr      = "fr"
+        case ja      = "ja"
+        case ko      = "ko"
         
         var id: String { rawValue }
     }
@@ -43,10 +50,24 @@ final class GVAppLanguage: ObservableObject {
         switch option {
         case .system:
             return .current
-        case .zhHans:
-            return Locale(identifier: "zh-Hans")
         case .en:
             return Locale(identifier: "en")
+        case .ru:
+            return Locale(identifier: "ru")
+        case .zhHans:
+            return Locale(identifier: "zh-Hans")
+        case .es:
+            return Locale(identifier: "es")
+        case .ptBR:
+            return Locale(identifier: "pt-BR")
+        case .de:
+            return Locale(identifier: "de")
+        case .fr:
+            return Locale(identifier: "fr")
+        case .ja:
+            return Locale(identifier: "ja")
+        case .ko:
+            return Locale(identifier: "ko")
         }
     }
     
@@ -56,10 +77,24 @@ final class GVAppLanguage: ObservableObject {
         switch option {
         case .system:
             code = nil
-        case .zhHans:
-            code = "zh-Hans"
         case .en:
             code = "en"
+        case .ru:
+            code = "ru"
+        case .zhHans:
+            code = "zh-Hans"
+        case .es:
+            code = "es"
+        case .ptBR:
+            code = "pt-BR"
+        case .de:
+            code = "de"
+        case .fr:
+            code = "fr"
+        case .ja:
+            code = "ja"
+        case .ko:
+            code = "ko"
         }
         
         if let code = code,

@@ -109,6 +109,20 @@
 "gv_lang_zh_desc" = "始终以简体中文显示界面";
 "gv_lang_en" = "English";
 "gv_lang_en_desc" = "Always display the interface in English";
+"gv_lang_ru" = "Русский";
+"gv_lang_ru_desc" = "Всегда показывать интерфейс на русском языке.";
+"gv_lang_es" = "Español";
+"gv_lang_es_desc" = "Mostrar siempre la interfaz en español.";
+"gv_lang_ptbr" = "Português (Brasil)";
+"gv_lang_ptbr_desc" = "Sempre mostrar a interface em português do Brasil.";
+"gv_lang_de" = "Deutsch";
+"gv_lang_de_desc" = "Die Oberfläche immer auf Deutsch anzeigen.";
+"gv_lang_fr" = "Français";
+"gv_lang_fr_desc" = "Toujours afficher l’interface en français.";
+"gv_lang_ja" = "日本語";
+"gv_lang_ja_desc" = "常に日本語でインターフェースを表示します。";
+"gv_lang_ko" = "한국어";
+"gv_lang_ko_desc" = "항상 한국어로 인터페이스를 표시합니다.";
 
 "gv_lang_page_desc" = "只影响本应用界面语言，不会修改系统语言或其他应用的显示。";
 
@@ -138,7 +152,7 @@
 "gv_toolbox_port_open" = "✅ 端口可连接";
 "gv_toolbox_port_closed" = "❌ 无法连接到该端口";
 
-"gv_toolbox_base64_title" = "Base64 文本工具";
+"gv_toolbox_base64_title" = "Base64 工具";
 "gv_toolbox_base64_subtitle" = "快速对文本进行编码 / 解码";
 "gv_toolbox_base64_hint" = "在上方输入原文或 Base64 文本，点击下面的按钮进行编码或解码，所有操作都在本地完成。";
 "gv_toolbox_base64_encode" = "编码";

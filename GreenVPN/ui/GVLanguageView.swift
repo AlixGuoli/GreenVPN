@@ -69,13 +69,42 @@ struct GVLanguageView: View {
                                     titleKey: "gv_lang_system",
                                     descriptionKey: "gv_lang_system_desc")
                         
+                        languageRow(option: .en,
+                                    titleKey: "gv_lang_en",
+                                    descriptionKey: "gv_lang_en_desc")
+                        
+                        languageRow(option: .ru,
+                                    titleKey: "gv_lang_ru",
+                                    descriptionKey: "gv_lang_ru_desc")
+                        
+                        // 开发阶段保留中文选项，方便调试；上线前可移除
                         languageRow(option: .zhHans,
                                     titleKey: "gv_lang_zh",
                                     descriptionKey: "gv_lang_zh_desc")
                         
-                        languageRow(option: .en,
-                                    titleKey: "gv_lang_en",
-                                    descriptionKey: "gv_lang_en_desc")
+                        languageRow(option: .es,
+                                    titleKey: "gv_lang_es",
+                                    descriptionKey: "gv_lang_es_desc")
+                        
+                        languageRow(option: .ptBR,
+                                    titleKey: "gv_lang_ptbr",
+                                    descriptionKey: "gv_lang_ptbr_desc")
+                        
+                        languageRow(option: .de,
+                                    titleKey: "gv_lang_de",
+                                    descriptionKey: "gv_lang_de_desc")
+                        
+                        languageRow(option: .fr,
+                                    titleKey: "gv_lang_fr",
+                                    descriptionKey: "gv_lang_fr_desc")
+                        
+                        languageRow(option: .ja,
+                                    titleKey: "gv_lang_ja",
+                                    descriptionKey: "gv_lang_ja_desc")
+                        
+                        languageRow(option: .ko,
+                                    titleKey: "gv_lang_ko",
+                                    descriptionKey: "gv_lang_ko_desc")
                     }
                     .padding(.horizontal, 20)
                     .padding(.top, 22)
@@ -114,11 +143,14 @@ struct GVLanguageView: View {
                     Text(appLanguage.localized(titleKey))
                         .font(.system(size: 17, weight: .medium))
                         .foregroundColor(.white)
+                        .multilineTextAlignment(.leading)
                     Text(appLanguage.localized(descriptionKey))
                         .font(.system(size: 13))
                         .foregroundColor(Color.white.opacity(0.70))
+                        .multilineTextAlignment(.leading)
                 }
-                Spacer()
+                .frame(maxWidth: .infinity, alignment: .leading)
+                
                 if appLanguage.option == option {
                     Image(systemName: "checkmark")
                         .font(.system(size: 16, weight: .semibold))

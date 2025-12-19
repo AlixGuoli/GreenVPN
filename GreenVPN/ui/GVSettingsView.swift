@@ -153,6 +153,7 @@ struct GVSettingsView: View {
 // MARK: - 顶部 App 信息卡片
 
 private struct SettingsAppCard: View {
+    @EnvironmentObject private var appLanguage: GVAppLanguage
     var body: some View {
         VStack(spacing: 10) {
             Image("logo")
@@ -166,7 +167,7 @@ private struct SettingsAppCard: View {
                 .font(.system(size: 18, weight: .semibold))
                 .foregroundColor(.white)
             
-            Text("Secure · Stable · Quiet")
+            Text(appLanguage.localized("gv_intro_subtitle", comment: "App subtitle"))
                 .font(.system(size: 13))
                 .foregroundColor(Color.white.opacity(0.7))
         }
@@ -211,7 +212,6 @@ private struct SettingsSimpleRow: View {
                         .font(.system(size: 13))
                         .foregroundColor(Color.white.opacity(0.72))
                         .multilineTextAlignment(.leading)
-                        .lineLimit(2)
                 }
                 
                 Spacer()
@@ -255,7 +255,6 @@ private struct SettingsNavRow: View {
                     .font(.system(size: 13))
                     .foregroundColor(Color.white.opacity(0.72))
                     .multilineTextAlignment(.leading)
-                    .lineLimit(2)
             }
             
             Spacer()
