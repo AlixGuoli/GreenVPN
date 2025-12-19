@@ -35,6 +35,24 @@
 "gv_home_button_connect" = "Connect VPN";
 
 "gv_node_list_title" = "Node List";
+"gv_node_auto_desc" = "Automatically select the best node";
+
+/* Node names */
+"gv_node_auto" = "Auto Select";
+"gv_node_us" = "United States";
+"gv_node_de" = "Germany";
+"gv_node_fr" = "France";
+"gv_node_gb" = "United Kingdom";
+"gv_node_jp" = "Japan";
+"gv_node_ca" = "Canada";
+"gv_node_sg" = "Singapore";
+"gv_node_au" = "Australia";
+"gv_node_kr" = "South Korea";
+
+/* Node load status */
+"gv_node_load_low" = "Low Load";
+"gv_node_load_medium" = "Medium Load";
+"gv_node_load_high" = "High Load";
 
 "gv_disconnect_title" = "Disconnect from VPN?";
 "gv_disconnect_message" = "After disconnecting, you will need to reconnect to continue using VPN.";

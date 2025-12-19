@@ -35,6 +35,24 @@
 "gv_home_button_connect" = "连接 VPN";
 
 "gv_node_list_title" = "节点列表";
+"gv_node_auto_desc" = "自动选择最佳节点";
+
+/* 节点名称 */
+"gv_node_auto" = "自动选择";
+"gv_node_us" = "美国";
+"gv_node_de" = "德国";
+"gv_node_fr" = "法国";
+"gv_node_gb" = "英国";
+"gv_node_jp" = "日本";
+"gv_node_ca" = "加拿大";
+"gv_node_sg" = "新加坡";
+"gv_node_au" = "澳大利亚";
+"gv_node_kr" = "韩国";
+
+/* 节点负载状态 */
+"gv_node_load_low" = "低负载";
+"gv_node_load_medium" = "中负载";
+"gv_node_load_high" = "高负载";
 
 "gv_disconnect_title" = "确认断开连接？";
 "gv_disconnect_message" = "断开后需要重新连接才能使用 VPN。";
