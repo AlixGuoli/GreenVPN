@@ -134,7 +134,7 @@ struct ResultView: View {
     
     private var shareURL: URL {
         // 直接分享 App Store 应用链接
-        return URL(string: "https://apps.apple.com/app/id6755873784")!
+        return URL(string: "https://apps.apple.com/app/id6756861853")!
     }
 }
 

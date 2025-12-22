@@ -146,7 +146,7 @@ struct GVSettingsView: View {
     }
     
     private var shareURL: URL {
-        URL(string: "https://apps.apple.com/app/id6755873784")!
+        URL(string: "https://apps.apple.com/app/id6756861853")!
     }
 }
 
