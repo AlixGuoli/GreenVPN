@@ -32,9 +32,9 @@ struct GreenVPNApp: App {
     var body: some Scene {
         WindowGroup {
             ZStack {
-                ContentView()
-                    .environmentObject(homeSessionModel)
-                    .environmentObject(routeCoordinator)
+            ContentView()
+                .environmentObject(homeSessionModel)
+                .environmentObject(routeCoordinator)
                     .environmentObject(appLanguage)
                     .environmentObject(GVNodeManager.shared)
                     .environmentObject(GVConnectionStatsManager.shared)

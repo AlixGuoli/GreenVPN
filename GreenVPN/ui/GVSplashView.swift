@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Network
 
 struct GVIntroCurtain: View {
     let onFinish: () -> Void
@@ -15,6 +16,8 @@ struct GVIntroCurtain: View {
     @State private var opacity: Double = 0.0
     @State private var progress: Int = 0
     @State private var timer: Timer?
+    @State private var networkMonitor: NWPathMonitor?
+    @State private var networkQueue: DispatchQueue?
     
     var body: some View {
         ZStack {
@@ -45,7 +48,7 @@ struct GVIntroCurtain: View {
                     .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
                     .shadow(color: Color.green.opacity(0.6), radius: 18, x: 0, y: 10)
                 
-                Text(appLanguage.localized("gv_intro_title", comment: "App name on intro screen"))
+                Text(GVAppInfo.displayName)
                     .font(.system(size: 26, weight: .semibold, design: .rounded))
                     .foregroundColor(.white)
                 
@@ -82,6 +85,9 @@ struct GVIntroCurtain: View {
                 opacity = 1.0
             }
             
+            // 检测网络类型，触发网络授权
+            checkNetworkType()
+            
             // 进度从 0 递增到 100
             timer = Timer.scheduledTimer(withTimeInterval: 0.015, repeats: true) { t in
                 if progress >= 100 {
@@ -105,7 +111,47 @@ struct GVIntroCurtain: View {
         .onDisappear {
             timer?.invalidate()
             timer = nil
+            networkMonitor?.cancel()
+            networkMonitor = nil
+            networkQueue = nil
         }
+    }
+    
+    /// 检测当前网络类型（WiFi、蜂窝、无网络），用于触发网络授权
+    private func checkNetworkType() {
+        // 如果已经有监控器在运行，先取消
+        if let existingMonitor = networkMonitor {
+            existingMonitor.cancel()
+        }
+        
+        let monitor = NWPathMonitor()
+        let queue = DispatchQueue(label: "com.greenvpn.network.monitor")
+        
+        monitor.pathUpdateHandler = { [weak monitor] path in
+            // 检测网络类型
+            if path.status == .satisfied {
+                if path.usesInterfaceType(.wifi) {
+                    print("[GVIntroCurtain] 网络类型: WiFi")
+                } else if path.usesInterfaceType(.cellular) {
+                    print("[GVIntroCurtain] 网络类型: 蜂窝网络")
+                } else if path.usesInterfaceType(.wiredEthernet) {
+                    print("[GVIntroCurtain] 网络类型: 有线网络")
+                } else {
+                    print("[GVIntroCurtain] 网络类型: 其他")
+                }
+            } else {
+                print("[GVIntroCurtain] 网络类型: 无网络连接")
+            }
+            
+            // 检测一次后取消监控（避免持续占用资源）
+            monitor?.cancel()
+        }
+        
+        monitor.start(queue: queue)
+        
+        // 保存引用以便后续清理
+        networkMonitor = monitor
+        networkQueue = queue
     }
 }
 

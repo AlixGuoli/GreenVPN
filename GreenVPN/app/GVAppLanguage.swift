@@ -2,7 +2,7 @@
 //  GVAppLanguage.swift
 //  GreenVPN
 //
-//  应用内多语言管理：支持跟随系统 / 简体中文 / English
+//  应用内多语言管理：支持跟随系统 / English / 其他语言
 //
 
 import Foundation
@@ -15,7 +15,6 @@ final class GVAppLanguage: ObservableObject {
         case system = "system"
         case en      = "en"
         case ru      = "ru"
-        case zhHans  = "zh-Hans"   // 开发阶段自用，上线前可移除
         case es      = "es"
         case ptBR    = "pt-BR"
         case de      = "de"
@@ -54,8 +53,6 @@ final class GVAppLanguage: ObservableObject {
             return Locale(identifier: "en")
         case .ru:
             return Locale(identifier: "ru")
-        case .zhHans:
-            return Locale(identifier: "zh-Hans")
         case .es:
             return Locale(identifier: "es")
         case .ptBR:
@@ -81,8 +78,6 @@ final class GVAppLanguage: ObservableObject {
             code = "en"
         case .ru:
             code = "ru"
-        case .zhHans:
-            code = "zh-Hans"
         case .es:
             code = "es"
         case .ptBR:

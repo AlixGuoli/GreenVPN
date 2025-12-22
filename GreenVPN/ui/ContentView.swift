@@ -52,7 +52,7 @@ struct ContentView: View {
                     // 只在“本轮第一次”结果变化时跳转，避免重复 push 同一个结果页
                     if lastOutcomeShown != r {
                         lastOutcomeShown = r
-                        routeCoordinator.showResult(r)
+                    routeCoordinator.showResult(r)
                     }
                 } else {
                     // 结果被清空（例如在结果页点击关闭）后，重置标记，下一轮可以再次展示
@@ -117,15 +117,15 @@ private struct HomeScreen: View {
                             Text(GVAppInfo.displayName)
                                 .font(.system(size: 20, weight: .semibold, design: .rounded))
                                 .foregroundColor(.white)
-                            Text(statusText)
+                    Text(statusText)
                                 .font(.system(size: 13, weight: .medium))
                                 .foregroundColor(Color.white.opacity(0.85))
-                        }
-                        
-                        Spacer()
-                        
+                }
+                
+                Spacer()
+                
                         // 右上角设置按钮（小入口）
-                        Button {
+                Button {
                             routeCoordinator.showSettings()
                         } label: {
                             Image(systemName: "gearshape.fill")
@@ -149,7 +149,7 @@ private struct HomeScreen: View {
                         detailText: detailText,
                         buttonText: buttonText,
                         onButtonTap: {
-                            homeSession.handlePrimaryAction()
+                    homeSession.handlePrimaryAction()
                         }
                     )
                     .padding(.horizontal, 20)
@@ -158,13 +158,13 @@ private struct HomeScreen: View {
                     if let selectedNode = nodeManager.selectedNode {
                         CurrentNodeCard(node: selectedNode)
                             .padding(.horizontal, 20)
-                    }
+                        }
                     
                     // 卡片3：功能入口（2x2 网格）
                     FunctionGridCard(
                         onNodeListTap: {
                             routeCoordinator.showNodeList()
-                        }
+                    }
                     )
                     .padding(.horizontal, 20)
                     
@@ -334,7 +334,7 @@ private struct DisconnectConfirmView: View {
                         .multilineTextAlignment(.center)
                 }
                 .padding(.horizontal, 8)
-                
+            
                 // 按钮：上下排列
                 VStack(spacing: 10) {
                     Button {
@@ -359,12 +359,12 @@ private struct DisconnectConfirmView: View {
                     }
                     
                     Button {
-                        onCancel()
+                    onCancel()
                     } label: {
                         Text(appLanguage.localized("gv_common_cancel", comment: "Cancel"))
                             .font(.system(size: 16, weight: .medium))
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 44)
+                .frame(maxWidth: .infinity)
+                .frame(height: 44)
                             .background(Color.white.opacity(0.08))
                             .foregroundColor(Color.white.opacity(0.92))
                             .cornerRadius(12)
@@ -479,7 +479,7 @@ private struct LaurelRingView: Shape {
                     height: leafHeight
                 )
                 path.addRoundedRect(in: leafRect, cornerSize: CGSize(width: leafHeight / 2, height: leafHeight / 2))
-            }
+                }
         }
         
         addSide(1)

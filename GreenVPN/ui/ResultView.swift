@@ -36,11 +36,11 @@ struct ResultView: View {
                 VStack(spacing: 12) {
                     ResultStatusIcon(result: result)
                     
-                    Text(title)
+            Text(title)
                         .font(.system(size: 22, weight: .semibold))
                         .foregroundColor(.white)
                     
-                    Text(message)
+            Text(message)
                         .font(.system(size: 14))
                         .foregroundColor(Color.white.opacity(0.7))
                         .multilineTextAlignment(.center)
@@ -77,17 +77,17 @@ struct ResultView: View {
                 Spacer()
                 
                 // 底部关闭按钮（自定义，而不是系统返回）
-                Button(action: {
-                    onClose()
-                }) {
+            Button(action: {
+                onClose()
+            }) {
                     Text(appLanguage.localized("gv_common_close", comment: "Close button"))
                         .font(.system(size: 17, weight: .semibold))
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
                         .frame(height: 48)
-                        .background(primaryColor)
+                    .background(primaryColor)
                         .cornerRadius(24)
-                }
+            }
                 .padding(.horizontal, 20)
                 .padding(.bottom, 24)
             }

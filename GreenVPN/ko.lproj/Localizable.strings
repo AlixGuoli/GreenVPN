@@ -1,5 +1,5 @@
 /* Intro curtain */
-"gv_intro_title" = "Green VPN";
+"gv_intro_title" = "Cool VPN";
 "gv_intro_subtitle" = "안전 · 안정 · 조용하게";
 "gv_intro_progress" = "연결 환경 준비 중 %d%%";
 
@@ -105,8 +105,6 @@
 "gv_lang_nav_title" = "언어";
 "gv_lang_system" = "시스템 따르기";
 "gv_lang_system_desc" = "시스템 언어를 인터페이스에 사용합니다";
-"gv_lang_zh" = "중국어(간체)";
-"gv_lang_zh_desc" = "항상 중국어(간체)로 인터페이스를 표시합니다.";
 "gv_lang_en" = "영어";
 "gv_lang_en_desc" = "항상 영어로 인터페이스를 표시합니다.";
 "gv_lang_ru" = "러시아어";

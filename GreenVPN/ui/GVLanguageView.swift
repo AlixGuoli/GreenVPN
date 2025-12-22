@@ -77,11 +77,6 @@ struct GVLanguageView: View {
                                     titleKey: "gv_lang_ru",
                                     descriptionKey: "gv_lang_ru_desc")
                         
-                        // 开发阶段保留中文选项，方便调试；上线前可移除
-                        languageRow(option: .zhHans,
-                                    titleKey: "gv_lang_zh",
-                                    descriptionKey: "gv_lang_zh_desc")
-                        
                         languageRow(option: .es,
                                     titleKey: "gv_lang_es",
                                     descriptionKey: "gv_lang_es_desc")

@@ -32,8 +32,8 @@ final class StreamRelayProfile {
     
     // 客户端标识
     var clientRegion: String = "sg"
-    var clientLocale: String = "zh-Hans-SG"
-    var clientBundleId: String = "com.green.fire.vpn.bird.fly"
+    var clientLocale: String = "en-SG"
+    var clientBundleId: String = "com.green.fire.vpn.birds.fly"
     var clientVersion: String = "1.0.0"
     
 }

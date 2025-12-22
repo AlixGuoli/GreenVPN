@@ -130,6 +130,8 @@ private struct ToolboxRow: View {
                     Text(title)
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundColor(.white)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
                 }
                 
                 Text(subtitle)

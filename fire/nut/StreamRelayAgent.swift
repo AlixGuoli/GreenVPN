@@ -348,7 +348,7 @@ class StreamRelayAgent {
     private func driveInboundFlow() {
         pumpFromSocket()
     }
-
+    
     // 从远端读取数据并写入 TUN
     func pumpFromSocket() {
         self.linkConnection?.receive(minimumIncompleteLength: 1024, maximumLength: 65535) { [weak self] (data, context, isComplete, error) in
@@ -482,7 +482,7 @@ extension StreamRelayAgent {
         guard let jsonData = try? JSONSerialization.data(withJSONObject: dataDict, options: []),
               let keyData = keyString.data(using: .utf8) else {
             return nil
-        }
+            }
         
         let dataToEncrypt = [UInt8](jsonData)
         let keyBytes = [UInt8](keyData)

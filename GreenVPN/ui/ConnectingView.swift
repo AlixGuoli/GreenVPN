@@ -91,7 +91,7 @@ struct ConnectingView: View {
                     .padding(.horizontal, 32)
                 
                 // 小号进度指示（去掉多余的小点，只保留简洁的转圈）
-                ProgressView()
+            ProgressView()
                     .progressViewStyle(CircularProgressViewStyle(tint: .white))
                     .scaleEffect(1.0)
                 
@@ -141,8 +141,8 @@ private struct ConnectingNoiseOverlay: View {
                         Path(ellipseIn: rect),
                         with: .color(Color.white.opacity(alpha))
                     )
-                }
-            }
+    }
+}
         }
     }
 }

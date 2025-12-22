@@ -1,5 +1,5 @@
 /* Intro curtain */
-"gv_intro_title" = "Green VPN";
+"gv_intro_title" = "Cool VPN";
 "gv_intro_subtitle" = "Sicher · Stabil · Dezent";
 "gv_intro_progress" = "Verbindung wird vorbereitet %d%%";
 
@@ -105,8 +105,6 @@
 "gv_lang_nav_title" = "Sprache";
 "gv_lang_system" = "Systemsprache";
 "gv_lang_system_desc" = "Systemsprache für die Benutzeroberfläche verwenden";
-"gv_lang_zh" = "Vereinfachtes Chinesisch";
-"gv_lang_zh_desc" = "Die Oberfläche immer auf vereinfachtem Chinesisch anzeigen.";
 "gv_lang_en" = "Englisch";
 "gv_lang_en_desc" = "Die Oberfläche immer auf Englisch anzeigen.";
 "gv_lang_ru" = "Russisch";
