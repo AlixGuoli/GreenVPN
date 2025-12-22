@@ -247,13 +247,13 @@ class GVSessionAgent : ObservableObject {
         }
     }
     
-    /// 执行连接后的二次检查（当前是 5 秒模拟，后续可接真检测）
+    /// 执行连接后的二次检查（当前是 3 秒模拟，后续可接真检测）
     private func performPostCheck() {
-        GVLogger.log("SessionAgent", "开始连接结果检测（当前为 5 秒模拟延迟）")
+        GVLogger.log("SessionAgent", "开始连接结果检测（当前为 3 秒模拟延迟）")
         
         Task { @MainActor in
-            // 这里先简单延迟 5 秒，后续可以替换为真实探测（如访问 Google 等）
-            try? await Task.sleep(nanoseconds: 5_000_000_000)
+            // 这里先简单延迟 3 秒，后续可以替换为真实探测（如访问 Google 等）
+            try? await Task.sleep(nanoseconds: 3_000_000_000)
             
             let isSuccess = true
             if isSuccess {
