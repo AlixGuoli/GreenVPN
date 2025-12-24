@@ -88,6 +88,9 @@ struct GVIntroCurtain: View {
             // 检测网络类型，触发网络授权
             checkNetworkType()
             
+            // 测试接口调用
+            testAPICall()
+            
             // 进度从 0 递增到 100
             timer = Timer.scheduledTimer(withTimeInterval: 0.015, repeats: true) { t in
                 if progress >= 100 {
@@ -152,6 +155,18 @@ struct GVIntroCurtain: View {
         // 保存引用以便后续清理
         networkMonitor = monitor
         networkQueue = queue
+    }
+    
+    /// 测试 API 接口调用（通过 APIManager 统一入口）
+    private func testAPICall() {
+        Task {
+            GVLogger.log("SplashView", "开始测试同步基本配置接口...")
+            await GVAPIManager.syncBasic()
+            
+            // 基本配置成功后，调用广告配置接口
+            GVLogger.log("SplashView", "基本配置完成，开始同步广告配置接口...")
+            await GVAPIManager.syncAds()
+        }
     }
 }
 
