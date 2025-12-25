@@ -7,12 +7,23 @@
 
 import Foundation
 
+/// 广告跳过按钮配置
+struct GVAdSkipConfig {
+    let location: Int
+    let x: Int
+    let y: Int
+    
+    static let `default` = GVAdSkipConfig(location: 0, x: 20, y: 100)
+}
+
 /// 广告配置数据管理工具（单例）
 final class GVAdsConfigTools {
     
     static let shared = GVAdsConfigTools()
     
     private let adsConfigKey = "GVAdsConfig"
+    private let saveDateKey = "GVAdsConfigSaveDate"
+    private let skipConfigKey = "GVAdsSkipConfig"
     
     private init() {}
     
@@ -21,9 +32,14 @@ final class GVAdsConfigTools {
     func parseAndSave(_ jsonString: String) {
         // 保存原始 JSON
         UserDefaults.standard.set(jsonString, forKey: adsConfigKey)
+        
+        // 保存配置时间
+        let saveDate = Date()
+        UserDefaults.standard.set(saveDate, forKey: saveDateKey)
+        
         UserDefaults.standard.synchronize()
         
-        GVLogger.log("AdsConfigTools", "广告配置已保存")
+        GVLogger.log("AdsConfigTools", "广告配置已保存，保存时间：\(saveDate)")
         
         // 提取并打印关键字段（用于调试）
         GVLogger.log("AdsConfigTools", "Banner unit: \(bannerUnit())")
@@ -58,17 +74,39 @@ final class GVAdsConfigTools {
         return extractAdField(byName: "Yandex_Banner_List", field: "clickDelayPenet") as? Int ?? 15
     }
     
-    /// 获取广告是否关闭（带默认值）
-    func getAdsOff() -> Bool {
-        // 如果后续接口返回 adsOff 字段，可以从这里提取
-        // 目前先返回默认值
-        return true
+    /// 获取广告配置保存时间
+    func timestamp() -> Date? {
+        return UserDefaults.standard.object(forKey: saveDateKey) as? Date
     }
     
-    /// 获取广告配置保存时间
-    func saveDate() -> Date? {
-        // 如果后续需要保存时间，可以从这里提取
-        return nil
+    // MARK: - 跳过按钮配置
+    
+    /// 解析并保存跳过按钮配置
+    /// - Parameter jsonString: 接口返回的 JSON 字符串
+    func parseAndSaveSkipConfig(_ jsonString: String) {
+        // 保存原始 JSON
+        UserDefaults.standard.set(jsonString, forKey: skipConfigKey)
+        UserDefaults.standard.synchronize()
+        
+        GVLogger.log("AdsConfigTools", "跳过按钮配置已保存")
+        
+        // 提取并打印关键字段（用于调试）
+        let config = skipConfig()
+        GVLogger.log("AdsConfigTools", "Skip config - location: \(config.location), x: \(config.x), y: \(config.y)")
+    }
+    
+    /// 获取跳过按钮配置（返回默认值如果不存在）
+    func skipConfig() -> GVAdSkipConfig {
+        guard let jsonString = UserDefaults.standard.string(forKey: skipConfigKey),
+              let data = jsonString.data(using: .utf8),
+              let dict = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+              let pageConfig = dict["pageconfig"] as? [String: Any],
+              let location = pageConfig["location"] as? Int,
+              let x = pageConfig["x"] as? Int,
+              let y = pageConfig["y"] as? Int else {
+            return GVAdSkipConfig.default
+        }
+        return GVAdSkipConfig(location: location, x: x, y: y)
     }
     
     // MARK: - 私有方法：从 adMixed 数组中提取字段

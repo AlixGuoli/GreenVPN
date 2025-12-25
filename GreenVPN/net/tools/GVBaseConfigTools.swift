@@ -78,7 +78,7 @@ final class GVBaseConfigTools {
     // MARK: - 配置保存时间
     
     /// 获取配置保存时间
-    func saveDate() -> Date? {
+    func timestamp() -> Date? {
         return UserDefaults.standard.object(forKey: saveDateKey) as? Date
     }
     

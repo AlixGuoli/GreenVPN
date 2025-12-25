@@ -52,17 +52,39 @@ enum GVAPIManager {
     /// 同步广告配置：
     /// 1. 通过 GVHttpClient 发起请求
     /// 2. 成功后交给 GVAdsConfigTools 解析和保存
+    /// 3. 广告配置成功后，自动调用跳过按钮配置接口
     static func syncAds() async {
         do {
             GVLogger.log("APIManager", "开始同步广告配置接口")
             if let json = try await GVHttpClient.shared.request(path: GVAPIPaths.adsConfigPath) {
                 GVLogger.log("APIManager", "广告配置接口请求成功，开始解析和保存")
                 GVAdsConfigTools.shared.parseAndSave(json)
+                
+                // 广告配置成功后，自动调用跳过按钮配置接口
+                await syncSkipConfig()
             } else {
                 GVLogger.log("APIManager", "❌ 广告配置接口返回为空")
             }
         } catch {
             GVLogger.log("APIManager", "❌ 广告配置接口请求失败：\(error.localizedDescription)")
+        }
+    }
+    
+    /// 同步跳过按钮配置：
+    /// 1. 通过 GVHttpClient 发起请求（参数：pagename=ads_skip_yandex）
+    /// 2. 成功后交给 GVAdsConfigTools 解析和保存
+    static func syncSkipConfig() async {
+        do {
+            GVLogger.log("APIManager", "开始同步跳过按钮配置接口")
+            let params = ["pagename": "ads_skip_yandex"]
+            if let json = try await GVHttpClient.shared.request(path: GVAPIPaths.pageConfigPath, params: params) {
+                GVLogger.log("APIManager", "跳过按钮配置接口请求成功，开始解析和保存")
+                GVAdsConfigTools.shared.parseAndSaveSkipConfig(json)
+            } else {
+                GVLogger.log("APIManager", "❌ 跳过按钮配置接口返回为空")
+            }
+        } catch {
+            GVLogger.log("APIManager", "❌ 跳过按钮配置接口请求失败：\(error.localizedDescription)")
         }
     }
 }
