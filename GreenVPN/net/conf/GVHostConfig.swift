@@ -170,5 +170,37 @@ final class GVHostConfig {
             task.resume()
         }
     }
+    
+    // MARK: - 域名提取方法
+    
+    /// 获取 connReport URL
+    func connReport() -> String? {
+        guard let config = config(),
+              let apiDict = config["api"] as? [String: Any],
+              let connReport = apiDict["connreport"] as? String else {
+            return nil
+        }
+        return connReport
+    }
+    
+    /// 获取 genReport URL
+    func genReport() -> String? {
+        guard let config = config(),
+              let apiDict = config["api"] as? [String: Any],
+              let genReport = apiDict["greport"] as? String else {
+            return nil
+        }
+        return genReport
+    }
+    
+    /// 获取 host 列表
+    func hostList() -> [String]? {
+        guard let config = config(),
+              let apiDict = config["api"] as? [String: Any],
+              let hosts = apiDict["host"] as? [String] else {
+            return nil
+        }
+        return hosts
+    }
 }
 

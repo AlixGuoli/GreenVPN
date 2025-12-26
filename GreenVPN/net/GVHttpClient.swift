@@ -77,7 +77,7 @@ final class GVHttpClient {
         let apiPath = path.hasPrefix("/") ? path : "/\(path)"
         let fullURL = buildFullURL(base: "\(baseURL)\(apiPath)", params: params)
         
-        GVLogger.log("HttpClient", "准备请求域名：\(host)")
+        GVLogger.log("HttpClient", "准备请求域名：\(baseURL)")
         GVLogger.log("HttpClient", "完整 URL：\(fullURL)")
         
         let response = await executeRequest(url: fullURL, hostIndex: index + 1, totalHosts: hosts.count)
@@ -128,10 +128,9 @@ final class GVHttpClient {
                             // 状态码正确
                             if let data = response.data,
                                let result = String(data: data, encoding: .utf8) {
-                                GVLogger.log("HttpClient", "✅ 请求成功，域名：\(urlObj.host ?? "unknown")")
-                                // 打印响应内容（前500字符）
-                                let preview = result.count > 500 ? String(result.prefix(500)) + "..." : result
-                                GVLogger.log("HttpClient", "响应内容：\(preview)")
+                                GVLogger.log("HttpClient", "✅ 请求成功，域名：\(urlObj.absoluteString)")
+                                // 打印完整响应内容
+                                GVLogger.log("HttpClient", "响应内容：\(result)")
                                 continuation.resume(returning: result)
                                 return
                             } else {

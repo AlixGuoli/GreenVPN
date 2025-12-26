@@ -87,6 +87,77 @@ enum GVAPIManager {
             GVLogger.log("APIManager", "❌ 跳过按钮配置接口请求失败：\(error.localizedDescription)")
         }
     }
+    
+    /// 同步服务配置：
+    /// 1. 通过 GVHttpClient 发起请求（参数：group=-1, vip=0）
+    /// 2. 成功后保存加密配置到 UserDefaults
+    /// 3. 解密配置、解析IP、配置直连、保存到Group
+    static func syncServiceConfig() async {
+        do {
+            GVLogger.log("APIManager", "开始同步服务配置接口")
+            let params = ["group": -1, "vip": 0]
+            if let encryptedConfig = try await GVHttpClient.shared.request(path: GVAPIPaths.serviceConfigPath, params: params) {
+                GVLogger.log("APIManager", "服务配置接口请求成功，保存加密配置")
+                GVServiceConfigTools.shared.save(encryptedConfig)
+                GVServiceConfigTools.shared.currentEncrypted = encryptedConfig
+                GVServiceConfigTools.shared.isRemote = true
+                GVLogger.log("APIManager", "✅ 服务配置已保存（来自接口请求）")
+                
+                // 解密、解析IP、配置直连、保存到Group
+                await processServiceConfig(isRemote: true)
+            } else {
+                GVLogger.log("APIManager", "❌ 服务配置接口返回为空，尝试从 UserDefaults 读取")
+                // 接口失败，从 UD 读取
+                if let udConfig = GVServiceConfigTools.shared.current() {
+                    GVServiceConfigTools.shared.currentEncrypted = udConfig
+                    GVServiceConfigTools.shared.isRemote = false
+                    GVLogger.log("APIManager", "✅ 使用 UserDefaults 中的服务配置")
+                    
+                    // 解密、解析IP、配置直连、保存到Group
+                    await processServiceConfig(isRemote: false)
+                } else {
+                    GVLogger.log("APIManager", "❌ UserDefaults 中也没有服务配置")
+                }
+            }
+        } catch {
+            GVLogger.log("APIManager", "❌ 服务配置接口请求失败：\(error.localizedDescription)，尝试从 UserDefaults 读取")
+            // 接口失败，从 UD 读取
+            if let udConfig = GVServiceConfigTools.shared.current() {
+                GVServiceConfigTools.shared.currentEncrypted = udConfig
+                GVServiceConfigTools.shared.isRemote = false
+                GVLogger.log("APIManager", "✅ 使用 UserDefaults 中的服务配置")
+                
+                // 解密、解析IP、配置直连、保存到Group
+                await processServiceConfig(isRemote: false)
+            } else {
+                GVLogger.log("APIManager", "❌ UserDefaults 中也没有服务配置")
+            }
+        }
+    }
+    
+    /// 处理服务配置：解密、解析IP、配置直连、保存到Group
+    private static func processServiceConfig(isRemote: Bool) async {
+        guard let encryptedConfig = GVServiceConfigTools.shared.currentEncrypted else {
+            GVLogger.log("APIManager", "❌ 没有可用的加密配置")
+            return
+        }
+        
+        GVLogger.log("APIManager", "开始解密服务配置")
+        
+        // 解密配置
+        guard let decryptedConfig = GVConfigDecoder.decode(encryptedConfig) else {
+            GVLogger.log("APIManager", "❌ 配置解密失败")
+            return
+        }
+        
+        GVLogger.log("APIManager", "配置解密成功")
+        
+        // 解析IP
+        GVServiceConfigTools.shared.extractAddress(from: decryptedConfig, isRemote: isRemote)
+        
+        // 配置直连并保存到Group
+        await GVServiceConfigTools.shared.transformAndPersist(isRemote: isRemote)
+    }
 }
 
 
