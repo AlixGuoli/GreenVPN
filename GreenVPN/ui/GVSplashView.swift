@@ -166,10 +166,6 @@ struct GVIntroCurtain: View {
             // 基本配置成功后，调用广告配置接口
             GVLogger.log("SplashView", "基本配置完成，开始同步广告配置接口...")
             await GVAPIManager.syncAds()
-            
-            // 所有接口完成后，最后调用服务配置接口
-            GVLogger.log("SplashView", "所有配置完成，开始同步服务配置接口...")
-            await GVAPIManager.syncServiceConfig()
         }
     }
 }

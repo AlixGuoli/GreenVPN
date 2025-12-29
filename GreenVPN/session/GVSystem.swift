@@ -68,7 +68,9 @@ class GVSystem {
             }
             
             self.driver = first
-            completion(true, nil)
+            self.driver.loadFromPreferences { error in
+                completion(true, error)
+            }
         }
     }
     

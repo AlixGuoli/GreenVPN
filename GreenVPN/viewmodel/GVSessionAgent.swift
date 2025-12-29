@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import NetworkExtension
+import Alamofire
 
 // 连接流程结果（供结果页展示使用）
 enum SessionOutcome: Hashable {
@@ -62,7 +63,7 @@ class GVSessionAgent : ObservableObject {
     }
     
     @objc private func vpnStatusDidChange(_ notification: Notification) {
-        backendState = GVSystem.shared().driver.connection.status
+        backendState = systemGV.driver.connection.status
         GVLogger.log("SessionAgent", "收到 NEVPNStatusDidChange 通知，当前状态 rawValue=\(backendState.rawValue)")
     }
    
@@ -74,7 +75,7 @@ class GVSessionAgent : ObservableObject {
     }
     
     /// 内部记录的底层连接状态（直接映射 NEVPNStatus）
-    @Published var backendState: NEVPNStatus = GVSystem.shared().driver.connection.status {
+    @Published var backendState: NEVPNStatus = .invalid {
         didSet {
             guard oldValue != backendState else { return }
             // 统一由映射方法驱动 UI 状态
@@ -174,13 +175,19 @@ class GVSessionAgent : ObservableObject {
             GVLogger.log("SessionAgent", "开始加载 VPN 配置（loadAllFromPreferences）")
             if let error = error {
                 GVLogger.log("SessionAgent", "加载 VPN 配置失败：\(error)")
-            }else{
+            } else {
                 GVLogger.log("SessionAgent", "加载 VPN 配置成功，已获取系统权限，开始连接流程")
+                // 立即更新UI
                 self.awaitingPostCheck = true
                 self.phase = .inProgress
                 self.showingProgress = true
                 self.outcome = nil
-                self.activateTunnel()
+                
+                // 异步获取服务配置，配置获取完成后启动连接
+                Task {
+                    await GVAPIManager.syncServiceConfig()
+                    self.activateTunnel()
+                }
             }
         }
     }
@@ -247,29 +254,120 @@ class GVSessionAgent : ObservableObject {
         }
     }
     
-    /// 执行连接后的二次检查（当前是 3 秒模拟，后续可接真检测）
+    /// 执行连接后的二次检查（网络可达性验证）
     private func performPostCheck() {
-        GVLogger.log("SessionAgent", "开始连接结果检测（当前为 3 秒模拟延迟）")
+        GVLogger.log("SessionAgent", "开始连接结果检测（网络可达性验证）")
         
-        Task { @MainActor in
-            // 这里先简单延迟 3 秒，后续可以替换为真实探测（如访问 Google 等）
-            try? await Task.sleep(nanoseconds: 3_000_000_000)
+        Task {
+            /// 测试服
+            //let isSuccess = true
+            let isSuccess = await checkNetworkReachability()
             
-            let isSuccess = true
-            if isSuccess {
-                markConnectSucceeded()
-            } else {
-                markConnectFailed()
+            await MainActor.run {
+                if isSuccess {
+                    markConnectSucceeded()
+                } else {
+                    markConnectFailed()
+                }
+                awaitingPostCheck = false
             }
-            awaitingPostCheck = false
         }
     }
     
+    /// 网络可达性验证（连接成功后探测）
+    private func checkNetworkReachability() async -> Bool {
+        GVLogger.log("SessionAgent", "ping start")
+        
+        var targets = GVBaseConfigTools.shared.detectionServers() ?? []
+        targets = targets.filter { !$0.isEmpty }
+        if targets.isEmpty {
+            targets = ["https://www.google.com/generate_204", "http://cp.cloudflare.com/generate_204"]
+            GVLogger.log("SessionAgent", "ping use fallback")
+        }
+        GVLogger.log("SessionAgent", "ping targets: \(targets)")
+        
+        let stateQueue = DispatchQueue(label: "corevpn.netcheck.state")
+        var ok = false
+        var taskMap: [URLSessionTask: String] = [:]
+        var completedCount = 0
+        let totalCount = targets.count
+        var hasResumed = false  // 确保 continuation 只 resume 一次
+        
+        // 使用 continuation 来异步等待结果
+        return await withCheckedContinuation { continuation in
+            for url in targets {
+                guard URL(string: url) != nil else { continue }
+                
+                let req = AF.request(url, method: .get)
+                    .response { resp in
+                        stateQueue.sync {
+                            // 如果已经 resume 了，忽略后续回调
+                            if hasResumed {
+                                return
+                            }
+                            
+                            switch resp.result {
+                            case .success:
+                                GVLogger.log("SessionAgent", "ping success: \(url)")
+                                ok = true
+                                hasResumed = true
+                                
+                                // 取消其他所有请求
+                                AF.session.getAllTasks { tasks in
+                                    tasks.forEach { task in
+                                        task.cancel()
+                                    }
+                                }
+                                
+                                // 立即返回成功
+                                continuation.resume(returning: true)
+                                
+                            case .failure(let error):
+                                GVLogger.log("SessionAgent", "ping fail: \(url), \(error.localizedDescription)")
+                                completedCount += 1
+                                
+                                // 如果所有请求都完成了且都失败
+                                if completedCount >= totalCount && !ok && !hasResumed {
+                                    hasResumed = true
+                                    continuation.resume(returning: false)
+                                }
+                            }
+                        }
+                    }
+                
+                if let task = req.task {
+                    stateQueue.sync {
+                        taskMap[task] = url
+                    }
+                    GVLogger.log("SessionAgent", "ping add task: \(url)")
+                }
+            }
+            
+            // 超时保护：10秒后如果还没有结果，返回失败
+            Task {
+                try? await Task.sleep(nanoseconds: 10_000_000_000)
+                stateQueue.sync {
+                    if !ok && !hasResumed {
+                        hasResumed = true
+                        GVLogger.log("SessionAgent", "ping timeout/all fail, cancel rest")
+                        AF.session.getAllTasks { tasks in
+                            tasks.forEach { task in
+                                task.cancel()
+                            }
+                        }
+                        continuation.resume(returning: false)
+                    }
+                }
+            }
+        }
+    }
+    
+
     // 用户确认断开
     func confirmDisconnect() {
         showDisconnectConfirm = false
         pendingUserStop = true
-        showingProgress = true
+        // 断开不需要进连接页，保持 showingProgress = false
         phase = .inProgress
         // 清除之前的结果页状态，避免重复显示
         outcome = nil
@@ -284,6 +382,16 @@ class GVSessionAgent : ObservableObject {
     
     private func markConnectSucceeded() {
         GVLogger.log("SessionAgent", "连接结果：成功，更新 UI 为已连接")
+        
+        // 网络验证成功，保存配置到 UserDefaults（如果来自接口请求）
+        let store = GVServiceConfigTools.shared
+        if store.isRemote {
+            if let serviceConfig = store.currentEncrypted, !serviceConfig.isEmpty {
+                GVLogger.log("SessionAgent", "保存服务配置到 UserDefaults（来自接口请求）")
+                store.save(serviceConfig)
+            }
+        }
+        
         phase = .online
         showingProgress = false
         outcome = .connectSuccess
@@ -384,4 +492,9 @@ class GVSessionAgent : ObservableObject {
         outcome = .connectFail
         awaitingPostCheck = false
     }
+}
+func logDebug(_ items: Any..., prefix: String = "[GreenVPN]", separator: String = " ", terminator: String = "\n") {
+    let message = items.map { "\($0)" }.joined(separator: separator)
+    debugPrint("\(prefix) \(message)", terminator: terminator)
+    //print("\(prefix) \(message)", terminator: terminator)
 }

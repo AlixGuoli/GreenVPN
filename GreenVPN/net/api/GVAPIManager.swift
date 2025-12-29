@@ -97,11 +97,11 @@ enum GVAPIManager {
             GVLogger.log("APIManager", "开始同步服务配置接口")
             let params = ["group": -1, "vip": 0]
             if let encryptedConfig = try await GVHttpClient.shared.request(path: GVAPIPaths.serviceConfigPath, params: params) {
-                GVLogger.log("APIManager", "服务配置接口请求成功，保存加密配置")
-                GVServiceConfigTools.shared.save(encryptedConfig)
+                GVLogger.log("APIManager", "服务配置接口请求成功，暂存到内存（连接成功后再保存到 UserDefaults）")
+                // 只保存到内存，等连接成功后再保存到 UserDefaults
                 GVServiceConfigTools.shared.currentEncrypted = encryptedConfig
                 GVServiceConfigTools.shared.isRemote = true
-                GVLogger.log("APIManager", "✅ 服务配置已保存（来自接口请求）")
+                GVLogger.log("APIManager", "✅ 服务配置已暂存到内存（来自接口请求）")
                 
                 // 解密、解析IP、配置直连、保存到Group
                 await processServiceConfig(isRemote: true)
