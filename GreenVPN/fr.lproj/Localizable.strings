@@ -63,6 +63,7 @@
 "gv_node_de" = "Allemagne";
 "gv_node_fr" = "France";
 "gv_node_gb" = "Royaume‑Uni";
+"gv_node_nl" = "Pays‑Bas";
 "gv_node_jp" = "Japon";
 "gv_node_ca" = "Canada";
 "gv_node_sg" = "Singapour";
@@ -81,6 +82,10 @@
 
 "gv_common_cancel" = "Annuler";
 "gv_common_close" = "Fermer";
+"gv_common_ok" = "OK";
+
+"gv_node_switch_title" = "Déconnexion requise";
+"gv_node_switch_message" = "Veuillez vous déconnecter du VPN avant de changer de nœud.";
 
 "gv_result_nav_title" = "Résultat de la connexion";
 "gv_result_title_connect_success" = "Connecté";

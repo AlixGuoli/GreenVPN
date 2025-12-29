@@ -63,6 +63,7 @@
 "gv_node_de" = "Германия";
 "gv_node_fr" = "Франция";
 "gv_node_gb" = "Великобритания";
+"gv_node_nl" = "Нидерланды";
 "gv_node_jp" = "Япония";
 "gv_node_ca" = "Канада";
 "gv_node_sg" = "Сингапур";
@@ -81,6 +82,10 @@
 
 "gv_common_cancel" = "Отмена";
 "gv_common_close" = "Закрыть";
+"gv_common_ok" = "ОК";
+
+"gv_node_switch_title" = "Необходимо отключиться";
+"gv_node_switch_message" = "Пожалуйста, отключитесь от VPN перед переключением узла.";
 
 "gv_result_nav_title" = "Результат подключения";
 "gv_result_title_connect_success" = "Подключено";

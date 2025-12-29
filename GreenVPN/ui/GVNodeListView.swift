@@ -66,6 +66,11 @@ struct GVNodeListView: View {
         .onAppear {
             // 每次进入节点列表时，随机更新延迟和负载
             nodeManager.refreshNodeStats()
+            
+            // 获取节点列表接口
+            Task {
+                await nodeManager.fetchNodesFromAPI()
+            }
         }
     }
 }
@@ -173,7 +178,9 @@ private struct NodeRowView: View {
             return appLanguage.localized("gv_node_auto", comment: "Auto node name")
         }
         let key = "gv_node_\(node.countryCode.lowercased())"
-        return appLanguage.localized(key, comment: "Node name")
+        let localized = appLanguage.localized(key, comment: "Node name")
+        // 如果本地化字符串不存在（返回的是 key），则使用接口返回的 name
+        return localized == key ? node.name : localized
     }
     
     private var loadText: String {
@@ -193,6 +200,78 @@ private struct NodeRowView: View {
             return .orange.opacity(0.8)
         } else {
             return .red.opacity(0.8)
+        }
+    }
+}
+
+// MARK: - 切换节点提示弹窗
+
+private struct SwitchNodeAlertView: View {
+    let onCancel: () -> Void
+    let onConfirm: () -> Void
+    @EnvironmentObject private var appLanguage: GVAppLanguage
+    
+    var body: some View {
+        ZStack {
+            VStack(spacing: 18) {
+                // 顶部图标
+                ZStack {
+                    Circle()
+                        .fill(Color(red: 0/255, green: 180/255, blue: 120/255).opacity(0.2))
+                        .frame(width: 60, height: 60)
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .font(.system(size: 24, weight: .bold))
+                        .foregroundColor(Color(red: 0/255, green: 210/255, blue: 150/255))
+                }
+                
+                // 标题 & 文案
+                VStack(spacing: 8) {
+                    Text(appLanguage.localized("gv_node_switch_title", comment: "Switch node alert title"))
+                        .font(.system(size: 18, weight: .semibold))
+                        .foregroundColor(.white)
+                    
+                    Text(appLanguage.localized("gv_node_switch_message", comment: "Switch node alert message"))
+                        .font(.system(size: 14))
+                        .foregroundColor(Color.white.opacity(0.8))
+                        .multilineTextAlignment(.center)
+                }
+                .padding(.horizontal, 8)
+            
+                // 按钮：上下排列
+                VStack(spacing: 10) {
+                    Button {
+                        onConfirm()
+                    } label: {
+                        Text(appLanguage.localized("gv_common_ok", comment: "OK"))
+                            .font(.system(size: 16, weight: .semibold))
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 46)
+                            .background(
+                                LinearGradient(
+                                    colors: [
+                                        Color(red: 0/255, green: 210/255, blue: 150/255),
+                                        Color(red: 0/255, green: 180/255, blue: 120/255)
+                                    ],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
+                            )
+                            .foregroundColor(.white)
+                            .cornerRadius(12)
+                    }
+                }
+                .padding(.top, 4)
+            }
+            .padding(.vertical, 20)
+            .padding(.horizontal, 18)
+            .background(
+                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    .fill(Color(red: 6/255, green: 40/255, blue: 45/255))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 20, style: .continuous)
+                            .stroke(Color.white.opacity(0.1), lineWidth: 1)
+                    )
+            )
         }
     }
 }

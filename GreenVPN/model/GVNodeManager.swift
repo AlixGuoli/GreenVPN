@@ -182,5 +182,117 @@ final class GVNodeManager: ObservableObject {
             nodes[index].latency = latency
         }
     }
+    
+    /// 从接口获取节点列表
+    func fetchNodesFromAPI() async {
+        guard let json = await GVAPIManager.fetchCountryNodes() else {
+            return
+        }
+        
+        // 解析 JSON
+        guard let jsonData = json.data(using: .utf8),
+              let jsonObject = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any],
+              let categories = jsonObject["categories"] as? [[String: Any]],
+              let firstCategory = categories.first,
+              let nodesArray = firstCategory["nodes"] as? [[String: Any]] else {
+            GVLogger.log("NodeManager", "❌ 解析节点列表 JSON 失败")
+            return
+        }
+        
+        // 保存当前选中的节点 ID
+        let currentSelectedId = selectedNodeId
+        
+        // 构建新节点列表：auto 节点在最前面
+        var newNodes: [GVNode] = [
+            GVNode(
+                id: -1,
+                name: "自动选择",
+                countryCode: "auto",
+                countryName: "自动",
+                latency: 0,
+                isAvailable: true,
+                load: 0.0
+            )
+        ]
+        
+        // 解析接口返回的节点
+        for nodeDict in nodesArray {
+            guard let id = nodeDict["id"] as? Int,
+                  let name = nodeDict["name"] as? String,
+                  let country = nodeDict["country"] as? String else {
+                continue
+            }
+            
+            let countryCode = country.lowercased()
+            let countryName = countryCodeToName(countryCode) ?? name
+            
+            let node = GVNode(
+                id: id,
+                name: name,
+                countryCode: countryCode,
+                countryName: countryName,
+                latency: Int.random(in: 5...120),
+                isAvailable: true,
+                load: Double.random(in: 0.05...0.35)
+            )
+            
+            newNodes.append(node)
+        }
+        
+        // 更新节点列表
+        nodes = newNodes
+        
+        // 检查已选节点是否还在新列表中
+        if let selectedId = currentSelectedId,
+           !nodes.contains(where: { $0.id == selectedId }) {
+            // 已选节点不在新列表中，重置为 auto
+            selectedNodeId = -1
+        }
+    }
+    
+    /// 国家代码到国家名称的映射
+    private func countryCodeToName(_ code: String) -> String? {
+        let mapping: [String: String] = [
+            "us": "美国",
+            "de": "德国",
+            "fr": "法国",
+            "gb": "英国",
+            "nl": "荷兰",
+            "jp": "日本",
+            "ca": "加拿大",
+            "sg": "新加坡",
+            "au": "澳大利亚",
+            "kr": "韩国",
+            "in": "印度",
+            "br": "巴西",
+            "ru": "俄罗斯",
+            "cn": "中国",
+            "hk": "香港",
+            "tw": "台湾",
+            "es": "西班牙",
+            "it": "意大利",
+            "ch": "瑞士",
+            "se": "瑞典",
+            "no": "挪威",
+            "dk": "丹麦",
+            "fi": "芬兰",
+            "pl": "波兰",
+            "at": "奥地利",
+            "be": "比利时",
+            "ie": "爱尔兰",
+            "nz": "新西兰",
+            "mx": "墨西哥",
+            "ar": "阿根廷",
+            "za": "南非",
+            "tr": "土耳其",
+            "th": "泰国",
+            "my": "马来西亚",
+            "id": "印度尼西亚",
+            "ph": "菲律宾",
+            "vn": "越南"
+        ]
+        
+        return mapping[code.lowercased()]
+    }
 }
 

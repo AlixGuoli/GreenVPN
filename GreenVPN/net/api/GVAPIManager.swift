@@ -89,13 +89,16 @@ enum GVAPIManager {
     }
     
     /// 同步服务配置：
-    /// 1. 通过 GVHttpClient 发起请求（参数：group=-1, vip=0）
+    /// 1. 通过 GVHttpClient 发起请求（参数：group=节点ID, vip=0）
     /// 2. 成功后保存加密配置到 UserDefaults
     /// 3. 解密配置、解析IP、配置直连、保存到Group
     static func syncServiceConfig() async {
         do {
             GVLogger.log("APIManager", "开始同步服务配置接口")
-            let params = ["group": -1, "vip": 0]
+            // 获取当前选中的节点 ID，没有则使用 -1
+            let nodeId = GVNodeManager.shared.selectedNodeId ?? -1
+            GVLogger.log("APIManager", "使用节点 ID: \(nodeId)")
+            let params = ["group": nodeId, "vip": 0]
             if let encryptedConfig = try await GVHttpClient.shared.request(path: GVAPIPaths.serviceConfigPath, params: params) {
                 GVLogger.log("APIManager", "服务配置接口请求成功，暂存到内存（连接成功后再保存到 UserDefaults）")
                 // 只保存到内存，等连接成功后再保存到 UserDefaults
@@ -157,6 +160,26 @@ enum GVAPIManager {
         
         // 配置直连并保存到Group
         await GVServiceConfigTools.shared.transformAndPersist(isRemote: isRemote)
+    }
+    
+    /// 获取节点列表：
+    /// 1. 通过 GVHttpClient 发起请求（使用基础参数：version, pk, country, language, uid）
+    /// 2. 返回节点列表 JSON 字符串
+    static func fetchCountryNodes() async -> String? {
+        do {
+            GVLogger.log("APIManager", "开始获取节点列表接口")
+            // 基础参数已包含 version, pk, country, language, uid，无需额外传参
+            if let json = try await GVHttpClient.shared.request(path: GVAPIPaths.countryNodesPath) {
+                GVLogger.log("APIManager", "✅ 节点列表接口请求成功")
+                return json
+            } else {
+                GVLogger.log("APIManager", "❌ 节点列表接口返回为空")
+                return nil
+            }
+        } catch {
+            GVLogger.log("APIManager", "❌ 节点列表接口请求失败：\(error.localizedDescription)")
+            return nil
+        }
     }
 }
 

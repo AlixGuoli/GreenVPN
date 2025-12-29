@@ -63,6 +63,7 @@
 "gv_node_de" = "ドイツ";
 "gv_node_fr" = "フランス";
 "gv_node_gb" = "イギリス";
+"gv_node_nl" = "オランダ";
 "gv_node_jp" = "日本";
 "gv_node_ca" = "カナダ";
 "gv_node_sg" = "シンガポール";
@@ -81,6 +82,10 @@
 
 "gv_common_cancel" = "キャンセル";
 "gv_common_close" = "閉じる";
+"gv_common_ok" = "OK";
+
+"gv_node_switch_title" = "切断が必要";
+"gv_node_switch_message" = "ノードを切り替える前に、VPNから切断してください。";
 
 "gv_result_nav_title" = "接続結果";
 "gv_result_title_connect_success" = "接続成功";

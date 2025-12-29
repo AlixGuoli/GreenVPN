@@ -63,6 +63,7 @@
 "gv_node_de" = "독일";
 "gv_node_fr" = "프랑스";
 "gv_node_gb" = "영국";
+"gv_node_nl" = "네덜란드";
 "gv_node_jp" = "일본";
 "gv_node_ca" = "캐나다";
 "gv_node_sg" = "싱가포르";
@@ -81,6 +82,10 @@
 
 "gv_common_cancel" = "취소";
 "gv_common_close" = "닫기";
+"gv_common_ok" = "확인";
+
+"gv_node_switch_title" = "연결 해제 필요";
+"gv_node_switch_message" = "노드를 전환하기 전에 VPN에서 연결을 해제해주세요.";
 
 "gv_result_nav_title" = "연결 결과";
 "gv_result_title_connect_success" = "연결 성공";

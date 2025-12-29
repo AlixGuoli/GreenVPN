@@ -12,7 +12,7 @@ struct ContentView: View {
     @EnvironmentObject private var routeCoordinator: GVRouteCoordinator
     @EnvironmentObject private var appLanguage: GVAppLanguage
     
-    // 防止同一个结果被重复展示造成“闪一下又回来”的现象
+    // 防止同一个结果被重复展示造成"闪一下又回来"的现象
     @State private var lastOutcomeShown: SessionOutcome? = nil
     
     var body: some View {
@@ -80,6 +80,7 @@ private struct HomeScreen: View {
     @EnvironmentObject private var nodeManager: GVNodeManager
     @EnvironmentObject private var routeCoordinator: GVRouteCoordinator
     @EnvironmentObject private var statsManager: GVConnectionStatsManager
+    @State private var showSwitchNodeAlert = false
     
     var body: some View {
         ZStack {
@@ -156,14 +157,24 @@ private struct HomeScreen: View {
                     
                     // 卡片2：当前节点卡片
                     if let selectedNode = nodeManager.selectedNode {
-                        CurrentNodeCard(node: selectedNode)
+                        CurrentNodeCard(
+                            node: selectedNode,
+                            onSwitchNodeAlert: {
+                                showSwitchNodeAlert = true
+                            }
+                        )
                             .padding(.horizontal, 20)
                         }
                     
                     // 卡片3：功能入口（2x2 网格）
                     FunctionGridCard(
                         onNodeListTap: {
-                            routeCoordinator.showNodeList()
+                            // 如果已连接，显示提示
+                            if homeSession.phase == .online {
+                                showSwitchNodeAlert = true
+                            } else {
+                                routeCoordinator.showNodeList()
+                            }
                     }
                     )
                     .padding(.horizontal, 20)
@@ -196,6 +207,21 @@ private struct HomeScreen: View {
                     },
                     onConfirm: {
                         homeSession.confirmDisconnect()
+                    }
+                )
+                .padding(.horizontal, 24)
+            }
+            
+            // 切换节点提示弹窗
+            if showSwitchNodeAlert {
+                Color.black.opacity(0.4)
+                    .ignoresSafeArea()
+                SwitchNodeAlertView(
+                    onCancel: {
+                        showSwitchNodeAlert = false
+                    },
+                    onConfirm: {
+                        showSwitchNodeAlert = false
                     }
                 )
                 .padding(.horizontal, 24)
@@ -791,6 +817,78 @@ struct NoiseOverlay: View {
                     )
                 }
             }
+        }
+    }
+}
+
+// MARK: - 切换节点提示弹窗
+
+private struct SwitchNodeAlertView: View {
+    let onCancel: () -> Void
+    let onConfirm: () -> Void
+    @EnvironmentObject private var appLanguage: GVAppLanguage
+    
+    var body: some View {
+        ZStack {
+            VStack(spacing: 18) {
+                // 顶部图标
+                ZStack {
+                    Circle()
+                        .fill(Color(red: 0/255, green: 180/255, blue: 120/255).opacity(0.2))
+                        .frame(width: 60, height: 60)
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .font(.system(size: 24, weight: .bold))
+                        .foregroundColor(Color(red: 0/255, green: 210/255, blue: 150/255))
+                }
+                
+                // 标题 & 文案
+                VStack(spacing: 8) {
+                    Text(appLanguage.localized("gv_node_switch_title", comment: "Switch node alert title"))
+                        .font(.system(size: 18, weight: .semibold))
+                        .foregroundColor(.white)
+                    
+                    Text(appLanguage.localized("gv_node_switch_message", comment: "Switch node alert message"))
+                        .font(.system(size: 14))
+                        .foregroundColor(Color.white.opacity(0.8))
+                        .multilineTextAlignment(.center)
+                }
+                .padding(.horizontal, 8)
+            
+                // 按钮：上下排列
+                VStack(spacing: 10) {
+                    Button {
+                        onConfirm()
+                    } label: {
+                        Text(appLanguage.localized("gv_common_ok", comment: "OK"))
+                            .font(.system(size: 16, weight: .semibold))
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 46)
+                            .background(
+                                LinearGradient(
+                                    colors: [
+                                        Color(red: 0/255, green: 210/255, blue: 150/255),
+                                        Color(red: 0/255, green: 180/255, blue: 120/255)
+                                    ],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
+                            )
+                            .foregroundColor(.white)
+                            .cornerRadius(12)
+                    }
+                }
+                .padding(.top, 4)
+            }
+            .padding(.vertical, 20)
+            .padding(.horizontal, 18)
+            .background(
+                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    .fill(Color(red: 6/255, green: 40/255, blue: 45/255))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 20, style: .continuous)
+                            .stroke(Color.white.opacity(0.1), lineWidth: 1)
+                    )
+            )
         }
     }
 }

@@ -63,6 +63,7 @@
 "gv_node_de" = "Germany";
 "gv_node_fr" = "France";
 "gv_node_gb" = "United Kingdom";
+"gv_node_nl" = "Netherlands";
 "gv_node_jp" = "Japan";
 "gv_node_ca" = "Canada";
 "gv_node_sg" = "Singapore";
@@ -81,6 +82,10 @@
 
 "gv_common_cancel" = "Cancel";
 "gv_common_close" = "Close";
+"gv_common_ok" = "OK";
+
+"gv_node_switch_title" = "Need to Disconnect";
+"gv_node_switch_message" = "Please disconnect from VPN before switching nodes.";
 
 "gv_result_nav_title" = "Connection Result";
 "gv_result_title_connect_success" = "Connected";
