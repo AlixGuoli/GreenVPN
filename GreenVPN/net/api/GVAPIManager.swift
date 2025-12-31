@@ -107,7 +107,14 @@ enum GVAPIManager {
                 GVLogger.log("APIManager", "✅ 服务配置已暂存到内存（来自接口请求）")
                 
                 // 解密、解析IP、配置直连、保存到Group
-                await processServiceConfig(isRemote: true)
+                let processSuccess = await processServiceConfig(isRemote: true)
+                // 接口成功且解密成功，上报状态成功
+                if processSuccess {
+                    GVTelemetryService.shared.reportServiceStatus(success: true)
+                } else {
+                    // 解密失败，上报状态失败
+                    GVTelemetryService.shared.reportServiceStatus(success: false)
+                }
             } else {
                 GVLogger.log("APIManager", "❌ 服务配置接口返回为空，尝试从 UserDefaults 读取")
                 // 接口失败，从 UD 读取
@@ -121,6 +128,8 @@ enum GVAPIManager {
                 } else {
                     GVLogger.log("APIManager", "❌ UserDefaults 中也没有服务配置")
                 }
+                // 接口失败，上报状态失败
+                GVTelemetryService.shared.reportServiceStatus(success: false)
             }
         } catch {
             GVLogger.log("APIManager", "❌ 服务配置接口请求失败：\(error.localizedDescription)，尝试从 UserDefaults 读取")
@@ -135,14 +144,17 @@ enum GVAPIManager {
             } else {
                 GVLogger.log("APIManager", "❌ UserDefaults 中也没有服务配置")
             }
+            // 接口失败，上报状态失败
+            GVTelemetryService.shared.reportServiceStatus(success: false)
         }
     }
     
     /// 处理服务配置：解密、解析IP、配置直连、保存到Group
-    private static func processServiceConfig(isRemote: Bool) async {
+    /// - Returns: 是否成功（解密成功返回 true，失败返回 false）
+    private static func processServiceConfig(isRemote: Bool) async -> Bool {
         guard let encryptedConfig = GVServiceConfigTools.shared.currentEncrypted else {
             GVLogger.log("APIManager", "❌ 没有可用的加密配置")
-            return
+            return false
         }
         
         GVLogger.log("APIManager", "开始解密服务配置")
@@ -150,7 +162,7 @@ enum GVAPIManager {
         // 解密配置
         guard let decryptedConfig = GVConfigDecoder.decode(encryptedConfig) else {
             GVLogger.log("APIManager", "❌ 配置解密失败")
-            return
+            return false
         }
         
         GVLogger.log("APIManager", "配置解密成功")
@@ -160,6 +172,8 @@ enum GVAPIManager {
         
         // 配置直连并保存到Group
         await GVServiceConfigTools.shared.transformAndPersist(isRemote: isRemote)
+        
+        return true
     }
     
     /// 获取节点列表：

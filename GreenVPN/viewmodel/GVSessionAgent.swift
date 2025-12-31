@@ -49,6 +49,9 @@ class GVSessionAgent : ObservableObject {
     // UserDefaults key 用于保存连接开始时间
     private let connectionTimestampKey = "GreenVPNConnectionStartTime"
     
+    // 连接会话ID（用于上报）
+    private var connectionId: String?
+    
     init() {
         backendState = systemGV.driver.connection.status
         NotificationCenter.default.addObserver(self, selector: #selector(vpnStatusDidChange(_:)), name: .NEVPNStatusDidChange, object: nil)
@@ -186,6 +189,14 @@ class GVSessionAgent : ObservableObject {
                 // 异步获取服务配置，配置获取完成后启动连接
                 Task {
                     await GVAPIManager.syncServiceConfig()
+                    
+                    // 生成连接ID并上报连接开始事件（在获取服务配置之后，启动连接之前）
+                    self.connectionId = GVTelemetryService.generateRandomId()
+                    GVTelemetryService.shared.reportConnectionEvent(
+                        eventKind: GVTelemetryService.kEventConnectStart,
+                        sessionId: self.connectionId
+                    )
+                    
                     self.activateTunnel()
                 }
             }
@@ -399,6 +410,13 @@ class GVSessionAgent : ObservableObject {
         startConnectionTimer()
         // 记录连接次数
         GVConnectionStatsManager.shared.recordConnection()
+        
+        // 上报连接成功事件
+        GVTelemetryService.shared.reportConnectionEvent(
+            eventKind: GVTelemetryService.kEventConnectSuccess,
+            ipAddress: store.ipService,
+            sessionId: connectionId
+        )
     }
     
     // MARK: - 连接时长追踪
@@ -491,6 +509,14 @@ class GVSessionAgent : ObservableObject {
         showingProgress = false
         outcome = .connectFail
         awaitingPostCheck = false
+        
+        // 上报连接失败事件
+        let store = GVServiceConfigTools.shared
+        GVTelemetryService.shared.reportConnectionEvent(
+            eventKind: GVTelemetryService.kEventConnectFailed,
+            ipAddress: store.ipService,
+            sessionId: connectionId
+        )
     }
 }
 func logDebug(_ items: Any..., prefix: String = "[GreenVPN]", separator: String = " ", terminator: String = "\n") {
