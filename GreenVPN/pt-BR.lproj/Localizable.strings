@@ -159,4 +159,7 @@
 "gv_toolbox_base64_decode" = "Decodificar";
 "gv_toolbox_base64_error" = "Falha ao decodificar: insira um texto Base64 válido.";
 
+/* Banner ad skip button */
+"gv_banner_wait_text" = "Pular anúncio em %ld s";
+"gv_banner_skip_text" = "Pular";
 

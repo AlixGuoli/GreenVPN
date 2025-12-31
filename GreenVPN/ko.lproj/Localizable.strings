@@ -163,4 +163,7 @@
 "gv_toolbox_base64_decode" = "디코딩";
 "gv_toolbox_base64_error" = "디코딩 실패: 올바른 Base64 텍스트를 입력해 주세요.";
 
+/* Banner ad skip button */
+"gv_banner_wait_text" = "%ld초 후 광고 건너뛰기";
+"gv_banner_skip_text" = "건너뛰기";
 

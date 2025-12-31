@@ -163,4 +163,7 @@
 "gv_toolbox_base64_decode" = "デコード";
 "gv_toolbox_base64_error" = "デコードに失敗しました。正しい Base64 テキストを入力してください。";
 
+/* Banner ad skip button */
+"gv_banner_wait_text" = "広告を%ld秒後にスキップ";
+"gv_banner_skip_text" = "スキップ";
 

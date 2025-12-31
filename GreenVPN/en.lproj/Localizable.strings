@@ -163,3 +163,7 @@
 "gv_toolbox_base64_decode" = "Decode";
 "gv_toolbox_base64_error" = "Decode failed: please input valid Base64 text.";
 
+/* Banner ad skip button */
+"gv_banner_wait_text" = "Skip Ad %ldS";
+"gv_banner_skip_text" = "Skip Ad";
+

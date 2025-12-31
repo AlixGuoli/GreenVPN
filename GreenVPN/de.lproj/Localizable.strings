@@ -159,4 +159,7 @@
 "gv_toolbox_base64_decode" = "Dekodieren";
 "gv_toolbox_base64_error" = "Dekodierung fehlgeschlagen: Bitte gültigen Base64‑Text eingeben.";
 
+/* Banner ad skip button */
+"gv_banner_wait_text" = "Werbung in %ld s überspringen";
+"gv_banner_skip_text" = "Überspringen";
 

@@ -163,4 +163,7 @@
 "gv_toolbox_base64_decode" = "Декодировать";
 "gv_toolbox_base64_error" = "Не удалось декодировать: введите корректный текст Base64.";
 
+/* Banner ad skip button */
+"gv_banner_wait_text" = "Пропустить рекламу через %ld";
+"gv_banner_skip_text" = "Пропустить";
 

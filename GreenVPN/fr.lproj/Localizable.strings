@@ -163,4 +163,7 @@
 "gv_toolbox_base64_decode" = "Décoder";
 "gv_toolbox_base64_error" = "Échec du décodage : veuillez saisir un texte Base64 valide.";
 
+/* Banner ad skip button */
+"gv_banner_wait_text" = "Passer la pub dans %ld s";
+"gv_banner_skip_text" = "Passer";
 
