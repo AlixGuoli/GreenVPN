@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Network
+import Alamofire
 
 struct GVIntroCurtain: View {
     let onFinish: () -> Void
@@ -14,10 +15,13 @@ struct GVIntroCurtain: View {
     
     @State private var scale: CGFloat = 0.8
     @State private var opacity: Double = 0.0
-    @State private var progress: Int = 0
-    @State private var timer: Timer?
+    @State private var progress: Int = 0           // 0 ~ 100
+    @State private var isDone = false              // 启动流程是否完成（接口成功或超时）
+    @State private var progressTimer: Timer?
     @State private var networkMonitor: NWPathMonitor?
     @State private var networkQueue: DispatchQueue?
+    
+    private let maxWaitTime: TimeInterval = 20.0
     
     var body: some View {
         ZStack {
@@ -58,21 +62,37 @@ struct GVIntroCurtain: View {
                     .padding(.top, 4)
                 
                 VStack(spacing: 6) {
-                    ZStack(alignment: .leading) {
-                        Capsule()
-                            .fill(Color.white.opacity(0.15))
-                            .frame(height: 4)
-                        Capsule()
-                            .fill(Color.green)
-                            .frame(width: CGFloat(progress) / 100.0 * 180.0,
-                                   height: 4)
+                    GeometryReader { geo in
+                        ZStack(alignment: .leading) {
+                            Capsule()
+                                .fill(Color.white.opacity(0.15))
+                                .frame(height: 6)
+                            Capsule()
+                                .fill(
+                                    LinearGradient(
+                                        colors: [
+                                            Color(red: 0/255, green: 210/255, blue: 150/255),
+                                            Color(red: 0/255, green: 180/255, blue: 120/255)
+                                        ],
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    )
+                                )
+                                .frame(width: geo.size.width * CGFloat(progress) / 100.0, height: 6)
+                        }
                     }
-                    .frame(width: 180, alignment: .leading)
+                    .frame(height: 6)
+                    .frame(width: 180)
                     
-                    Text(String(format: appLanguage.localized("gv_intro_progress", comment: "Intro loading progress"),
-                                progress))
-                        .font(.system(size: 12))
-                        .foregroundColor(Color.white.opacity(0.7))
+                    // 百分比文案：直接使用 0~100 的整数
+                    Text(
+                        String(
+                            format: appLanguage.localized("gv_intro_progress", comment: "Intro loading progress"),
+                            progress
+                        )
+                    )
+                    .font(.system(size: 12))
+                    .foregroundColor(Color.white.opacity(0.7))
                 }
                 .padding(.top, 18)
             }
@@ -85,89 +105,109 @@ struct GVIntroCurtain: View {
                 opacity = 1.0
             }
             
-            // 检测网络类型，触发网络授权
-            checkNetworkType()
-            
-            // 测试接口调用
-            testAPICall()
-            
-            // 进度从 0 递增到 100
-            timer = Timer.scheduledTimer(withTimeInterval: 0.015, repeats: true) { t in
-                if progress >= 100 {
-                    t.invalidate()
-                    timer = nil
-                    return
-                }
-                progress += 1
-            }
-            
-            // 启动页停留时间，可按需要微调（与进度条时长保持大致一致）
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.6) {
-                withAnimation(.easeOut(duration: 0.25)) {
-                    opacity = 0.0
-                }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-                    onFinish()
-                }
+            beginSetup()
+        }
+        .onChange(of: isDone) { done in
+            // 只有在标记完成时，才统一处理进度和跳转
+            if done {
+                completeSplash()
             }
         }
         .onDisappear {
-            timer?.invalidate()
-            timer = nil
+            progressTimer?.invalidate()
+            progressTimer = nil
             networkMonitor?.cancel()
             networkMonitor = nil
             networkQueue = nil
         }
     }
     
-    /// 检测当前网络类型（WiFi、蜂窝、无网络），用于触发网络授权
-    private func checkNetworkType() {
-        // 如果已经有监控器在运行，先取消
-        if let existingMonitor = networkMonitor {
-            existingMonitor.cancel()
-        }
+    // MARK: - 初始化流程
+    
+    private func beginSetup() {
+        // 重置进度
+        progress = 0
         
-        let monitor = NWPathMonitor()
-        let queue = DispatchQueue(label: "com.greenvpn.network.monitor")
-        
-        monitor.pathUpdateHandler = { [weak monitor] path in
-            // 检测网络类型
-            if path.status == .satisfied {
-                if path.usesInterfaceType(.wifi) {
-                    print("[GVIntroCurtain] 网络类型: WiFi")
-                } else if path.usesInterfaceType(.cellular) {
-                    print("[GVIntroCurtain] 网络类型: 蜂窝网络")
-                } else if path.usesInterfaceType(.wiredEthernet) {
-                    print("[GVIntroCurtain] 网络类型: 有线网络")
-                } else {
-                    print("[GVIntroCurtain] 网络类型: 其他")
-                }
+        // 启动 20 秒进度条：每 0.2 秒 +1，一共 100 步
+        progressTimer?.invalidate()
+        let stepInterval = maxWaitTime / 100.0
+        progressTimer = Timer.scheduledTimer(withTimeInterval: stepInterval, repeats: true) { timer in
+            if progress >= 100 {
+                timer.invalidate()
+                progressTimer = nil
             } else {
-                print("[GVIntroCurtain] 网络类型: 无网络连接")
+                progress += 1
             }
-            
-            // 检测一次后取消监控（避免持续占用资源）
-            monitor?.cancel()
+        }
+        if let timer = progressTimer {
+            RunLoop.current.add(timer, forMode: .common)
         }
         
-        monitor.start(queue: queue)
+        // 检查网络并初始化
+        checkNetwork()
         
-        // 保存引用以便后续清理
-        networkMonitor = monitor
-        networkQueue = queue
+        // 20秒超时
+        DispatchQueue.main.asyncAfter(deadline: .now() + maxWaitTime) {
+            if !isDone {
+                GVLogger.log("SplashView", "⏱️ 20秒超时，进入主页")
+                isDone = true
+            }
+        }
     }
     
-    /// 测试 API 接口调用（通过 APIManager 统一入口）
-    private func testAPICall() {
+    private func checkNetwork() {
+        let netMgr = NetworkReachabilityManager()
+        netMgr?.startListening(onUpdatePerforming: { status in
+            switch status {
+            case .reachable(.ethernetOrWiFi), .reachable(.cellular):
+                GVLogger.log("SplashView", "🌐 网络可用，开始初始化")
+                Task {
+                    await setupConfig()
+                    DispatchQueue.main.async {
+                        // 接口完成：标记完成，剩下交给 completeSplash 处理
+                        if !isDone {
+                            isDone = true
+                        }
+                    }
+                }
+                netMgr?.stopListening()
+            case .notReachable:
+                break
+            case .unknown:
+                break
+            }
+        })
+    }
+    
+    private func setupConfig() async {
+        // 1. 先获取基础配置（必须等待完成）
+        GVLogger.log("SplashView", "开始请求基础配置")
+        await GVAPIManager.syncBasic()
+        GVLogger.log("SplashView", "基础配置请求完成")
+        
+        // 2. 同步广告配置（不等待完成，后台进行）
         Task {
-            GVLogger.log("SplashView", "开始测试同步基本配置接口...")
-            await GVAPIManager.syncBasic()
-            
-            // 基本配置成功后，调用广告配置接口
-            GVLogger.log("SplashView", "基本配置完成，开始同步广告配置接口...")
             await GVAPIManager.syncAds()
         }
     }
+    
+    // MARK: - 完成启动页
+    
+    /// 接口完成或超时之后统一调用：先把进度条补到 100%，再进入主页
+    private func completeSplash() {
+        // 确保进度条到100%
+        if progress < 100 {
+            withAnimation(.easeOut(duration: 0.3)) {
+                progress = 100
+            }
+        }
+        
+        // 等待进度条动画完成后再进入主页（确保能看到 0 -> 100 的效果）
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+            onFinish()
+        }
+    }
+    
 }
 
 struct GVIntroCurtain_Previews: PreviewProvider {
