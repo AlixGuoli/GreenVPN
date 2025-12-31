@@ -93,6 +93,10 @@ final class GVBaseConfigTools {
     
     /// 从 UserDefaults 读取本地保存的 Git 版本号
     func localGitVersion() -> Int {
+        // 如果 key 不存在，返回默认值 1（避免第一次进入时触发不必要的 Git 更新）
+        if UserDefaults.standard.object(forKey: localGitVersionKey) == nil {
+            return 1
+        }
         return UserDefaults.standard.integer(forKey: localGitVersionKey)
     }
     

@@ -273,8 +273,6 @@ class GVSessionAgent : ObservableObject {
         GVLogger.log("SessionAgent", "开始连接结果检测（网络可达性验证）")
         
         Task {
-            /// 测试服
-            //let isSuccess = true
             let isSuccess = await checkNetworkReachability()
             
             await MainActor.run {
