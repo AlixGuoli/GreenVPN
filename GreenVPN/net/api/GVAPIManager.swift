@@ -195,6 +195,51 @@ enum GVAPIManager {
             return nil
         }
     }
+    
+    /// 检查基础配置和广告配置是否过期，过期则后台刷新
+    static func validateConfigCache(
+        baseExpiry: TimeInterval = 6 * 3600,
+        adsExpiry: TimeInterval = 4 * 3600
+    ) {
+        // 基础配置：超过 baseExpiry 则重新获取
+        refreshConfigIfNeeded(
+            lastSave: GVBaseConfigTools.shared.timestamp(),
+            expiry: baseExpiry,
+            refreshAction: { await syncBasic() },
+            configName: "基础配置"
+        )
+        
+        // 广告配置：超过 adsExpiry 则重新获取
+        refreshConfigIfNeeded(
+            lastSave: GVAdsConfigTools.shared.timestamp(),
+            expiry: adsExpiry,
+            refreshAction: { await syncAds() },
+            configName: "广告配置"
+        )
+    }
+    
+    private static func refreshConfigIfNeeded(
+        lastSave: Date?,
+        expiry: TimeInterval,
+        refreshAction: @escaping () async -> Void,
+        configName: String
+    ) {
+        let currentTime = Date()
+        
+        if let timestamp = lastSave {
+            if currentTime.timeIntervalSince(timestamp) >= expiry {
+                GVLogger.log("[Config]", "\(configName)超过阈值，触发刷新")
+                Task {
+                    await refreshAction()
+                }
+            }
+        } else {
+            GVLogger.log("[Config]", "未找到\(configName)时间戳，首次拉取")
+            Task {
+                await refreshAction()
+            }
+        }
+    }
 }
 
 

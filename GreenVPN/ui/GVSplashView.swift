@@ -11,17 +11,24 @@ import Alamofire
 
 struct GVIntroCurtain: View {
     let onFinish: () -> Void
+    let onFinishWithAd: (() -> Void)?
     @EnvironmentObject private var appLanguage: GVAppLanguage
     
     @State private var scale: CGFloat = 0.8
     @State private var opacity: Double = 0.0
     @State private var progress: Int = 0           // 0 ~ 100
     @State private var isDone = false              // 启动流程是否完成（接口成功或超时）
+    @State private var mediaReady = false          // 媒体资源是否加载成功
     @State private var progressTimer: Timer?
     @State private var networkMonitor: NWPathMonitor?
     @State private var networkQueue: DispatchQueue?
     
     private let maxWaitTime: TimeInterval = 20.0
+    
+    init(onFinish: @escaping () -> Void, onFinishWithAd: (() -> Void)? = nil) {
+        self.onFinish = onFinish
+        self.onFinishWithAd = onFinishWithAd
+    }
     
     var body: some View {
         ZStack {
@@ -189,22 +196,96 @@ struct GVIntroCurtain: View {
         Task {
             await GVAPIManager.syncAds()
         }
+        
+        // 3. 加载媒体资源（同时加载 Banner 和 Interstitial，优先等待 Banner）
+        let resourceReady = await loadMediaResources()
+        DispatchQueue.main.async {
+            if !isDone {
+                mediaReady = resourceReady
+                isDone = true
+            }
+        }
+    }
+    
+    private func loadMediaResources() async -> Bool {
+        // 同时开始加载两个资源
+        async let bannerResult = loadBannerResource()
+        async let intResult = loadInterstitialResource()
+        
+        // 先等待 Banner 的结果
+        let bannerOk = await bannerResult
+        if bannerOk {
+            GVLogger.log("[Ad]", "✅ Banner 执行完成，直接返回")
+            return true
+        } else {
+            GVLogger.log("[Ad]", "⏳ Banner 失败，等待 Int 结果")
+            let intOk = await intResult
+            return intOk
+        }
+    }
+    
+    private func loadBannerResource() async -> Bool {
+        return await withCheckedContinuation { continuation in
+            DispatchQueue.main.async {
+                var resumed = false
+                
+                GVAdCoordinator.shared.prepareBa(onAdReady: {
+                    if !resumed {
+                        resumed = true
+                        GVLogger.log("[Ad]", "✅ Banner 执行完成")
+                        continuation.resume(returning: true)
+                    }
+                }, onAdFailed: {
+                    if !resumed {
+                        resumed = true
+                        GVLogger.log("[Ad]", "❌ Banner 加载失败")
+                        continuation.resume(returning: false)
+                    }
+                })
+            }
+        }
+    }
+    
+    private func loadInterstitialResource() async -> Bool {
+        return await withCheckedContinuation { continuation in
+            DispatchQueue.main.async {
+                var resumed = false
+                
+                GVAdCoordinator.shared.prepareYa(onAdReady: {
+                    if !resumed {
+                        resumed = true
+                        GVLogger.log("[Ad]", "✅ Int 执行完成")
+                        continuation.resume(returning: true)
+                    }
+                }, onAdFailed: {
+                    if !resumed {
+                        resumed = true
+                        GVLogger.log("[Ad]", "❌ Int 加载失败")
+                        continuation.resume(returning: false)
+                    }
+                })
+            }
+        }
     }
     
     // MARK: - 完成启动页
     
     /// 接口完成或超时之后统一调用：先把进度条补到 100%，再进入主页
     private func completeSplash() {
-        // 确保进度条到100%
+        // 如果提前完成，进度条跳到100%
         if progress < 100 {
             withAnimation(.easeOut(duration: 0.3)) {
                 progress = 100
             }
         }
         
-        // 等待进度条动画完成后再进入主页（确保能看到 0 -> 100 的效果）
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-            onFinish()
+        // 延迟一点再进入主页，确保进度条动画完成
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            if mediaReady {
+                onFinishWithAd?()
+            } else {
+                onFinish()
+            }
         }
     }
     

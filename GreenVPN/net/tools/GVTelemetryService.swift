@@ -257,9 +257,10 @@ final class GVTelemetryService {
     
     /// 获取当前连接的IP
     private func fetchCurrentIPAddress() -> String {
-        if let ip = GVServiceConfigTools.shared.ipService,
-           !ip.isEmpty {
-            return ip
+        // 检查连接状态：使用全局状态
+        if GVAppState.shared.currentPhase == .online {
+            let ip = GVServiceConfigTools.shared.ipService
+            return (ip?.isEmpty == false) ? ip! : "0.0.0.0"
         } else {
             return "local"
         }

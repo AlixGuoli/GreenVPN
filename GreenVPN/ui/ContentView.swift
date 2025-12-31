@@ -47,12 +47,23 @@ struct ContentView: View {
                     routeCoordinator.dismissConnectingIfNeeded()
                 }
             }
-            .onChange(of: homeSession.outcome) { result in
-                if let r = result {
-                    // 只在“本轮第一次”结果变化时跳转，避免重复 push 同一个结果页
+            .onChange(of: homeSession.outcome) { newValue in
+                if let r = newValue {
+                    // 只在"本轮第一次"结果变化时跳转，避免重复 push 同一个结果页
                     if lastOutcomeShown != r {
                         lastOutcomeShown = r
-                    routeCoordinator.showResult(r)
+                        routeCoordinator.showResult(r)
+                        
+                        // 根据结果类型展示媒体
+                        switch r {
+                        case .connectSuccess:
+                            displayMedia(moment: GVAdTrigger.connect)
+                        case .disconnectSuccess:
+                            displayMedia(moment: GVAdTrigger.disconnect)
+                        case .connectFail:
+                            // 连接失败不出媒体
+                            break
+                        }
                     }
                 } else {
                     // 结果被清空（例如在结果页点击关闭）后，重置标记，下一轮可以再次展示
@@ -68,6 +79,31 @@ struct ContentView: View {
                     }
                 }
             }
+        }
+    }
+    
+    // MARK: - 媒体展示
+    
+    /// 展示媒体（根据结果类型）
+    private func displayMedia(moment: String) {
+        let mediaCoordinator = GVAdCoordinator.shared
+        
+        // 检查是否有媒体可以展示
+        guard mediaCoordinator.hasAny() else {
+            GVLogger.log("[Ad]", "无可用媒体，跳过展示")
+            return
+        }
+        
+        // 按优先级展示媒体：AdMob > Yandex Banner > Yandex Int
+        if mediaCoordinator.queryGa() {
+            GVLogger.log("[Ad]", "展示 AdMob")
+            mediaCoordinator.presentGa(moment: moment)
+        } else if mediaCoordinator.queryBa() {
+            GVLogger.log("[Ad]", "展示 Yandex Banner")
+            mediaCoordinator.presentBa()
+        } else if mediaCoordinator.queryYa() {
+            GVLogger.log("[Ad]", "展示 Yandex Int")
+            mediaCoordinator.presentYa()
         }
     }
 }

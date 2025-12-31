@@ -56,6 +56,8 @@ class GVSessionAgent : ObservableObject {
         backendState = systemGV.driver.connection.status
         NotificationCenter.default.addObserver(self, selector: #selector(vpnStatusDidChange(_:)), name: .NEVPNStatusDidChange, object: nil)
         syncFromSystem()
+        // 初始化时同步一次全局状态
+        GVAppState.shared.currentPhase = phase
     }
     
     deinit{
@@ -73,7 +75,8 @@ class GVSessionAgent : ObservableObject {
     // UI 绑定：连接状态（列表页）
     @Published var phase: SessionPhase = .idle {
         didSet {
-            // 同步到GlobalStatus
+            // 同步到全局状态（用于广告等全局访问）
+            GVAppState.shared.currentPhase = phase
         }
     }
     
@@ -276,13 +279,54 @@ class GVSessionAgent : ObservableObject {
             
             await MainActor.run {
                 if isSuccess {
-                    markConnectSucceeded()
+                    // 探测成功后，先更新全局连接状态（用于广告系统判断）
+                    // UI 还未更新，但广告需要立即开始加载
+                    GVAppState.shared.currentPhase = .online
+                    // 等待广告加载完成后再显示结果页
+                    waitForMediaResource()
                 } else {
                     markConnectFailed()
                 }
                 awaitingPostCheck = false
             }
         }
+    }
+    
+    /// 等待媒体资源加载（等待加载完成后更新UI）
+    private func waitForMediaResource() {
+        let beginTime = Date()
+        GVLogger.log("[Ad]", "媒体资源检查开始")
+        
+        var isCompleted = false
+        let maxWaitSeconds: TimeInterval = 15.0
+        
+        // 超时保护
+        let timeoutHandler = DispatchWorkItem { [weak self] in
+            guard let self = self, !isCompleted else { return }
+            isCompleted = true
+            let timeoutEnd = Date()
+            GVLogger.log("[Ad]", "媒体资源检查超时，耗时: \(timeoutEnd.timeIntervalSince(beginTime))秒")
+            self.markConnectSucceeded()
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + maxWaitSeconds, execute: timeoutHandler)
+        
+        // 请求媒体资源（AdMob，因为已连接）
+        GVAdCoordinator.shared.prepareGa(moment: GVAdTrigger.connect, onAdReady: { [weak self] in
+            guard let self = self, !isCompleted else { return }
+            isCompleted = true
+            timeoutHandler.cancel()
+            let finishTime = Date()
+            GVLogger.log("[Ad]", "媒体资源检查成功，耗时: \(finishTime.timeIntervalSince(beginTime))秒")
+            self.markConnectSucceeded()
+        }, onAdFailed: { [weak self] in
+            guard let self = self, !isCompleted else { return }
+            isCompleted = true
+            timeoutHandler.cancel()
+            let finishTime = Date()
+            GVLogger.log("[Ad]", "媒体资源检查失败，耗时: \(finishTime.timeIntervalSince(beginTime))秒")
+            self.markConnectSucceeded()
+        })
     }
     
     /// 网络可达性验证（连接成功后探测）
@@ -379,10 +423,32 @@ class GVSessionAgent : ObservableObject {
         showDisconnectConfirm = false
         pendingUserStop = true
         // 断开不需要进连接页，保持 showingProgress = false
-        phase = .inProgress
-        // 清除之前的结果页状态，避免重复显示
-        outcome = nil
-        haltTunnel()
+        
+        // 如果之前连接过，先显示结果页
+        if phase == .online {
+            outcome = .disconnectSuccess
+            showingProgress = false
+            pendingUserStop = false
+            
+            // 检查是否有广告可用
+            if GVAdCoordinator.shared.hasAny() {
+                GVLogger.log("[Ad]", "断开连接：有广告可用，延迟3秒后断开")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                    self.phase = .inProgress
+                    self.haltTunnel()
+                }
+            } else {
+                GVLogger.log("[Ad]", "断开连接：无广告可用，立即断开")
+                phase = .inProgress
+                haltTunnel()
+            }
+        } else {
+            // 没有连接过，直接断开
+            phase = .inProgress
+            // 清除之前的结果页状态，避免重复显示
+            outcome = nil
+            haltTunnel()
+        }
     }
     
     // 用户取消断开
