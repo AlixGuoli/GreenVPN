@@ -96,6 +96,11 @@ struct ConnectingView: View {
                     .scaleEffect(1.0)
                 
                 Spacer()
+                
+                // 评价提示卡片
+                ReviewPromptCard()
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 24)
             }
         }
         // 连接流程由状态驱动，页面不提供系统返回

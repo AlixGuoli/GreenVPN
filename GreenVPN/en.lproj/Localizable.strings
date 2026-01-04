@@ -167,3 +167,7 @@
 "gv_banner_wait_text" = "Skip Ad %ldS";
 "gv_banner_skip_text" = "Skip Ad";
 
+/* Review prompt */
+"gv_review_title" = "Rate Us";
+"gv_review_body" = "We value your feedback and use it to make our app better. Your support helps us continue improving.";
+

@@ -76,6 +76,10 @@ struct ResultView: View {
                 
                 Spacer()
                 
+                // 评价提示卡片
+                ReviewPromptCard()
+                    .padding(.horizontal, 20)
+                
                 // 底部关闭按钮（自定义，而不是系统返回）
             Button(action: {
                 onClose()

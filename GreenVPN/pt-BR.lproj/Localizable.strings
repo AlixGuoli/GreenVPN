@@ -163,3 +163,7 @@
 "gv_banner_wait_text" = "Pular anúncio em %ld s";
 "gv_banner_skip_text" = "Pular";
 
+/* Review prompt */
+"gv_review_title" = "Avalie-nos";
+"gv_review_body" = "Valorizamos seu feedback e o usamos para melhorar nosso aplicativo. Seu apoio nos ajuda a continuar melhorando.";
+

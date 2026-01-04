@@ -167,3 +167,7 @@
 "gv_banner_wait_text" = "Passer la pub dans %ld s";
 "gv_banner_skip_text" = "Passer";
 
+/* Review prompt */
+"gv_review_title" = "Notez-nous";
+"gv_review_body" = "Nous apprécions vos commentaires et les utilisons pour améliorer notre application. Votre soutien nous aide à continuer à progresser.";
+

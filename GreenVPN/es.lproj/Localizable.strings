@@ -163,3 +163,7 @@
 "gv_banner_wait_text" = "Omitir publicidad en %ld s";
 "gv_banner_skip_text" = "Omitir";
 
+/* Review prompt */
+"gv_review_title" = "Valóranos";
+"gv_review_body" = "Valoramos tus comentarios y los utilizamos para mejorar nuestra aplicación. Tu apoyo nos ayuda a seguir mejorando.";
+

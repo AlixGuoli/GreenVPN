@@ -167,3 +167,7 @@
 "gv_banner_wait_text" = "広告を%ld秒後にスキップ";
 "gv_banner_skip_text" = "スキップ";
 
+/* Review prompt */
+"gv_review_title" = "評価する";
+"gv_review_body" = "皆様のフィードバックを大切にし、アプリの改善に活用しています。ご支援により、継続的な改善が可能になります。";
+

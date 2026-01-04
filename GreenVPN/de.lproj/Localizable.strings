@@ -163,3 +163,7 @@
 "gv_banner_wait_text" = "Werbung in %ld s überspringen";
 "gv_banner_skip_text" = "Überspringen";
 
+/* Review prompt */
+"gv_review_title" = "Bewerte uns";
+"gv_review_body" = "Wir schätzen dein Feedback und nutzen es, um unsere App zu verbessern. Deine Unterstützung hilft uns, weiter zu optimieren.";
+

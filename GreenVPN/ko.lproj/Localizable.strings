@@ -167,3 +167,7 @@
 "gv_banner_wait_text" = "%ld초 후 광고 건너뛰기";
 "gv_banner_skip_text" = "건너뛰기";
 
+/* Review prompt */
+"gv_review_title" = "평가하기";
+"gv_review_body" = "귀하의 피드백을 소중히 여기며 앱을 개선하는 데 활용합니다. 귀하의 지원이 우리가 계속 개선할 수 있도록 도와줍니다.";
+
