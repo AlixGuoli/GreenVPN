@@ -12,18 +12,38 @@ import YandexMobileAds
 /// Yandex 横幅广告管理器（混淆自 YanBannerHub）
 final class GVYandexBannerManager: NSObject {
     
+    private var loadStartAt: Date?
     private var currentAdView: AdView?
-    private var isLoading = false
+    private var adUnitIndex = 0
     private var isReady = false
     private var adUnitList: [String] = []
-    private var adUnitIndex = 0
-    private var loadStartAt: Date?
+    private var isLoading = false
     
     var onAdReady: (() -> Void)?
     var onAdFailed: (() -> Void)?
     var onAdClicked: (() -> Void)?
     
-    // MARK: - 广告配置和加载
+    // MARK: - 状态查询
+    
+    func hasReadyAd() -> Bool {
+        return isReady && currentAdView != nil
+    }
+    
+    func getActiveAdView() -> AdView? {
+        return hasReadyAd() ? currentAdView : nil
+    }
+    
+    private func canStartLoading() -> Bool {
+        if isReady { return false }
+        if isLoading {
+            guard let startTime = loadStartAt else { return false }
+            let elapsedTime = Date().timeIntervalSince(startTime)
+            return elapsedTime > 100
+        }
+        return true
+    }
+    
+    // MARK: - 配置管理
     
     func prepareAdUnits() {
         adUnitList = GVAdsConfigTools.shared.bannerUnit()
@@ -36,61 +56,34 @@ final class GVYandexBannerManager: NSObject {
         }
     }
     
-    func hasReadyAd() -> Bool {
-        return isReady && currentAdView != nil
-    }
-    
-    func getActiveAdView() -> AdView? {
-        return hasReadyAd() ? currentAdView : nil
-    }
-    
-    func resetAd() {
-        isReady = false
-        currentAdView = nil
-        GVLogger.log("[Ad]", "清空广告")
-    }
-    
-    // MARK: - 广告展示
-    
-    /// 展示 Banner 广告（直接创建 BannerBoard 并展示）
-    /// - Parameter viewController: 展示广告的视图控制器
-    func showAd(from viewController: UIViewController) {
-        guard hasReadyAd() else {
-            return
-        }
-        
-        let bannerController = GVBannerDisplayController()
-        bannerController.modalPresentationStyle = .fullScreen
-        viewController.present(bannerController, animated: true)
-    }
-    
-    // MARK: - 广告加载管理
+    // MARK: - 加载流程
     
     func startLoading(moment: String? = nil) {
         GVLogger.log("[Ad]", "开始加载")
         
         if canStartLoading() {
-            prepareAdUnits()
-            if !adUnitList.isEmpty {
-                adUnitIndex = 0
-                isLoading = true
-                loadStartAt = Date()
-                Task {
-                    await tryLoadNext(moment: moment)
-                }
-            } else {
-                GVLogger.log("[Ad]", "❌ 无可用 keys")
-                onAdFailed?()
-            }
+            beginLoadProcess(moment: moment)
         }
     }
     
-    func restartLoading(moment: String? = nil) {
-        resetAd()
-        startLoading(moment: moment)
+    private func beginLoadProcess(moment: String? = nil) {
+        prepareAdUnits()
+        if !adUnitList.isEmpty {
+            adUnitIndex = 0
+            isLoading = true
+            loadStartAt = Date()
+            executeLoad(moment: moment)
+        } else {
+            GVLogger.log("[Ad]", "❌ 无可用 keys")
+            onAdFailed?()
+        }
     }
     
-    // MARK: - 私有方法
+    private func executeLoad(moment: String? = nil) {
+        Task {
+            await tryLoadNext(moment: moment)
+        }
+    }
     
     private func tryLoadNext(moment: String? = nil) async {
         guard adUnitIndex < adUnitList.count else {
@@ -132,14 +125,31 @@ final class GVYandexBannerManager: NSObject {
         }
     }
     
-    private func canStartLoading() -> Bool {
-        if isReady { return false }
-        if isLoading {
-            guard let startTime = loadStartAt else { return false }
-            let elapsedTime = Date().timeIntervalSince(startTime)
-            return elapsedTime > 100
+    func restartLoading(moment: String? = nil) {
+        resetAd()
+        startLoading(moment: moment)
+    }
+    
+    // MARK: - 展示管理
+    
+    /// 展示 Banner 广告（直接创建 BannerBoard 并展示）
+    /// - Parameter viewController: 展示广告的视图控制器
+    func showAd(from viewController: UIViewController) {
+        guard hasReadyAd() else {
+            return
         }
-        return true
+        
+        let bannerController = GVBannerDisplayController()
+        bannerController.modalPresentationStyle = .fullScreen
+        viewController.present(bannerController, animated: true)
+    }
+    
+    // MARK: - 清理管理
+    
+    func resetAd() {
+        isReady = false
+        currentAdView = nil
+        GVLogger.log("[Ad]", "清空广告")
     }
     
     private func loadNextAd() {

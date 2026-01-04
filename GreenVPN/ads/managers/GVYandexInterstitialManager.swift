@@ -12,20 +12,40 @@ import YandexMobileAds
 /// Yandex 插屏广告管理器（混淆自 YanSlotHub）
 final class GVYandexInterstitialManager: NSObject {
     
+    private var loadStartAt: Date?
     private var currentAd: InterstitialAd?
-    private var presentingAd: InterstitialAd?
-    private var adLoader: InterstitialAdLoader?
+    private var adUnitIndex = 0
     private var isLoading = false
     private var adUnitList: [String] = []
-    private var adUnitIndex = 0
-    private var loadStartAt: Date?
+    private var adLoader: InterstitialAdLoader?
+    private var presentingAd: InterstitialAd?
     
     var onAdReady: (() -> Void)?
     var onAdFailed: (() -> Void)?
     var onAdClicked: (() -> Void)?
     var onAdClosed: (() -> Void)?
     
-    // MARK: - 广告配置和展示
+    // MARK: - 状态查询
+    
+    func hasReadyAd() -> Bool {
+        return currentAd != nil
+    }
+    
+    func getActiveAd() -> InterstitialAd? {
+        return hasReadyAd() ? currentAd : nil
+    }
+    
+    private func canStartLoading() -> Bool {
+        if hasReadyAd() { return false }
+        if isLoading {
+            guard let startTime = loadStartAt else { return false }
+            let elapsedTime = Date().timeIntervalSince(startTime)
+            return elapsedTime > 100
+        }
+        return true
+    }
+    
+    // MARK: - 配置管理
     
     func prepareAdUnits() {
         adUnitList = GVAdsConfigTools.shared.interstitialUnit()
@@ -38,54 +58,33 @@ final class GVYandexInterstitialManager: NSObject {
         }
     }
     
-    func showAd(from viewController: UIViewController, moment: String?) {
-        guard let activeAd = currentAd else {
-            return
-        }
-        
-        activeAd.show(from: viewController)
-    }
-    
-    func hasReadyAd() -> Bool {
-        return currentAd != nil
-    }
-    
-    func getActiveAd() -> InterstitialAd? {
-        return hasReadyAd() ? currentAd : nil
-    }
-    
-    func resetAd() {
-        currentAd = nil
-        adLoader = nil
-        GVLogger.log("[Ad]", "清空广告")
-    }
-    
-    // MARK: - 广告加载管理
+    // MARK: - 加载流程
     
     func startLoading(moment: String? = nil) {
         GVLogger.log("[Ad]", "开始加载")
         
         if canStartLoading() {
-            prepareAdUnits()
-            adUnitIndex = 0
-            guard adUnitList.count > adUnitIndex else { return }
-            
-            GVLogger.log("[Ad]", "启动加载流程")
-            isLoading = true
-            loadStartAt = Date()
-            
-            Task {
-                await tryLoadNext(moment: moment)
-            }
+            beginLoadProcess(moment: moment)
         }
     }
     
-    func restartLoading(moment: String? = nil) {
-        resetAd()
-        startLoading(moment: moment)
+    private func beginLoadProcess(moment: String? = nil) {
+        prepareAdUnits()
+        adUnitIndex = 0
+        guard adUnitList.count > adUnitIndex else { return }
+        
+        GVLogger.log("[Ad]", "启动加载流程")
+        isLoading = true
+        loadStartAt = Date()
+        
+        executeLoad(moment: moment)
     }
     
-    // MARK: - 私有方法
+    private func executeLoad(moment: String? = nil) {
+        Task {
+            await tryLoadNext(moment: moment)
+        }
+    }
     
     private func tryLoadNext(moment: String? = nil) async {
         guard adUnitIndex < adUnitList.count else {
@@ -113,14 +112,27 @@ final class GVYandexInterstitialManager: NSObject {
         }
     }
     
-    private func canStartLoading() -> Bool {
-        if hasReadyAd() { return false }
-        if isLoading {
-            guard let startTime = loadStartAt else { return false }
-            let elapsedTime = Date().timeIntervalSince(startTime)
-            return elapsedTime > 100
+    func restartLoading(moment: String? = nil) {
+        resetAd()
+        startLoading(moment: moment)
+    }
+    
+    // MARK: - 展示管理
+    
+    func showAd(from viewController: UIViewController, moment: String?) {
+        guard let activeAd = currentAd else {
+            return
         }
-        return true
+        
+        activeAd.show(from: viewController)
+    }
+    
+    // MARK: - 清理管理
+    
+    func resetAd() {
+        currentAd = nil
+        adLoader = nil
+        GVLogger.log("[Ad]", "清空广告")
     }
     
     private func notifyLoadFailed() {
