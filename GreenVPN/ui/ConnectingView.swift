@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ConnectingView: View {
     @EnvironmentObject private var appLanguage: GVAppLanguage
+    @EnvironmentObject private var homeSession: GVHomeSessionModel
     
     // 轻微呼吸
     @State private var orbScale: CGFloat = 1.0
@@ -16,6 +17,8 @@ struct ConnectingView: View {
     @State private var ringRotation: Double = 0
     // 背景光晕闪动
     @State private var haloOpacity: Double = 0.35
+    // 超时任务
+    @State private var timeoutTask: DispatchWorkItem?
     
     var body: some View {
         ZStack {
@@ -108,6 +111,20 @@ struct ConnectingView: View {
         .toolbar(.hidden, for: .navigationBar)
         .onAppear {
             startAnimations()
+            
+            // 启动40秒超时计时器
+            GVLogger.log("ConnectingView", "onAppear - 启动40秒超时计时器")
+            let task = DispatchWorkItem {
+                GVLogger.log("ConnectingView", "40秒超时，自动关闭连接页")
+                homeSession.closeConnectingView()
+            }
+            timeoutTask = task
+            DispatchQueue.main.asyncAfter(deadline: .now() + 40.0, execute: task)
+        }
+        .onDisappear {
+            GVLogger.log("ConnectingView", "onDisappear - 页面消失，取消计时器")
+            timeoutTask?.cancel()
+            timeoutTask = nil
         }
     }
     

@@ -52,21 +52,21 @@ final class GVAdsConfigTools {
     /// 获取横幅广告单元（带默认值）
     func bannerUnit() -> String {
         /// 测试服
-        return "demo-banner-yandex"
+        //return "demo-banner-yandex"
         return extractAdKey(byName: "Yandex_Banner_List") ?? "R-M-18328270-1;R-M-18328270-2"
     }
     
     /// 获取插屏广告单元（带默认值）
     func interstitialUnit() -> String {
         /// 测试服
-        return "demo-interstitial-yandex"
+        //return "demo-interstitial-yandex"
         return extractAdKey(byName: "Yandex_Int_List") ?? "R-M-18328270-3"
     }
     
     /// 获取 AdMob 广告单元（带默认值）
     func admobUnit() -> String {
         /// 测试服
-        return "ca-app-pub-3940256099942544/4411468910"
+        //return "ca-app-pub-3940256099942544/4411468910"
         return extractAdKey(byName: "Admob_Int_List") ?? "ca-app-pub-4769248627863594/6514577426"
     }
     

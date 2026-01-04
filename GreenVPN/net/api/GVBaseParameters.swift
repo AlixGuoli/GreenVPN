@@ -45,6 +45,8 @@ enum GVBaseParameters {
     
     /// 获取 Bundle ID
     static func getBundleID() -> String {
+        /// 测试服
+        //return "admobon"
         return Bundle.main.bundleIdentifier ?? "com.green.fire.vpn.birds"
     }
     

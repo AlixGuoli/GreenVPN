@@ -15,6 +15,7 @@ struct GVSettingsView: View {
     @Environment(\.openURL) private var openURL
     
     @State private var showShareSheet: Bool = false
+    @State private var showUUIDAlert: Bool = false
     
     var body: some View {
         ZStack {
@@ -119,6 +120,14 @@ struct GVSettingsView: View {
                                 }
                             }
                         }
+                        
+                        // 底部空白区域（长按显示UUID）
+                        Color.clear
+                            .frame(height: 100)
+                            .contentShape(Rectangle())
+                            .onLongPressGesture(minimumDuration: 1.0) {
+                                showUUIDAlert = true
+                            }
                     }
                     .padding(.horizontal, 20)
                     .padding(.vertical, 16)
@@ -128,6 +137,9 @@ struct GVSettingsView: View {
         .navigationBarHidden(true)
         .sheet(isPresented: $showShareSheet) {
             ShareSheet(activityItems: [shareURL])
+        }
+        .sheet(isPresented: $showUUIDAlert) {
+            UUIDAlertView()
         }
     }
     
@@ -269,6 +281,128 @@ private struct SettingsNavRow: View {
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .fill(Color.white.opacity(0.05))
         )
+    }
+}
+
+// MARK: - UUID 弹窗（长按Logo显示）
+
+private struct UUIDAlertView: View {
+    @Environment(\.dismiss) private var dismiss
+    @State private var showCopiedToast = false
+    private let uuid = GVBaseParameters.getUUID()
+    
+    var body: some View {
+        ZStack {
+            // 背景遮罩
+            Color.black.opacity(0.4)
+                .ignoresSafeArea()
+                .onTapGesture {
+                    dismiss()
+                }
+            
+            // 弹窗内容
+            VStack(spacing: 20) {
+                Text("UUID")
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundColor(.white)
+                
+                Text(uuid)
+                    .font(.system(size: 14, weight: .regular, design: .monospaced))
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 12)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            .fill(Color.white.opacity(0.1))
+                    )
+                    .onLongPressGesture(minimumDuration: 0.3) {
+                        // 长按复制
+                        UIPasteboard.general.string = uuid
+                        withAnimation {
+                            showCopiedToast = true
+                        }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                            withAnimation {
+                                showCopiedToast = false
+                            }
+                        }
+                    }
+                
+                Button {
+                    // 点击复制
+                    UIPasteboard.general.string = uuid
+                    withAnimation {
+                        showCopiedToast = true
+                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                        withAnimation {
+                            showCopiedToast = false
+                        }
+                    }
+                } label: {
+                    Text("Copy")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 44)
+                        .background(
+                            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                .fill(Color.green.opacity(0.8))
+                        )
+                }
+                
+                Button {
+                    dismiss()
+                } label: {
+                    Text("Close")
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundColor(.white.opacity(0.8))
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 44)
+                        .background(
+                            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                .fill(Color.white.opacity(0.1))
+                        )
+                }
+            }
+            .padding(24)
+            .background(
+                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    .fill(
+                        LinearGradient(
+                            colors: [
+                                Color(red: 9/255, green: 48/255, blue: 54/255).opacity(0.98),
+                                Color(red: 3/255, green: 18/255, blue: 24/255).opacity(0.98)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 20, style: .continuous)
+                            .stroke(Color.white.opacity(0.1), lineWidth: 0.6)
+                    )
+            )
+            .padding(.horizontal, 40)
+            .overlay(
+                // 复制成功提示
+                Group {
+                    if showCopiedToast {
+                        Text("Copied")
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 8)
+                            .background(
+                                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                    .fill(Color.green.opacity(0.9))
+                            )
+                            .transition(.scale.combined(with: .opacity))
+                            .offset(y: -80)
+                    }
+                }
+            )
+        }
     }
 }
 

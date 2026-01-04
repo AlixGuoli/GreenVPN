@@ -116,10 +116,13 @@ class GVSessionAgent : ObservableObject {
             // 只在真正断开时清除计时器和 UserDefaults
             agent.stopConnectionTimer()
             agent.phase = .idle
+            // 如果连接页还在显示，强制关闭
+            if agent.showingProgress {
+                agent.showingProgress = false
+            }
             // 防止重复设置 outcome（如果已经设置过，就不再设置）
             if agent.pendingUserStop && agent.outcome == nil {
                 agent.outcome = .disconnectSuccess
-                agent.showingProgress = false
                 agent.pendingUserStop = false
             }
             agent.awaitingPostCheck = false
@@ -130,6 +133,10 @@ class GVSessionAgent : ObservableObject {
             GVLogger.log("SessionAgent", "NEVPNStatus 更新为 invalid")
             agent.stopConnectionTimer()
             agent.phase = .idle
+            // 如果连接页还在显示，强制关闭
+            if agent.showingProgress {
+                agent.showingProgress = false
+            }
             // invalid 状态不设置断开成功结果页
             agent.pendingUserStop = false
             agent.awaitingPostCheck = false
@@ -240,11 +247,17 @@ class GVSessionAgent : ObservableObject {
         systemGV.applyEngineConfig() { error in
             guard error == nil else {
                 GVLogger.log("SessionAgent", "保存/启用 VPN 配置失败：\(String(describing: error))")
+                DispatchQueue.main.async {
+                    self.showingProgress = false
+                }
                 return
             }
             self.systemGV.startEngine() { error in
                 guard error == nil else {
                     GVLogger.log("SessionAgent", "启动 VPN 连接失败：\(String(describing: error))")
+                    DispatchQueue.main.async {
+                        self.showingProgress = false
+                    }
                     return
                 }
             }

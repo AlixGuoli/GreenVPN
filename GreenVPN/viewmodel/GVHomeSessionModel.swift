@@ -64,6 +64,11 @@ final class GVHomeSessionModel: ObservableObject {
     func clearOutcome() {
         agent.outcome = nil
     }
+    
+    /// 关闭连接页（用于超时保护）
+    func closeConnectingView() {
+        agent.showingProgress = false
+    }
 }
 
 

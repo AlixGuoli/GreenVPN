@@ -136,13 +136,66 @@ final class GVHostConfig {
             let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
                 isCompleted = true
                 
-                guard error == nil,
-                      let http = response as? HTTPURLResponse,
-                      (200...299).contains(http.statusCode),
-                      let data = data,
-                      let encryptedString = String(data: data, encoding: .utf8),
+                // 详细错误日志
+                if let error = error {
+                    var errorDetails = "错误类型: \(type(of: error))"
+                    if let urlError = error as? URLError {
+                        errorDetails += ", URLError code: \(urlError.code.rawValue)"
+                        errorDetails += ", 描述: \(urlError.localizedDescription)"
+                        switch urlError.code {
+                        case .timedOut:
+                            errorDetails += " (请求超时)"
+                        case .notConnectedToInternet:
+                            errorDetails += " (未连接到互联网)"
+                        case .networkConnectionLost:
+                            errorDetails += " (网络连接丢失)"
+                        case .cannotFindHost:
+                            errorDetails += " (无法找到主机)"
+                        case .cannotConnectToHost:
+                            errorDetails += " (无法连接到主机)"
+                        case .dnsLookupFailed:
+                            errorDetails += " (DNS 查询失败)"
+                        default:
+                            break
+                        }
+                    } else {
+                        errorDetails += ", 描述: \(error.localizedDescription)"
+                    }
+                    GVLogger.log("HostConfig", "❌ 从 Git 拉取配置失败：\(urlString)")
+                    GVLogger.log("HostConfig", "   错误详情：\(errorDetails)")
+                    continuation.resume(returning: false)
+                    return
+                }
+                
+                if let http = response as? HTTPURLResponse {
+                    let statusCode = http.statusCode
+                    if !(200...299).contains(statusCode) {
+                        GVLogger.log("HostConfig", "❌ 从 Git 拉取配置失败：\(urlString)")
+                        GVLogger.log("HostConfig", "   HTTP 状态码：\(statusCode)")
+                        if let data = data, let responseString = String(data: data, encoding: .utf8) {
+                            GVLogger.log("HostConfig", "   响应内容（前200字符）：\(String(responseString.prefix(200)))")
+                        }
+                        continuation.resume(returning: false)
+                        return
+                    }
+                } else {
+                    GVLogger.log("HostConfig", "❌ 从 Git 拉取配置失败：\(urlString)")
+                    GVLogger.log("HostConfig", "   错误：响应不是 HTTPURLResponse")
+                    continuation.resume(returning: false)
+                    return
+                }
+                
+                guard let data = data else {
+                    GVLogger.log("HostConfig", "❌ 从 Git 拉取配置失败：\(urlString)")
+                    GVLogger.log("HostConfig", "   错误：响应数据为空")
+                    continuation.resume(returning: false)
+                    return
+                }
+                
+                guard let encryptedString = String(data: data, encoding: .utf8),
                       !encryptedString.isEmpty else {
                     GVLogger.log("HostConfig", "❌ 从 Git 拉取配置失败：\(urlString)")
+                    GVLogger.log("HostConfig", "   错误：无法将响应数据转换为字符串，数据长度：\(data.count) 字节")
                     continuation.resume(returning: false)
                     return
                 }
@@ -151,9 +204,18 @@ final class GVHostConfig {
                 GVLogger.log("HostConfig", "Git 返回的加密配置（前100字符）: \(String(encryptedString.prefix(100)))...")
                 
                 // 解密配置
-                guard let jsonString = GVConfigDecoder.decode(encryptedString),
-                      let config = self?.parseConfigJson(jsonString) else {
-                    GVLogger.log("HostConfig", "❌ Git 配置解密失败")
+                guard let jsonString = GVConfigDecoder.decode(encryptedString) else {
+                    GVLogger.log("HostConfig", "❌ Git 配置解密失败：\(urlString)")
+                    GVLogger.log("HostConfig", "   加密内容长度：\(encryptedString.count) 字符")
+                    GVLogger.log("HostConfig", "   加密内容（前200字符）：\(String(encryptedString.prefix(200)))")
+                    continuation.resume(returning: false)
+                    return
+                }
+                
+                guard let config = self?.parseConfigJson(jsonString) else {
+                    GVLogger.log("HostConfig", "❌ Git 配置 JSON 解析失败：\(urlString)")
+                    GVLogger.log("HostConfig", "   解密后内容长度：\(jsonString.count) 字符")
+                    GVLogger.log("HostConfig", "   解密后内容（前200字符）：\(String(jsonString.prefix(200)))")
                     continuation.resume(returning: false)
                     return
                 }
