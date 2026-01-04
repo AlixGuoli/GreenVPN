@@ -8,7 +8,4 @@
 #ifndef Fire_Header_h
 #define Fire_Header_h
 
-#import "hev-main.h"
-#import "libMeow.h"
-
 #endif /* Fire_Header_h */
