@@ -33,6 +33,9 @@ struct GreenVPNApp: App {
     init() {
         let agent = GVSessionAgent()
         _homeSessionModel = StateObject(wrappedValue: GVHomeSessionModel(agent: agent))
+        
+        // 测试服：预热内购管理器，启动时尽早恢复 VIP 状态并检查订阅
+        _ = GVPurchaseManager.shared
     }
     
     // MARK: - 辅助方法
@@ -146,25 +149,29 @@ struct GreenVPNApp: App {
     // MARK: - 场景状态处理
     
     private func enterActiveMode() {
-        // 只有在 App 启动完成后才显示从后台回来的 Splash 页面
-        guard backgroundFlag && setupComplete else {
-            return
+        Task { [backgroundFlag, setupComplete] in
+            // 每次回到前台时先刷新订阅状态，避免 VIP 已过期还按老状态拉广告
+            await GVPurchaseManager.shared.checkSubscriptionStatus()
+            
+            // 只有在 App 启动完成，并且此前确实在后台时，才考虑展示返回页和拉广告
+            guard backgroundFlag && setupComplete else { return }
+            
+            let contentManager = GVAdCoordinator.shared
+            
+            // 返回前台时检查配置是否过期（基础配置6小时，广告配置4小时）
+            GVAPIManager.validateConfigCache()
+            
+            // 拉广告（会自动根据 VIP / adsOff 判断是否需要加载）
+            contentManager.prepareAll(moment: GVAdTrigger.foreground)
+            
+            if canDisplayResumeOverlay(mediaCoordinator: contentManager) {
+                GVLogger.log("[Ad]", "✅ 显示后台启动页")
+                activateResumeOverlay()
+            }
+            
+            // 重置后台标记
+            self.backgroundFlag = false
         }
-        
-        let contentManager = GVAdCoordinator.shared
-        
-        // 返回前台时检查配置是否过期（基础配置6小时，广告配置4小时）
-        GVAPIManager.validateConfigCache()
-        
-        // 拉广告
-        contentManager.prepareAll(moment: GVAdTrigger.foreground)
-        
-        if canDisplayResumeOverlay(mediaCoordinator: contentManager) {
-            GVLogger.log("[Ad]", "✅ 显示后台启动页")
-            activateResumeOverlay()
-        }
-        
-        backgroundFlag = false
     }
     
     private func enterInactiveMode() {

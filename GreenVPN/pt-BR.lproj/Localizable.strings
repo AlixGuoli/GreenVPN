@@ -167,3 +167,50 @@
 "gv_review_title" = "Avalie-nos";
 "gv_review_body" = "Valorizamos seu feedback e o usamos para melhorar nosso aplicativo. Seu apoio nos ajuda a continuar melhorando.";
 
+/* Premium / Purchase */
+"gv_premium_title" = "VPN Premium";
+"gv_premium_subtitle" = "Desbloqueie mais recursos";
+"gv_premium_expires" = "Válido até: %@";
+"gv_premium_not_subscribed" = "Não assinado";
+
+/* Premium Plans */
+"gv_premium_plan_weekly" = "Semanal";
+"gv_premium_plan_monthly" = "Mensal";
+"gv_premium_plan_annual" = "Anual";
+
+/* Premium Features */
+"gv_premium_feature_no_ads" = "Sem anúncios";
+"gv_premium_feature_faster_speeds" = "Velocidades mais rápidas";
+"gv_premium_feature_global_servers" = "Rede de servidores globais";
+
+/* Premium Buttons */
+"gv_premium_button_subscribe" = "Assinar";
+"gv_premium_button_change_plan" = "Alterar plano";
+"gv_premium_button_restore" = "Restaurar compra";
+"gv_premium_button_processing" = "Processando...";
+"gv_premium_button_ok" = "OK";
+"gv_premium_button_loading" = "Carregando...";
+
+/* Premium Agreement */
+"gv_premium_agreement" = "Contrato";
+"gv_premium_agreement_auto_renewal" = "《Termos de renovação automática》";
+"gv_premium_agreement_membership" = "《Termos de associação》";
+
+/* Premium Terms */
+"gv_premium_terms_title" = "Termos e condições";
+"gv_premium_terms_payment" = "A cobrança será feita na sua conta da App Store ao confirmar a compra. A renovação é cobrada até 24 horas antes do fim do período atual. Você pode gerenciar sua assinatura e desativar a renovação automática nas configurações da sua conta Apple ID.";
+"gv_premium_terms_of_use" = "Termos de uso";
+"gv_premium_privacy_policy" = "Política de privacidade";
+
+/* Premium Errors */
+"gv_premium_error" = "Erro";
+"gv_premium_error_product_not_loaded" = "Não foi possível carregar o produto";
+"gv_premium_error_restore_failed" = "Falha ao restaurar compras";
+
+/* Premium Restore */
+"gv_premium_restore_success_title" = "Restaurado";
+"gv_premium_restore_success_message" = "As suas compras foram restauradas com sucesso.";
+"gv_premium_restore_none_title" = "Nenhuma compra";
+"gv_premium_restore_none_message" = "Nenhuma assinatura ativa foi encontrada para este Apple ID.";
+
+

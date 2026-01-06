@@ -37,6 +37,8 @@ struct ContentView: View {
                     GVSettingsView()
                 case .toolbox:
                     GVToolboxView()
+                case .purchase:
+                    GVPurchaseView()
                 }
             }
             // 根据 ViewModel 状态自动跳转
@@ -161,19 +163,37 @@ private struct HomeScreen: View {
                 
                 Spacer()
                 
-                        // 右上角设置按钮（小入口）
-                Button {
-                            routeCoordinator.showSettings()
-                        } label: {
-                            Image(systemName: "gearshape.fill")
-                                .font(.system(size: 20, weight: .semibold))
-                                .foregroundColor(.white.opacity(0.9))
-                                .frame(width: 32, height: 32)
-                                .background(
-                                    Circle()
-                                        .fill(Color.white.opacity(0.10))
-                                )
-                        }
+                // 右上角按钮：Premium 入口 + 设置入口
+                HStack(spacing: 8) {
+                    // Premium 入口（钻石图标）
+                    Button {
+                        routeCoordinator.showPurchase()
+                    } label: {
+                        Image("vip")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 22, height: 22)
+                            .padding(5)
+                            .background(
+                                Circle()
+                                    .fill(Color.white.opacity(0.10))
+                            )
+                    }
+                    
+                    // 设置按钮
+                    Button {
+                        routeCoordinator.showSettings()
+                    } label: {
+                        Image(systemName: "gearshape.fill")
+                            .font(.system(size: 20, weight: .semibold))
+                            .foregroundColor(.white.opacity(0.9))
+                            .frame(width: 32, height: 32)
+                            .background(
+                                Circle()
+                                    .fill(Color.white.opacity(0.10))
+                            )
+                    }
+                }
                     }
                     .padding(.horizontal, 20)
                     .padding(.top, 10)

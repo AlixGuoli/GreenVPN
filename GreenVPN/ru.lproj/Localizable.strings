@@ -171,3 +171,49 @@
 "gv_review_title" = "Оцените нас";
 "gv_review_body" = "Ваши отзывы помогают нам улучшать приложение. Ваша поддержка важна для нас.";
 
+/* Premium / Purchase */
+"gv_premium_title" = "VPN Premium";
+"gv_premium_subtitle" = "Откройте больше возможностей";
+"gv_premium_expires" = "Действительно до: %@";
+"gv_premium_not_subscribed" = "Подписка не оформлена";
+
+/* Premium Plans */
+"gv_premium_plan_weekly" = "Еженедельная";
+"gv_premium_plan_monthly" = "Месячная";
+"gv_premium_plan_annual" = "Годовая";
+
+/* Premium Features */
+"gv_premium_feature_no_ads" = "Без рекламы";
+"gv_premium_feature_faster_speeds" = "Более высокая скорость";
+"gv_premium_feature_global_servers" = "Глобальная сеть серверов";
+
+/* Premium Buttons */
+"gv_premium_button_subscribe" = "Оформить подписку";
+"gv_premium_button_change_plan" = "Изменить тариф";
+"gv_premium_button_restore" = "Восстановить покупку";
+"gv_premium_button_processing" = "Обработка...";
+"gv_premium_button_ok" = "OK";
+"gv_premium_button_loading" = "Загрузка...";
+
+/* Premium Agreement */
+"gv_premium_agreement" = "Условия обслуживания";
+"gv_premium_agreement_auto_renewal" = "«Условия автоматического продления»";
+"gv_premium_agreement_membership" = "«Условия членства»";
+
+/* Premium Terms */
+"gv_premium_terms_title" = "Условия и положения";
+"gv_premium_terms_payment" = "Оплата будет списана с вашего аккаунта iTunes при подтверждении покупки. Плата за продление подписки взимается не позднее чем за 24 часа до окончания текущего периода. Вы можете управлять подпиской и отключить автопродление в настройках учётной записи Apple ID.";
+"gv_premium_terms_of_use" = "Условия использования";
+"gv_premium_privacy_policy" = "Политика конфиденциальности";
+
+/* Premium Errors */
+"gv_premium_error" = "Ошибка";
+"gv_premium_error_product_not_loaded" = "Не удалось загрузить продукт";
+"gv_premium_error_restore_failed" = "Не удалось восстановить покупки";
+
+/* Premium Restore */
+"gv_premium_restore_success_title" = "Восстановлено";
+"gv_premium_restore_success_message" = "Ваши покупки успешно восстановлены.";
+"gv_premium_restore_none_title" = "Подписок не найдено";
+"gv_premium_restore_none_message" = "Для этой учётной записи Apple ID не найдено активных подписок.";
+

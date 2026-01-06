@@ -167,3 +167,50 @@
 "gv_review_title" = "Bewerte uns";
 "gv_review_body" = "Wir schätzen dein Feedback und nutzen es, um unsere App zu verbessern. Deine Unterstützung hilft uns, weiter zu optimieren.";
 
+/* Premium / Purchase */
+"gv_premium_title" = "VPN Premium";
+"gv_premium_subtitle" = "Schalte weitere Funktionen frei";
+"gv_premium_expires" = "Läuft ab am: %@";
+"gv_premium_not_subscribed" = "Kein Abo";
+
+/* Premium Plans */
+"gv_premium_plan_weekly" = "Wöchentlich";
+"gv_premium_plan_monthly" = "Monatlich";
+"gv_premium_plan_annual" = "Jährlich";
+
+/* Premium Features */
+"gv_premium_feature_no_ads" = "Keine Werbung";
+"gv_premium_feature_faster_speeds" = "Schnellere Verbindung";
+"gv_premium_feature_global_servers" = "Globales Servernetzwerk";
+
+/* Premium Buttons */
+"gv_premium_button_subscribe" = "Abonnieren";
+"gv_premium_button_change_plan" = "Tarif ändern";
+"gv_premium_button_restore" = "Abo wiederherstellen";
+"gv_premium_button_processing" = "Wird verarbeitet...";
+"gv_premium_button_ok" = "OK";
+"gv_premium_button_loading" = "Wird geladen...";
+
+/* Premium Agreement */
+"gv_premium_agreement" = "Vereinbarung";
+"gv_premium_agreement_auto_renewal" = "„Bedingungen zur automatischen Verlängerung“";
+"gv_premium_agreement_membership" = "„Mitgliedschaftsbedingungen“";
+
+/* Premium Terms */
+"gv_premium_terms_title" = "Allgemeine Geschäftsbedingungen";
+"gv_premium_terms_payment" = "Die Zahlung wird bei Bestätigung des Kaufs deinem Apple‑ID‑Konto belastet. Die Verlängerungsgebühr wird bis zu 24 Stunden vor Ablauf des aktuellen Abrechnungszeitraums berechnet. Du kannst dein Abo in den Einstellungen deiner Apple‑ID verwalten und die automatische Verlängerung deaktivieren.";
+"gv_premium_terms_of_use" = "Nutzungsbedingungen";
+"gv_premium_privacy_policy" = "Datenschutzrichtlinie";
+
+/* Premium Errors */
+"gv_premium_error" = "Fehler";
+"gv_premium_error_product_not_loaded" = "Produkt konnte nicht geladen werden";
+"gv_premium_error_restore_failed" = "Wiederherstellung der Käufe fehlgeschlagen";
+
+/* Premium Restore */
+"gv_premium_restore_success_title" = "Wiederhergestellt";
+"gv_premium_restore_success_message" = "Deine Käufe wurden erfolgreich wiederhergestellt.";
+"gv_premium_restore_none_title" = "Keine Käufe";
+"gv_premium_restore_none_message" = "Es wurden keine aktiven Abos für diese Apple‑ID gefunden.";
+
+

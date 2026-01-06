@@ -167,3 +167,50 @@
 "gv_review_title" = "Valóranos";
 "gv_review_body" = "Valoramos tus comentarios y los utilizamos para mejorar nuestra aplicación. Tu apoyo nos ayuda a seguir mejorando.";
 
+/* Premium / Purchase */
+"gv_premium_title" = "VPN Premium";
+"gv_premium_subtitle" = "Desbloquea más funciones";
+"gv_premium_expires" = "Válido hasta: %@";
+"gv_premium_not_subscribed" = "Sin suscripción";
+
+/* Premium Plans */
+"gv_premium_plan_weekly" = "Semanal";
+"gv_premium_plan_monthly" = "Mensual";
+"gv_premium_plan_annual" = "Anual";
+
+/* Premium Features */
+"gv_premium_feature_no_ads" = "Sin anuncios";
+"gv_premium_feature_faster_speeds" = "Conexiones más rápidas";
+"gv_premium_feature_global_servers" = "Red global de servidores";
+
+/* Premium Buttons */
+"gv_premium_button_subscribe" = "Suscribirse";
+"gv_premium_button_change_plan" = "Cambiar plan";
+"gv_premium_button_restore" = "Restaurar compras";
+"gv_premium_button_processing" = "Procesando...";
+"gv_premium_button_ok" = "OK";
+"gv_premium_button_loading" = "Cargando...";
+
+/* Premium Agreement */
+"gv_premium_agreement" = "Acuerdo";
+"gv_premium_agreement_auto_renewal" = "«Términos de renovación automática»";
+"gv_premium_agreement_membership" = "«Términos de membresía»";
+
+/* Premium Terms */
+"gv_premium_terms_title" = "Términos y condiciones";
+"gv_premium_terms_payment" = "El pago se cargará a tu cuenta de iTunes al confirmar la compra. La renovación se cobrará hasta 24 horas antes de que finalice el período de suscripción actual. Puedes gestionar tu suscripción y desactivar la renovación automática en los ajustes de tu cuenta de Apple ID.";
+"gv_premium_terms_of_use" = "Términos de uso";
+"gv_premium_privacy_policy" = "Política de privacidad";
+
+/* Premium Errors */
+"gv_premium_error" = "Error";
+"gv_premium_error_product_not_loaded" = "No se pudo cargar el producto";
+"gv_premium_error_restore_failed" = "Error al restaurar las compras";
+
+/* Premium Restore */
+"gv_premium_restore_success_title" = "Restaurado";
+"gv_premium_restore_success_message" = "Tus compras se han restaurado correctamente.";
+"gv_premium_restore_none_title" = "Sin compras";
+"gv_premium_restore_none_message" = "No se encontró ninguna suscripción activa para este Apple ID.";
+
+

@@ -17,8 +17,10 @@ final class GVAdCoordinator {
     /// 是否有广告正在展示
     var isPresenting = false
     
-    /// VIP 标志（暂时设为 false，后续可扩展）
-    private var premiumStatus = false
+    /// VIP 标志：与内购管理器同步
+    private var premiumStatus: Bool {
+        GVPurchaseManager.shared.isVIP
+    }
     
     // MARK: - 广告管理器实例
     
@@ -26,10 +28,7 @@ final class GVAdCoordinator {
     private let yBanHandler = GVYandexBannerManager()
     private let yIntHandler = GVYandexInterstitialManager()
     
-    private init() {
-        // 初始化时检查 VIP 状态（暂时设为 false）
-        premiumStatus = false
-    }
+    private init() {}
     
     // MARK: - 广告开关检查
     

@@ -10,6 +10,8 @@ import SwiftUI
 struct GVNodeListView: View {
     @EnvironmentObject private var nodeManager: GVNodeManager
     @EnvironmentObject private var appLanguage: GVAppLanguage
+    @EnvironmentObject private var routeCoordinator: GVRouteCoordinator
+    @StateObject private var purchaseManager = GVPurchaseManager.shared
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
@@ -50,10 +52,17 @@ struct GVNodeListView: View {
                 ScrollView {
                     LazyVStack(spacing: 12) {
                         ForEach(nodeManager.nodes) { node in
-                            NodeRowView(node: node)
+                            let isLocked = !purchaseManager.isVIP && node.id != -1
+                            
+                            NodeRowView(node: node, isLocked: isLocked)
                                 .onTapGesture {
-                                    nodeManager.selectNode(node)
-                                    dismiss()
+                                    // 非会员：除 Auto 外的节点点击跳转到内购页（在当前栈上 push，返回时回到节点列表）
+                                    if isLocked {
+                                        routeCoordinator.pushPurchase()
+                                    } else {
+                                        nodeManager.selectNode(node)
+                                        dismiss()
+                                    }
                                 }
                         }
                     }
@@ -79,6 +88,7 @@ struct GVNodeListView: View {
 
 private struct NodeRowView: View {
     let node: GVNode
+    let isLocked: Bool
     @EnvironmentObject private var nodeManager: GVNodeManager
     @EnvironmentObject private var appLanguage: GVAppLanguage
     
@@ -145,8 +155,12 @@ private struct NodeRowView: View {
             
             Spacer()
             
-            // 选中标记
-            if isSelected {
+            // 右侧状态：非 VIP 的普通节点显示锁，其他显示选中勾
+            if isLocked {
+                Image(systemName: "lock.fill")
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundColor(.white.opacity(0.85))
+            } else if isSelected {
                 Image(systemName: "checkmark.circle.fill")
                     .font(.system(size: 24))
                     .foregroundColor(Color(red: 0/255, green: 210/255, blue: 150/255))

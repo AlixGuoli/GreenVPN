@@ -15,6 +15,7 @@ enum GVRoute: Hashable {
     case nodeList
     case settings
     case toolbox   // 工具箱页面
+    case purchase  // 内购页面
 }
 
 // 简单路由协调器，集中管理 NavigationStack 的 path
@@ -49,6 +50,16 @@ final class GVRouteCoordinator: ObservableObject {
     /// 显示工具箱页面
     func showToolbox() {
         path = [.toolbox]
+    }
+    
+    /// 显示内购页面（作为独立页面，清空现有栈）
+    func showPurchase() {
+        path = [.purchase]
+    }
+    
+    /// 在当前导航栈上推入内购页面（例如在节点列表内部打开，返回时回到节点列表）
+    func pushPurchase() {
+        path.append(.purchase)
     }
     
     /// 清空路由

@@ -308,6 +308,7 @@ struct FunctionGridCard: View {
     let onNodeListTap: () -> Void
     let onLanguageTap: (() -> Void)?
     @EnvironmentObject private var appLanguage: GVAppLanguage
+    @EnvironmentObject private var routeCoordinator: GVRouteCoordinator
     
     init(
         onNodeListTap: @escaping () -> Void,
@@ -323,7 +324,10 @@ struct FunctionGridCard: View {
                 FunctionButton(
                     icon: "globe.asia.australia.fill",
                     title: appLanguage.localized("gv_node_list_title", comment: "Node list"),
-                    action: onNodeListTap
+                    action: {
+                        // 需求调整：节点锁放到列表内部，入口始终可以进入节点页
+                        onNodeListTap()
+                    }
                 )
                 
                 NavigationLink {

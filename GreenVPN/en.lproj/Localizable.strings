@@ -171,3 +171,49 @@
 "gv_review_title" = "Rate Us";
 "gv_review_body" = "We value your feedback and use it to make our app better. Your support helps us continue improving.";
 
+/* Premium / Purchase */
+"gv_premium_title" = "VPN Premium";
+"gv_premium_subtitle" = "Unlock more features";
+"gv_premium_expires" = "Expires: %@";
+"gv_premium_not_subscribed" = "Not subscribed";
+
+/* Premium Plans */
+"gv_premium_plan_weekly" = "Weekly";
+"gv_premium_plan_monthly" = "Monthly";
+"gv_premium_plan_annual" = "Annual";
+
+/* Premium Features */
+"gv_premium_feature_no_ads" = "No ads";
+"gv_premium_feature_faster_speeds" = "Faster speeds";
+"gv_premium_feature_global_servers" = "Global server network";
+
+/* Premium Buttons */
+"gv_premium_button_subscribe" = "Subscribe";
+"gv_premium_button_change_plan" = "Change Plan";
+"gv_premium_button_restore" = "Restore Purchase";
+"gv_premium_button_processing" = "Processing...";
+"gv_premium_button_ok" = "OK";
+"gv_premium_button_loading" = "Loading...";
+
+/* Premium Agreement */
+"gv_premium_agreement" = "Agreement";
+"gv_premium_agreement_auto_renewal" = "《Auto Renewal Terms》";
+"gv_premium_agreement_membership" = "《Membership Terms》";
+
+/* Premium Terms */
+"gv_premium_terms_title" = "Terms & Conditions";
+"gv_premium_terms_payment" = "Payment will be charged to your iTunes Account upon purchase confirmation. Renewal charges will be applied to your account within 24 hours before the current subscription period ends. You can manage your subscription and disable auto-renewal in your Apple ID account settings.";
+"gv_premium_terms_of_use" = "Terms of Use";
+"gv_premium_privacy_policy" = "Privacy Policy";
+
+/* Premium Errors */
+"gv_premium_error" = "Error";
+"gv_premium_error_product_not_loaded" = "Product not loaded";
+"gv_premium_error_restore_failed" = "Failed to restore purchases";
+
+/* Premium Restore */
+"gv_premium_restore_success_title" = "Restored";
+"gv_premium_restore_success_message" = "Purchases restored successfully.";
+"gv_premium_restore_none_title" = "No Purchases";
+"gv_premium_restore_none_message" = "No active subscriptions found for this Apple ID.";
+

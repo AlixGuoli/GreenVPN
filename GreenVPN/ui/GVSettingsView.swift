@@ -14,8 +14,23 @@ struct GVSettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
     
+    @StateObject private var purchaseManager = GVPurchaseManager.shared
+    
     @State private var showShareSheet: Bool = false
     @State private var showUUIDAlert: Bool = false
+    
+    /// 内购入口的副标题
+    private var purchaseSubtitle: String {
+        if purchaseManager.isVIP, let expiration = purchaseManager.expirationDate {
+            let formatter = DateFormatter()
+            // 正式环境：按日期展示到天即可，如需更精细可调整格式
+            formatter.dateFormat = "yyyy-MM-dd"
+            let template = appLanguage.localized("gv_premium_expires", comment: "")
+            return String(format: template, formatter.string(from: expiration))
+        } else {
+            return appLanguage.localized("gv_premium_subtitle", comment: "")
+        }
+    }
     
     var body: some View {
         ZStack {
@@ -59,6 +74,17 @@ struct GVSettingsView: View {
                         
                         // 设置项列表（语言入口放在最上方）
                         VStack(spacing: 12) {
+                            // 内购入口（导航到内购页）
+                            NavigationLink {
+                                GVPurchaseView()
+                            } label: {
+                                SettingsNavRow(
+                                    icon: "vip",
+                                    title: appLanguage.localized("gv_premium_title", comment: ""),
+                                    subtitle: purchaseSubtitle
+                                )
+                            }
+                            
                             // 语言设置入口（导航到语言页）
                             NavigationLink {
                                 GVLanguageView()
@@ -135,6 +161,10 @@ struct GVSettingsView: View {
             }
         }
         .navigationBarHidden(true)
+        .task {
+            // 进入设置页时刷新订阅状态，避免长时间不重启导致 VIP 状态过期
+            await purchaseManager.checkSubscriptionStatus()
+        }
         .sheet(isPresented: $showShareSheet) {
             ShareSheet(activityItems: [shareURL])
         }
@@ -248,15 +278,30 @@ private struct SettingsNavRow: View {
     let title: String
     let subtitle: String
     
+    // 判断是 SF Symbol 还是图片资源
+    private var isSystemIcon: Bool {
+        // 如果是系统图标，通常不包含图片资源名称
+        // 这里简单判断：如果 icon 是 "vip"，使用图片资源，否则使用 SF Symbol
+        return icon != "vip" && icon != "logoAd" && icon != "logoCon" && icon != "logoWorld"
+    }
+    
     var body: some View {
         HStack(spacing: 14) {
             ZStack {
                 RoundedRectangle(cornerRadius: 14, style: .continuous)
                     .fill(Color.white.opacity(0.10))
                     .frame(width: 38, height: 38)
-                Image(systemName: icon)
-                    .font(.system(size: 18, weight: .semibold))
-                    .foregroundColor(.white)
+                
+                if isSystemIcon {
+                    Image(systemName: icon)
+                        .font(.system(size: 18, weight: .semibold))
+                        .foregroundColor(.white)
+                } else {
+                    Image(icon)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 24, height: 24)
+                }
             }
             
             VStack(alignment: .leading, spacing: 4) {

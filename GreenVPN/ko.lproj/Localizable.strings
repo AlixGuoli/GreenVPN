@@ -171,3 +171,49 @@
 "gv_review_title" = "평가하기";
 "gv_review_body" = "귀하의 피드백을 소중히 여기며 앱을 개선하는 데 활용합니다. 귀하의 지원이 우리가 계속 개선할 수 있도록 도와줍니다.";
 
+/* Premium / Purchase */
+"gv_premium_title" = "VPN Premium";
+"gv_premium_subtitle" = "더 많은 기능 잠금 해제";
+"gv_premium_expires" = "만료일: %@";
+"gv_premium_not_subscribed" = "구독되지 않음";
+
+/* Premium Plans */
+"gv_premium_plan_weekly" = "주간";
+"gv_premium_plan_monthly" = "월간";
+"gv_premium_plan_annual" = "연간";
+
+/* Premium Features */
+"gv_premium_feature_no_ads" = "광고 없음";
+"gv_premium_feature_faster_speeds" = "더 빠른 속도";
+"gv_premium_feature_global_servers" = "전 세계 서버 네트워크";
+
+/* Premium Buttons */
+"gv_premium_button_subscribe" = "구독하기";
+"gv_premium_button_change_plan" = "요금제 변경";
+"gv_premium_button_restore" = "구독 복원";
+"gv_premium_button_processing" = "처리 중...";
+"gv_premium_button_ok" = "확인";
+"gv_premium_button_loading" = "불러오는 중...";
+
+/* Premium Agreement */
+"gv_premium_agreement" = "이용 약관";
+"gv_premium_agreement_auto_renewal" = "《자동 갱신 약관》";
+"gv_premium_agreement_membership" = "《멤버십 약관》";
+
+/* Premium Terms */
+"gv_premium_terms_title" = "이용 약관 및 조건";
+"gv_premium_terms_payment" = "결제는 구매 확정 시 사용자의 iTunes 계정으로 청구됩니다. 현재 구독 기간이 종료되기 최소 24시간 전에 갱신 요금이 청구됩니다. 설정에서 Apple ID 계정을 통해 구독을 관리하거나 자동 갱신을 해제할 수 있습니다.";
+"gv_premium_terms_of_use" = "이용 약관";
+"gv_premium_privacy_policy" = "개인정보 처리방침";
+
+/* Premium Errors */
+"gv_premium_error" = "오류";
+"gv_premium_error_product_not_loaded" = "상품 정보를 불러오지 못했습니다";
+"gv_premium_error_restore_failed" = "구독 복원에 실패했습니다";
+
+/* Premium Restore */
+"gv_premium_restore_success_title" = "복원 완료";
+"gv_premium_restore_success_message" = "구독이 성공적으로 복원되었습니다.";
+"gv_premium_restore_none_title" = "구독 없음";
+"gv_premium_restore_none_message" = "이 Apple ID에서 활성 구독을 찾을 수 없습니다.";
+
