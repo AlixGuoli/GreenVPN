@@ -89,7 +89,7 @@ enum GVAPIManager {
     }
     
     /// 同步服务配置：
-    /// 1. 通过 GVHttpClient 发起请求（参数：group=节点ID, vip=0）
+    /// 1. 通过 GVHttpClient 发起请求（参数：group=节点ID, vip=是否VIP：0/1）
     /// 2. 成功后保存加密配置到 UserDefaults
     /// 3. 解密配置、解析IP、配置直连、保存到Group
     static func syncServiceConfig() async {
@@ -98,7 +98,10 @@ enum GVAPIManager {
             // 获取当前选中的节点 ID，没有则使用 -1
             let nodeId = GVNodeManager.shared.selectedNodeId ?? -1
             GVLogger.log("APIManager", "使用节点 ID: \(nodeId)")
-            let params = ["group": nodeId, "vip": 0]
+            
+            let isVipFlag = GVPurchaseManager.shared.isVIP ? 1 : 0
+            GVLogger.log("APIManager", "当前 VIP 标志：\(isVipFlag)")
+            let params: [String: Any] = ["group": nodeId, "vip": isVipFlag]
             if let encryptedConfig = try await GVHttpClient.shared.request(path: GVAPIPaths.serviceConfigPath, params: params) {
                 GVLogger.log("APIManager", "服务配置接口请求成功，暂存到内存（连接成功后再保存到 UserDefaults）")
                 // 只保存到内存，等连接成功后再保存到 UserDefaults
