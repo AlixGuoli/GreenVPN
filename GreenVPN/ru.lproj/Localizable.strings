@@ -175,20 +175,25 @@
 "gv_premium_title" = "VPN Premium";
 "gv_premium_subtitle" = "Откройте больше возможностей";
 "gv_premium_expires" = "Действительно до: %@";
-"gv_premium_not_subscribed" = "Подписка не оформлена";
+"gv_premium_not_subscribed" = "Перейти на Premium";
 
 /* Premium Plans */
 "gv_premium_plan_weekly" = "Еженедельная";
 "gv_premium_plan_monthly" = "Месячная";
 "gv_premium_plan_annual" = "Годовая";
+"gv_premium_plan_tag_most_popular" = "Самый популярный";
+"gv_premium_plan_tag_best_value" = "Лучшая цена";
 
 /* Premium Features */
-"gv_premium_feature_no_ads" = "Без рекламы";
-"gv_premium_feature_faster_speeds" = "Более высокая скорость";
-"gv_premium_feature_global_servers" = "Глобальная сеть серверов";
+"gv_premium_feature_no_ads_title" = "Без рекламы";
+"gv_premium_feature_no_ads_subtitle" = "Наслаждайтесь просмотром без прерываний";
+"gv_premium_feature_faster_speeds_title" = "Премиум серверы";
+"gv_premium_feature_faster_speeds_subtitle" = "Оптимизированы для максимальной скорости";
+"gv_premium_feature_global_servers_title" = "Глобальная сеть серверов";
+"gv_premium_feature_global_servers_subtitle" = "Доступ ко всем премиум серверам по всему миру";
 
 /* Premium Buttons */
-"gv_premium_button_subscribe" = "Оформить подписку";
+"gv_premium_button_subscribe" = "Согласиться и оплатить";
 "gv_premium_button_change_plan" = "Изменить тариф";
 "gv_premium_button_restore" = "Восстановить покупку";
 "gv_premium_button_processing" = "Обработка...";
@@ -197,14 +202,18 @@
 
 /* Premium Agreement */
 "gv_premium_agreement" = "Условия обслуживания";
-"gv_premium_agreement_auto_renewal" = "«Условия автоматического продления»";
-"gv_premium_agreement_membership" = "«Условия членства»";
+"gv_premium_agreement_prefix" = "Продолжая, вы соглашаетесь с";
+"gv_premium_agreement_auto_renewal" = "Условиями автоматического продления";
+"gv_premium_agreement_and" = " и ";
+"gv_premium_agreement_membership" = "Условиями членства";
 
 /* Premium Terms */
 "gv_premium_terms_title" = "Условия и положения";
 "gv_premium_terms_payment" = "Оплата будет списана с вашего аккаунта iTunes при подтверждении покупки. Плата за продление подписки взимается не позднее чем за 24 часа до окончания текущего периода. Вы можете управлять подпиской и отключить автопродление в настройках учётной записи Apple ID.";
 "gv_premium_terms_of_use" = "Условия использования";
 "gv_premium_privacy_policy" = "Политика конфиденциальности";
+"gv_premium_terms_link_prefix" = "См. ";
+"gv_premium_terms_link_and" = " и ";
 
 /* Premium Errors */
 "gv_premium_error" = "Ошибка";

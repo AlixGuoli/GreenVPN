@@ -175,20 +175,25 @@
 "gv_premium_title" = "VPNプレミアム";
 "gv_premium_subtitle" = "より多くの機能を利用できます";
 "gv_premium_expires" = "有効期限：%@";
-"gv_premium_not_subscribed" = "未加入";
+"gv_premium_not_subscribed" = "Premiumにアップグレード";
 
 /* Premium Plans */
 "gv_premium_plan_weekly" = "週間プラン";
 "gv_premium_plan_monthly" = "月額プラン";
 "gv_premium_plan_annual" = "年額プラン";
+"gv_premium_plan_tag_most_popular" = "人気No.1";
+"gv_premium_plan_tag_best_value" = "お得";
 
 /* Premium Features */
-"gv_premium_feature_no_ads" = "広告なし";
-"gv_premium_feature_faster_speeds" = "より高速な接続";
-"gv_premium_feature_global_servers" = "世界中のサーバーネットワーク";
+"gv_premium_feature_no_ads_title" = "広告なし";
+"gv_premium_feature_no_ads_subtitle" = "中断のない快適なブラウジング";
+"gv_premium_feature_faster_speeds_title" = "プレミアムサーバー";
+"gv_premium_feature_faster_speeds_subtitle" = "最大速度に最適化";
+"gv_premium_feature_global_servers_title" = "世界中のサーバーネットワーク";
+"gv_premium_feature_global_servers_subtitle" = "すべてのプレミアムサーバーにアクセス";
 
 /* Premium Buttons */
-"gv_premium_button_subscribe" = "購読する";
+"gv_premium_button_subscribe" = "同意して支払う";
 "gv_premium_button_change_plan" = "プランを変更";
 "gv_premium_button_restore" = "購入を復元";
 "gv_premium_button_processing" = "処理中...";
@@ -197,14 +202,18 @@
 
 /* Premium Agreement */
 "gv_premium_agreement" = "利用規約";
-"gv_premium_agreement_auto_renewal" = "《自動更新規約》";
-"gv_premium_agreement_membership" = "《メンバーシップ規約》";
+"gv_premium_agreement_prefix" = "続行することで、";
+"gv_premium_agreement_auto_renewal" = "自動更新規約";
+"gv_premium_agreement_and" = "および";
+"gv_premium_agreement_membership" = "メンバーシップ規約";
 
 /* Premium Terms */
 "gv_premium_terms_title" = "利用規約および条件";
 "gv_premium_terms_payment" = "お支払いは購入確定時にお客様の iTunes アカウントに請求されます。現在のサブスクリプション期間が終了する24時間前以内に、更新料金が自動的に請求されます。Apple ID アカウントの設定からサブスクリプションを管理したり、自動更新をオフにすることができます。";
 "gv_premium_terms_of_use" = "利用規約";
 "gv_premium_privacy_policy" = "プライバシーポリシー";
+"gv_premium_terms_link_prefix" = "";
+"gv_premium_terms_link_and" = "および";
 
 /* Premium Errors */
 "gv_premium_error" = "エラー";

@@ -174,21 +174,26 @@
 /* Premium / Purchase */
 "gv_premium_title" = "VPN Premium";
 "gv_premium_subtitle" = "Unlock more features";
-"gv_premium_expires" = "Expires: %@";
-"gv_premium_not_subscribed" = "Not subscribed";
+"gv_premium_expires" = "Valid until: %@";
+"gv_premium_not_subscribed" = "Upgrade to Premium";
 
 /* Premium Plans */
 "gv_premium_plan_weekly" = "Weekly";
 "gv_premium_plan_monthly" = "Monthly";
 "gv_premium_plan_annual" = "Annual";
+"gv_premium_plan_tag_most_popular" = "Most popular";
+"gv_premium_plan_tag_best_value" = "Best value";
 
 /* Premium Features */
-"gv_premium_feature_no_ads" = "No ads";
-"gv_premium_feature_faster_speeds" = "Faster speeds";
-"gv_premium_feature_global_servers" = "Global server network";
+"gv_premium_feature_no_ads_title" = "Ad-free experience";
+"gv_premium_feature_no_ads_subtitle" = "Enjoy uninterrupted browsing";
+"gv_premium_feature_faster_speeds_title" = "Premium servers";
+"gv_premium_feature_faster_speeds_subtitle" = "Optimized for maximum speed";
+"gv_premium_feature_global_servers_title" = "Global server network";
+"gv_premium_feature_global_servers_subtitle" = "Access to all premium servers worldwide";
 
 /* Premium Buttons */
-"gv_premium_button_subscribe" = "Subscribe";
+"gv_premium_button_subscribe" = "Agree and Pay";
 "gv_premium_button_change_plan" = "Change Plan";
 "gv_premium_button_restore" = "Restore Purchase";
 "gv_premium_button_processing" = "Processing...";
@@ -197,14 +202,18 @@
 
 /* Premium Agreement */
 "gv_premium_agreement" = "Agreement";
-"gv_premium_agreement_auto_renewal" = "《Auto Renewal Terms》";
-"gv_premium_agreement_membership" = "《Membership Terms》";
+"gv_premium_agreement_prefix" = "By continuing, you agree to the";
+"gv_premium_agreement_auto_renewal" = "Auto-Renewal Terms";
+"gv_premium_agreement_and" = " and ";
+"gv_premium_agreement_membership" = "Membership Terms";
 
 /* Premium Terms */
 "gv_premium_terms_title" = "Terms & Conditions";
 "gv_premium_terms_payment" = "Payment will be charged to your iTunes Account upon purchase confirmation. Renewal charges will be applied to your account within 24 hours before the current subscription period ends. You can manage your subscription and disable auto-renewal in your Apple ID account settings.";
 "gv_premium_terms_of_use" = "Terms of Use";
 "gv_premium_privacy_policy" = "Privacy Policy";
+"gv_premium_terms_link_prefix" = "See ";
+"gv_premium_terms_link_and" = " and ";
 
 /* Premium Errors */
 "gv_premium_error" = "Error";

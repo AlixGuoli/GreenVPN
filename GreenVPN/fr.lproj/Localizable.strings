@@ -171,3 +171,57 @@
 "gv_review_title" = "Notez-nous";
 "gv_review_body" = "Nous apprécions vos commentaires et les utilisons pour améliorer notre application. Votre soutien nous aide à continuer à progresser.";
 
+/* Premium / Purchase */
+"gv_premium_title" = "VPN Premium";
+"gv_premium_subtitle" = "Débloquez plus de fonctionnalités";
+"gv_premium_expires" = "Valide jusqu'au: %@";
+"gv_premium_not_subscribed" = "Passer à Premium";
+
+/* Premium Plans */
+"gv_premium_plan_weekly" = "Hebdomadaire";
+"gv_premium_plan_monthly" = "Mensuel";
+"gv_premium_plan_annual" = "Annuel";
+"gv_premium_plan_tag_most_popular" = "Le plus populaire";
+"gv_premium_plan_tag_best_value" = "Meilleur prix";
+
+/* Premium Features */
+"gv_premium_feature_no_ads_title" = "Sans publicité";
+"gv_premium_feature_no_ads_subtitle" = "Profitez d'une navigation sans interruption";
+"gv_premium_feature_faster_speeds_title" = "Serveurs premium";
+"gv_premium_feature_faster_speeds_subtitle" = "Optimisés pour une vitesse maximale";
+"gv_premium_feature_global_servers_title" = "Réseau de serveurs mondial";
+"gv_premium_feature_global_servers_subtitle" = "Accès à tous les serveurs premium dans le monde entier";
+
+/* Premium Buttons */
+"gv_premium_button_subscribe" = "Accepter et payer";
+"gv_premium_button_change_plan" = "Changer de plan";
+"gv_premium_button_restore" = "Restaurer les achats";
+"gv_premium_button_processing" = "Traitement...";
+"gv_premium_button_ok" = "OK";
+"gv_premium_button_loading" = "Chargement...";
+
+/* Premium Agreement */
+"gv_premium_agreement" = "Accord";
+"gv_premium_agreement_prefix" = "En continuant, vous acceptez les";
+"gv_premium_agreement_auto_renewal" = "Conditions de renouvellement automatique";
+"gv_premium_agreement_and" = " et les ";
+"gv_premium_agreement_membership" = "Conditions d'adhésion";
+
+/* Premium Terms */
+"gv_premium_terms_title" = "Conditions générales";
+"gv_premium_terms_payment" = "Le paiement sera débité sur votre compte iTunes lors de la confirmation de l'achat. Les frais de renouvellement seront appliqués à votre compte dans les 24 heures précédant la fin de la période d'abonnement actuelle. Vous pouvez gérer votre abonnement et désactiver le renouvellement automatique dans les paramètres de votre compte Apple ID.";
+"gv_premium_terms_of_use" = "Conditions d'utilisation";
+"gv_premium_privacy_policy" = "Politique de confidentialité";
+"gv_premium_terms_link_prefix" = "Voir ";
+"gv_premium_terms_link_and" = " et ";
+
+/* Premium Errors */
+"gv_premium_error" = "Erreur";
+"gv_premium_error_product_not_loaded" = "Produit non chargé";
+"gv_premium_error_restore_failed" = "Échec de la restauration des achats";
+
+/* Premium Restore */
+"gv_premium_restore_success_title" = "Restauré";
+"gv_premium_restore_success_message" = "Vos achats ont été restaurés avec succès.";
+"gv_premium_restore_none_title" = "Aucun achat";
+"gv_premium_restore_none_message" = "Aucun abonnement actif trouvé pour cet Apple ID.";

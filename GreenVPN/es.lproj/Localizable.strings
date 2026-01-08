@@ -82,6 +82,10 @@
 
 "gv_common_cancel" = "Cancelar";
 "gv_common_close" = "Cerrar";
+"gv_common_ok" = "OK";
+
+"gv_node_switch_title" = "Desconexión requerida";
+"gv_node_switch_message" = "Por favor, desconéctese del VPN antes de cambiar de nodo.";
 
 "gv_result_nav_title" = "Resultado de la conexión";
 "gv_result_title_connect_success" = "Conectado";
@@ -171,20 +175,25 @@
 "gv_premium_title" = "VPN Premium";
 "gv_premium_subtitle" = "Desbloquea más funciones";
 "gv_premium_expires" = "Válido hasta: %@";
-"gv_premium_not_subscribed" = "Sin suscripción";
+"gv_premium_not_subscribed" = "Actualizar a Premium";
 
 /* Premium Plans */
 "gv_premium_plan_weekly" = "Semanal";
 "gv_premium_plan_monthly" = "Mensual";
 "gv_premium_plan_annual" = "Anual";
+"gv_premium_plan_tag_most_popular" = "Más popular";
+"gv_premium_plan_tag_best_value" = "Mejor precio";
 
 /* Premium Features */
-"gv_premium_feature_no_ads" = "Sin anuncios";
-"gv_premium_feature_faster_speeds" = "Conexiones más rápidas";
-"gv_premium_feature_global_servers" = "Red global de servidores";
+"gv_premium_feature_no_ads_title" = "Sin anuncios";
+"gv_premium_feature_no_ads_subtitle" = "Disfruta de una navegación sin interrupciones";
+"gv_premium_feature_faster_speeds_title" = "Servidores premium";
+"gv_premium_feature_faster_speeds_subtitle" = "Optimizados para máxima velocidad";
+"gv_premium_feature_global_servers_title" = "Red global de servidores";
+"gv_premium_feature_global_servers_subtitle" = "Acceso a todos los servidores premium en todo el mundo";
 
 /* Premium Buttons */
-"gv_premium_button_subscribe" = "Suscribirse";
+"gv_premium_button_subscribe" = "Aceptar y pagar";
 "gv_premium_button_change_plan" = "Cambiar plan";
 "gv_premium_button_restore" = "Restaurar compras";
 "gv_premium_button_processing" = "Procesando...";
@@ -193,14 +202,18 @@
 
 /* Premium Agreement */
 "gv_premium_agreement" = "Acuerdo";
-"gv_premium_agreement_auto_renewal" = "«Términos de renovación automática»";
-"gv_premium_agreement_membership" = "«Términos de membresía»";
+"gv_premium_agreement_prefix" = "Al continuar, acepta los";
+"gv_premium_agreement_auto_renewal" = "Términos de renovación automática";
+"gv_premium_agreement_and" = " y los ";
+"gv_premium_agreement_membership" = "Términos de membresía";
 
 /* Premium Terms */
 "gv_premium_terms_title" = "Términos y condiciones";
 "gv_premium_terms_payment" = "El pago se cargará a tu cuenta de iTunes al confirmar la compra. La renovación se cobrará hasta 24 horas antes de que finalice el período de suscripción actual. Puedes gestionar tu suscripción y desactivar la renovación automática en los ajustes de tu cuenta de Apple ID.";
 "gv_premium_terms_of_use" = "Términos de uso";
 "gv_premium_privacy_policy" = "Política de privacidad";
+"gv_premium_terms_link_prefix" = "Ver ";
+"gv_premium_terms_link_and" = " y ";
 
 /* Premium Errors */
 "gv_premium_error" = "Error";

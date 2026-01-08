@@ -82,6 +82,10 @@
 
 "gv_common_cancel" = "Abbrechen";
 "gv_common_close" = "Schließen";
+"gv_common_ok" = "OK";
+
+"gv_node_switch_title" = "Trennung erforderlich";
+"gv_node_switch_message" = "Bitte trennen Sie die VPN-Verbindung, bevor Sie den Knoten wechseln.";
 
 "gv_result_nav_title" = "Verbindungsergebnis";
 "gv_result_title_connect_success" = "Verbunden";
@@ -170,21 +174,26 @@
 /* Premium / Purchase */
 "gv_premium_title" = "VPN Premium";
 "gv_premium_subtitle" = "Schalte weitere Funktionen frei";
-"gv_premium_expires" = "Läuft ab am: %@";
-"gv_premium_not_subscribed" = "Kein Abo";
+"gv_premium_expires" = "Gültig bis: %@";
+"gv_premium_not_subscribed" = "Auf Premium upgraden";
 
 /* Premium Plans */
 "gv_premium_plan_weekly" = "Wöchentlich";
 "gv_premium_plan_monthly" = "Monatlich";
 "gv_premium_plan_annual" = "Jährlich";
+"gv_premium_plan_tag_most_popular" = "Beliebteste";
+"gv_premium_plan_tag_best_value" = "Bester Preis";
 
 /* Premium Features */
-"gv_premium_feature_no_ads" = "Keine Werbung";
-"gv_premium_feature_faster_speeds" = "Schnellere Verbindung";
-"gv_premium_feature_global_servers" = "Globales Servernetzwerk";
+"gv_premium_feature_no_ads_title" = "Keine Werbung";
+"gv_premium_feature_no_ads_subtitle" = "Unterbrechungsfreies Surfen genießen";
+"gv_premium_feature_faster_speeds_title" = "Premium-Server";
+"gv_premium_feature_faster_speeds_subtitle" = "Für maximale Geschwindigkeit optimiert";
+"gv_premium_feature_global_servers_title" = "Globales Servernetzwerk";
+"gv_premium_feature_global_servers_subtitle" = "Zugriff auf alle Premium-Server weltweit";
 
 /* Premium Buttons */
-"gv_premium_button_subscribe" = "Abonnieren";
+"gv_premium_button_subscribe" = "Zustimmen und bezahlen";
 "gv_premium_button_change_plan" = "Tarif ändern";
 "gv_premium_button_restore" = "Abo wiederherstellen";
 "gv_premium_button_processing" = "Wird verarbeitet...";
@@ -193,14 +202,18 @@
 
 /* Premium Agreement */
 "gv_premium_agreement" = "Vereinbarung";
-"gv_premium_agreement_auto_renewal" = "„Bedingungen zur automatischen Verlängerung“";
-"gv_premium_agreement_membership" = "„Mitgliedschaftsbedingungen“";
+"gv_premium_agreement_prefix" = "Durch Fortfahren stimmen Sie den";
+"gv_premium_agreement_auto_renewal" = "Bedingungen zur automatischen Verlängerung";
+"gv_premium_agreement_and" = " und den ";
+"gv_premium_agreement_membership" = "Mitgliedschaftsbedingungen";
 
 /* Premium Terms */
 "gv_premium_terms_title" = "Allgemeine Geschäftsbedingungen";
 "gv_premium_terms_payment" = "Die Zahlung wird bei Bestätigung des Kaufs deinem Apple‑ID‑Konto belastet. Die Verlängerungsgebühr wird bis zu 24 Stunden vor Ablauf des aktuellen Abrechnungszeitraums berechnet. Du kannst dein Abo in den Einstellungen deiner Apple‑ID verwalten und die automatische Verlängerung deaktivieren.";
 "gv_premium_terms_of_use" = "Nutzungsbedingungen";
 "gv_premium_privacy_policy" = "Datenschutzrichtlinie";
+"gv_premium_terms_link_prefix" = "Siehe ";
+"gv_premium_terms_link_and" = " und ";
 
 /* Premium Errors */
 "gv_premium_error" = "Fehler";
