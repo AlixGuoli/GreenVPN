@@ -293,51 +293,15 @@ class GVSessionAgent : ObservableObject {
                     // 探测成功后，先更新全局连接状态（用于广告系统判断）
                     // UI 还未更新，但广告需要立即开始加载
                     GVAppState.shared.currentPhase = .online
-                    // 等待广告加载完成后再显示结果页
-                    waitForMediaResource()
+                    // 去掉 AdMob 后，连接结果不等待广告加载：按当前 adsType 模式后台预热即可
+                    GVAdCoordinator.shared.prepareAll(moment: GVAdTrigger.connect)
+                    markConnectSucceeded()
                 } else {
                     markConnectFailed()
                 }
                 awaitingPostCheck = false
             }
         }
-    }
-    
-    /// 等待媒体资源加载（等待加载完成后更新UI）
-    private func waitForMediaResource() {
-        let beginTime = Date()
-        GVLogger.log("[Ad]", "媒体资源检查开始")
-        
-        var isCompleted = false
-        let maxWaitSeconds: TimeInterval = 15.0
-        
-        // 超时保护
-        let timeoutHandler = DispatchWorkItem { [weak self] in
-            guard let self = self, !isCompleted else { return }
-            isCompleted = true
-            let timeoutEnd = Date()
-            GVLogger.log("[Ad]", "媒体资源检查超时，耗时: \(timeoutEnd.timeIntervalSince(beginTime))秒")
-            self.markConnectSucceeded()
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + maxWaitSeconds, execute: timeoutHandler)
-        
-        // 请求媒体资源（AdMob，因为已连接）
-        GVAdCoordinator.shared.prepareGa(moment: GVAdTrigger.connect, onAdReady: { [weak self] in
-            guard let self = self, !isCompleted else { return }
-            isCompleted = true
-            timeoutHandler.cancel()
-            let finishTime = Date()
-            GVLogger.log("[Ad]", "媒体资源检查成功，耗时: \(finishTime.timeIntervalSince(beginTime))秒")
-            self.markConnectSucceeded()
-        }, onAdFailed: { [weak self] in
-            guard let self = self, !isCompleted else { return }
-            isCompleted = true
-            timeoutHandler.cancel()
-            let finishTime = Date()
-            GVLogger.log("[Ad]", "媒体资源检查失败，耗时: \(finishTime.timeIntervalSince(beginTime))秒")
-            self.markConnectSucceeded()
-        })
     }
     
     /// 网络可达性验证（连接成功后探测）

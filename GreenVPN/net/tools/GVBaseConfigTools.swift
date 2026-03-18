@@ -53,12 +53,47 @@ final class GVBaseConfigTools {
     
     /// 获取 adsOff
     func getAdsOff() -> Bool? {
+        /// 测试服
+        return false
         return extractField(path: ["commonConf", "adsOff"]) as? Bool
     }
     
     /// 获取 adsType
     func adsType() -> String? {
+        /// 测试服
+        return "y;e"
         return extractField(path: ["commonConf", "adsType"]) as? String
+    }
+
+    /// 基于 adsType 解析 Yandex / EM 的开关模式
+    ///
+    /// - none:    没有 y、也没有 e（完全关闭 Yandex 相关广告）
+    /// - legacy:  只有 y，没有 e（使用原版 Yandex Int）
+    /// - em:      只要包含 e（有无 y 都是 EM 模式）
+    enum YandexAdsMode {
+        case none
+        case legacy
+        case em
+    }
+
+    /// 当前 Yandex 广告模式
+    func yandexAdsMode() -> YandexAdsMode {
+        guard let type = adsType(), !type.isEmpty else {
+            return .none
+        }
+
+        let parts = type.components(separatedBy: ";")
+        let hasY = parts.contains("y")
+        let hasE = parts.contains("e")
+
+        if hasE {
+            // 只要有 e，一律进入 EM 模式（不回退到 legacy）
+            return .em
+        } else if hasY {
+            return .legacy
+        } else {
+            return .none
+        }
     }
     
     /// 获取 git_version

@@ -96,15 +96,9 @@ struct ContentView: View {
             return
         }
         
-        // 按优先级展示媒体：AdMob > Yandex Banner > Yandex Int
-        if mediaCoordinator.queryGa() {
-            GVLogger.log("[Ad]", "展示 AdMob")
-            mediaCoordinator.presentGa(moment: moment)
-        } else if mediaCoordinator.queryBa() {
-            GVLogger.log("[Ad]", "展示 Yandex Banner")
-            mediaCoordinator.presentBa()
-        } else if mediaCoordinator.queryYa() {
-            GVLogger.log("[Ad]", "展示 Yandex Int")
+        // 仅展示插屏：Yandex legacy 或 EM
+        if mediaCoordinator.queryYa() {
+            GVLogger.log("[Ad]", "展示 Yandex Int/EM")
             mediaCoordinator.presentYa()
         }
     }

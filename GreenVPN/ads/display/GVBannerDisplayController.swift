@@ -24,6 +24,10 @@ final class GVBannerDisplayController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        // Banner 已下线：保留类避免链接错误，但不再展示任何内容
+        dismiss(animated: false)
+        return
+
         initializeAd()
         prepareInterface()
         registerObservers()

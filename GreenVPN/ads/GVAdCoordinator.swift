@@ -27,6 +27,7 @@ final class GVAdCoordinator {
     private let gAdHandler = GVAdMobInterstitialManager.shared
     private let yBanHandler = GVYandexBannerManager()
     private let yIntHandler = GVYandexInterstitialManager()
+    private let yEmIntHandler = GVYandexEMInterstitialManager()
     
     private init() {}
     
@@ -57,6 +58,29 @@ final class GVAdCoordinator {
         GVLogger.log("[Ad]", "Yandex 关闭")
         return false
     }
+
+    /// Yandex 插屏广告模式（legacy / EM / none）
+    private var yandexMode: GVBaseConfigTools.YandexAdsMode {
+        GVBaseConfigTools.shared.yandexAdsMode()
+    }
+
+    private var yandexModeLabel: String {
+        switch yandexMode {
+        case .none: return "none"
+        case .legacy: return "yandex"
+        case .em: return "em"
+        }
+    }
+
+    /// Yandex 插屏是否开启（包含 legacy 和 EM 两种模式）
+    private var isYandexInterstitialEnabled: Bool {
+        switch yandexMode {
+        case .none:
+            return false
+        case .legacy, .em:
+            return true
+        }
+    }
     
     /// AdMob 广告是否开启（检查 adsType 是否包含 "a" 且已连接）
     private var isAdmobEnabled: Bool {
@@ -76,35 +100,43 @@ final class GVAdCoordinator {
     // MARK: - 状态检查方法
     
     /// 检查 Yandex Banner 广告是否可用
+    ///
+    /// 最新策略：Banner 已下线，永远返回 false（保留方法签名，便于逐步移除调用点）
     func queryBa() -> Bool {
-        return yBanHandler.hasReadyAd()
+        return false
     }
     
     /// 检查 Yandex 插屏广告是否可用
     func queryYa() -> Bool {
-        return yIntHandler.hasReadyAd()
+        guard isYandexInterstitialEnabled else { return false }
+
+        switch yandexMode {
+        case .none:
+            return false
+        case .legacy:
+            return yIntHandler.hasReadyAd()
+        case .em:
+            return yEmIntHandler.hasReadyAd()
+        }
     }
     
     /// 检查 AdMob 插屏广告是否可用（需要已连接）
+    ///
+    /// 最新策略：AdMob 已下线，永远返回 false（保留方法签名，便于逐步移除调用点）
     func queryGa() -> Bool {
-        if GVAppState.shared.currentPhase == .online {
-            return gAdHandler.hasReadyAd()
-        } else {
-            gAdHandler.resetAd()
-            return false
-        }
+        return false
     }
     
     /// 检查是否有 Yandex 广告可用
     func hasYa() -> Bool {
         guard isAdsEnabled else { return false }
-        return queryBa() || queryYa()
+        return queryYa()
     }
     
     /// 检查是否有任何广告可用
     func hasAny() -> Bool {
         guard isAdsEnabled else { return false }
-        return hasYa() || queryGa()
+        return queryYa()
     }
     
     // MARK: - 广告加载管理
@@ -112,20 +144,22 @@ final class GVAdCoordinator {
     /// 预热所有广告
     /// - Parameter moment: 广告触发时机字符串（可选）
     func prepareAll(moment: String? = nil) {
-        GVLogger.log("[Ad]", "加载所有广告 | moment: \(moment ?? "nil")")
+        GVLogger.log("[Ad]", "加载插屏广告 | moment: \(moment ?? "nil") | mode: \(yandexModeLabel)")
         
         guard isAdsEnabled else {
             GVLogger.log("[Ad]", "广告已禁用，跳过加载")
             return
         }
-        
-        if isYandexEnabled {
-            yBanHandler.startLoading(moment: moment)
+
+        // 仅加载插屏：Yandex legacy 或 EM（取决于 adsType）
+        guard isYandexInterstitialEnabled else { return }
+        switch yandexMode {
+        case .none:
+            return
+        case .legacy:
             yIntHandler.startLoading(moment: moment)
-        }
-        
-        if isAdmobEnabled {
-            gAdHandler.startLoading(moment: moment)
+        case .em:
+            yEmIntHandler.startLoading(moment: moment)
         }
     }
     
@@ -134,19 +168,9 @@ final class GVAdCoordinator {
     ///   - onAdReady: 加载成功回调
     ///   - onAdFailed: 加载失败回调
     func prepareBa(onAdReady: (() -> Void)? = nil, onAdFailed: (() -> Void)? = nil) {
-        GVLogger.log("[Ad]", "加载 Yandex Banner")
-        
-        if isAdsEnabled && isYandexEnabled {
-            if queryBa() {
-                onAdReady?()
-            } else {
-                yBanHandler.onAdReady = onAdReady
-                yBanHandler.onAdFailed = onAdFailed
-                yBanHandler.startLoading()
-            }
-        } else {
-            onAdReady?()
-        }
+        // Banner 已下线：保持回调为“可继续流程”，避免阻塞启动流程
+        GVLogger.log("[Ad]", "Banner 已下线，跳过加载")
+        onAdReady?()
     }
     
     /// 预热 Yandex 插屏广告
@@ -154,18 +178,29 @@ final class GVAdCoordinator {
     ///   - onAdReady: 加载成功回调
     ///   - onAdFailed: 加载失败回调
     func prepareYa(onAdReady: (() -> Void)? = nil, onAdFailed: (() -> Void)? = nil) {
-        GVLogger.log("[Ad]", "加载 Yandex Int")
-        
-        if isAdsEnabled && isYandexEnabled {
-            if queryYa() {
-                onAdReady?()
-            } else {
-                yIntHandler.onAdReady = onAdReady
-                yIntHandler.onAdFailed = onAdFailed
-                yIntHandler.startLoading()
-            }
-        } else {
+        GVLogger.log("[Ad]", "加载插屏 | mode: \(yandexModeLabel)")
+
+        guard isAdsEnabled, isYandexInterstitialEnabled else {
             onAdReady?()
+            return
+        }
+
+        if queryYa() {
+            onAdReady?()
+            return
+        }
+
+        switch yandexMode {
+        case .none:
+            onAdFailed?()
+        case .legacy:
+            yIntHandler.onAdReady = onAdReady
+            yIntHandler.onAdFailed = onAdFailed
+            yIntHandler.startLoading()
+        case .em:
+            yEmIntHandler.onAdReady = onAdReady
+            yEmIntHandler.onAdFailed = onAdFailed
+            yEmIntHandler.startLoading()
         }
     }
     
@@ -175,22 +210,16 @@ final class GVAdCoordinator {
     ///   - onAdReady: 加载成功回调
     ///   - onAdFailed: 加载失败回调
     func prepareGa(moment: String? = nil, onAdReady: (() -> Void)? = nil, onAdFailed: (() -> Void)? = nil) {
-        GVLogger.log("[Ad]", "加载 Admob Int")
-        
-        if isAdsEnabled && isAdmobEnabled {
-            gAdHandler.onAdReady = onAdReady
-            gAdHandler.onAdFailed = onAdFailed
-            gAdHandler.startLoading(moment: moment)
-        } else {
-            onAdReady?()
-        }
+        // AdMob 已下线：保持回调为“可继续流程”，避免阻塞调用方
+        GVLogger.log("[Ad]", "AdMob 已下线，跳过加载")
+        onAdReady?()
     }
     
     // MARK: - 广告展示
     
     /// 展示 Yandex Banner 广告
     func presentBa() {
-        presentBannerAd()
+        GVLogger.log("[Ad]", "Banner 已下线，跳过展示")
     }
     
     /// 展示 Yandex 插屏广告
@@ -202,21 +231,19 @@ final class GVAdCoordinator {
     /// 展示 AdMob 插屏广告
     /// - Parameter moment: 广告触发时机字符串
     func presentGa(moment: String?) {
-        presentAdmobInterstitial(moment: moment)
+        GVLogger.log("[Ad]", "AdMob 已下线，跳过展示")
     }
     
     /// 获取 Banner 广告视图（用于自定义展示）
     /// - Returns: Banner 广告视图，如果可用
     func obtainBa() -> AdView? {
-        let adView = yBanHandler.getActiveAdView()
-        yBanHandler.restartLoading()
-        return adView
+        return nil
     }
     
     /// 设置 Banner 广告点击回调（用于 BannerBoard）
     /// - Parameter callback: 点击回调
     func setBannerClickCallback(_ callback: @escaping () -> Void) {
-        yBanHandler.onAdClicked = callback
+        // no-op (Banner 已下线)
     }
     
     // MARK: - 私有展示方法
@@ -224,8 +251,20 @@ final class GVAdCoordinator {
     /// 从根视图控制器展示 Yandex 插屏广告
     private func presentYandexInterstitial(onClose: (() -> Void)? = nil) {
         guard let rootVC = findTopViewController() else { return }
-        yIntHandler.onAdClosed = onClose
-        yIntHandler.showAd(from: rootVC, moment: nil)
+        guard isYandexInterstitialEnabled else { return }
+
+        switch yandexMode {
+        case .none:
+            return
+        case .legacy:
+            GVLogger.log("[Ad]", "展示插屏 | mode: yandex")
+            yIntHandler.onAdClosed = onClose
+            yIntHandler.showAd(from: rootVC, moment: nil)
+        case .em:
+            GVLogger.log("[Ad]", "展示插屏 | mode: em")
+            yEmIntHandler.onAdClosed = onClose
+            yEmIntHandler.showAd(from: rootVC, moment: nil)
+        }
     }
     
     /// 从根视图控制器展示 Banner 广告

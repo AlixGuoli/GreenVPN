@@ -212,15 +212,12 @@ struct GreenVPNApp: App {
         
         let contentManager = GVAdCoordinator.shared
         GVLogger.log("[Ad]", "🎬 开始展示启动页媒体")
-        
-        if contentManager.queryBa() {
-            GVLogger.log("[Ad]", "❤️ 展示 Banner")
-            contentManager.presentBa()
-        } else if contentManager.queryYa() {
-            GVLogger.log("[Ad]", "❤️ 展示 Int")
+
+        if contentManager.queryYa() {
+            GVLogger.log("[Ad]", "❤️ 展示 Int/EM")
             contentManager.presentYa()
         } else {
-            GVLogger.log("[Ad]", "❌ 无可用媒体")
+            GVLogger.log("[Ad]", "❌ 无可用插屏媒体")
         }
     }
     
@@ -283,17 +280,9 @@ struct GreenVPNApp: App {
     }
     
     private func showTopPriorityContent(mediaCoordinator: GVAdCoordinator) -> Bool {
-        // 优先级顺序：AdMob > Yandex Banner > Yandex Int
-        if mediaCoordinator.queryGa() {
-            GVLogger.log("[Ad]", "❤️ 展示 Admob")
-            mediaCoordinator.presentGa(moment: GVAdTrigger.foreground)
-            return true
-        } else if mediaCoordinator.queryBa() {
-            GVLogger.log("[Ad]", "❤️ 展示 Yandex Banner")
-            mediaCoordinator.presentBa()
-            return true
-        } else if mediaCoordinator.queryYa() {
-            GVLogger.log("[Ad]", "❤️ 展示 Yandex Int")
+        // 仅保留插屏（Yandex legacy 或 EM）
+        if mediaCoordinator.queryYa() {
+            GVLogger.log("[Ad]", "❤️ 展示 Yandex Int/EM")
             mediaCoordinator.presentYa()
             return true
         }

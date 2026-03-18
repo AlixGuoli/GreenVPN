@@ -197,7 +197,7 @@ struct GVIntroCurtain: View {
             await GVAPIManager.syncAds()
         }
         
-        // 3. 加载媒体资源（同时加载 Banner 和 Interstitial，优先等待 Banner）
+        // 3. 加载媒体资源（仅加载 Interstitial：Yandex/EM）
         let resourceReady = await loadMediaResources()
         DispatchQueue.main.async {
             if !isDone {
@@ -208,42 +208,8 @@ struct GVIntroCurtain: View {
     }
     
     private func loadMediaResources() async -> Bool {
-        // 同时开始加载两个资源
-        async let bannerResult = loadBannerResource()
-        async let intResult = loadInterstitialResource()
-        
-        // 先等待 Banner 的结果
-        let bannerOk = await bannerResult
-        if bannerOk {
-            GVLogger.log("[Ad]", "✅ Banner 执行完成，直接返回")
-            return true
-        } else {
-            GVLogger.log("[Ad]", "⏳ Banner 失败，等待 Int 结果")
-            let intOk = await intResult
-            return intOk
-        }
-    }
-    
-    private func loadBannerResource() async -> Bool {
-        return await withCheckedContinuation { continuation in
-            DispatchQueue.main.async {
-                var resumed = false
-                
-                GVAdCoordinator.shared.prepareBa(onAdReady: {
-                    if !resumed {
-                        resumed = true
-                        GVLogger.log("[Ad]", "✅ Banner 执行完成")
-                        continuation.resume(returning: true)
-                    }
-                }, onAdFailed: {
-                    if !resumed {
-                        resumed = true
-                        GVLogger.log("[Ad]", "❌ Banner 加载失败")
-                        continuation.resume(returning: false)
-                    }
-                })
-            }
-        }
+        // 只加载插屏（Yandex legacy 或 EM，取决于 adsType）
+        return await loadInterstitialResource()
     }
     
     private func loadInterstitialResource() async -> Bool {
@@ -254,13 +220,13 @@ struct GVIntroCurtain: View {
                 GVAdCoordinator.shared.prepareYa(onAdReady: {
                     if !resumed {
                         resumed = true
-                        GVLogger.log("[Ad]", "✅ Int 执行完成")
+                        GVLogger.log("[Ad]", "✅ Int/EM 执行完成")
                         continuation.resume(returning: true)
                     }
                 }, onAdFailed: {
                     if !resumed {
                         resumed = true
-                        GVLogger.log("[Ad]", "❌ Int 加载失败")
+                        GVLogger.log("[Ad]", "❌ Int/EM 加载失败")
                         continuation.resume(returning: false)
                     }
                 })

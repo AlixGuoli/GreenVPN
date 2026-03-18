@@ -60,7 +60,7 @@ final class GVAdsConfigTools {
     /// 获取插屏广告单元（带默认值）
     func interstitialUnit() -> String {
         /// 测试服
-        //return "demo-interstitial-yandex"
+        return "demo-interstitial-yandex"
         return extractAdKey(byName: "Yandex_Int_List") ?? "R-M-18328270-3"
     }
 
@@ -69,7 +69,8 @@ final class GVAdsConfigTools {
     /// - 返回值为以分号分隔的 key 串，例如："R-M-18442340-1;R-M-18442340-2"
     /// - 当配置中不存在对应字段时，返回空字符串，交由上层根据 adsType 决定是否可用
     func emInterstitialUnit() -> String {
-        return extractAdKey(byName: "Yandex_EMInt_List") ?? ""
+        /// 测试服
+        return extractAdKey(byName: "Yandex_EMInt_List") ?? "40-1;demo-interstitial-yandex"
     }
     
     /// 获取 AdMob 广告单元（带默认值）
