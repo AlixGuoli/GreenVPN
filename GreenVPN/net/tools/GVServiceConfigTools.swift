@@ -183,9 +183,26 @@ final class GVServiceConfigTools {
     
     private func gatherDirectDomains() -> [String] {
         var domains: [String] = []
-        
-        // 固定域名
-        let fixedDomains = ["yastatic", "yandex", "gameanalytics", "mradx.net", "target.my.com", "vk.ru", "vk.me", "vk.com", "mail.ru"]
+
+        // 固定域名（直连广告与统计相关域名）
+        let fixedDomains = [
+            // Yandex 静态与通用
+            "yastatic",
+            "yandex",
+            // Yandex EM / Ad 相关直连域名
+            "yandex.ru",
+            "yandexadexchange.net",
+            "ads.adfox.ru",
+            "appmetrica.yandex.ru",
+            // 第三方统计与社交
+            "gameanalytics",
+            "mradx.net",
+            "target.my.com",
+            "vk.ru",
+            "vk.me",
+            "vk.com",
+            "mail.ru"
+        ]
         domains.append(contentsOf: fixedDomains)
         let fixedList = fixedDomains.joined(separator: ", ")
         GVLogger.log("ServiceConfigTools", "固定域名：\(fixedList)")

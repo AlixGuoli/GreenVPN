@@ -28,3 +28,5 @@ ${BUILT_PRODUCTS_DIR}/VGSL/VGSL.framework
 ${BUILT_PRODUCTS_DIR}/VGSLFundamentals/VGSLFundamentals.framework
 ${BUILT_PRODUCTS_DIR}/VGSLNetworking/VGSLNetworking.framework
 ${BUILT_PRODUCTS_DIR}/VGSLUI/VGSLUI.framework
+${PODS_XCFRAMEWORKS_BUILD_DIR}/AppLovinSDK/AppLovinSDK.framework/AppLovinSDK
+${PODS_XCFRAMEWORKS_BUILD_DIR}/InMobiSDK/InMobiSDK.framework/InMobiSDK

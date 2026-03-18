@@ -32,19 +32,20 @@ final class GVAdsConfigTools {
     func parseAndSave(_ jsonString: String) {
         // 保存原始 JSON
         UserDefaults.standard.set(jsonString, forKey: adsConfigKey)
-        
+
         // 保存配置时间
         let saveDate = Date()
         UserDefaults.standard.set(saveDate, forKey: saveDateKey)
-        
+
         UserDefaults.standard.synchronize()
-        
+
         GVLogger.log("AdsConfigTools", "广告配置已保存，保存时间：\(saveDate)")
-        
+
         // 提取并打印关键字段（用于调试）
         GVLogger.log("AdsConfigTools", "Banner unit: \(bannerUnit())")
         GVLogger.log("AdsConfigTools", "Interstitial unit: \(interstitialUnit())")
         GVLogger.log("AdsConfigTools", "AdMob unit: \(admobUnit())")
+        GVLogger.log("AdsConfigTools", "EM Interstitial unit: \(emInterstitialUnit())")
         GVLogger.log("AdsConfigTools", "Penetration: \(penetration())")
         GVLogger.log("AdsConfigTools", "Delay: \(delay())")
     }
@@ -61,6 +62,14 @@ final class GVAdsConfigTools {
         /// 测试服
         //return "demo-interstitial-yandex"
         return extractAdKey(byName: "Yandex_Int_List") ?? "R-M-18328270-3"
+    }
+
+    /// 获取 EM 模式下的插屏广告单元列表
+    ///
+    /// - 返回值为以分号分隔的 key 串，例如："R-M-18442340-1;R-M-18442340-2"
+    /// - 当配置中不存在对应字段时，返回空字符串，交由上层根据 adsType 决定是否可用
+    func emInterstitialUnit() -> String {
+        return extractAdKey(byName: "Yandex_EMInt_List") ?? ""
     }
     
     /// 获取 AdMob 广告单元（带默认值）
