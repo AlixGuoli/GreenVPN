@@ -29,6 +29,9 @@ struct GreenVPNApp: App {
     @Environment(\.scenePhase) private var scenePhase
     
     private let consentKey = "GreenVPNPolicyAccepted_v1"
+    private let attRequestedKey = "GreenVPNATTRequested_v1"
+    private let attStatusKey = "GreenVPNATTStatus_v1"
+    private let homeBootstrapDoneKey = "GreenVPNHomeBootstrapDone_v1"
     
     init() {
         let agent = GVSessionAgent()
@@ -48,6 +51,47 @@ struct GreenVPNApp: App {
     
     private func hasConsent() -> Bool {
         return UserDefaults.standard.bool(forKey: consentKey)
+    }
+
+    private func hasRequestedATT() -> Bool {
+        UserDefaults.standard.bool(forKey: attRequestedKey)
+    }
+
+    private func markATTRequested() {
+        UserDefaults.standard.set(true, forKey: attRequestedKey)
+        UserDefaults.standard.synchronize()
+    }
+
+    private func hasATTResult() -> Bool {
+        UserDefaults.standard.object(forKey: attStatusKey) != nil
+    }
+
+    private func saveATTStatus(_ status: ATTrackingManager.AuthorizationStatus) {
+        // 用 rawValue 存，避免后续 enum 变动造成反序列化问题
+        UserDefaults.standard.set(status.rawValue, forKey: attStatusKey)
+        UserDefaults.standard.synchronize()
+    }
+
+    private func hasBootstrappedAtHome() -> Bool {
+        UserDefaults.standard.bool(forKey: homeBootstrapDoneKey)
+    }
+
+    private func markBootstrappedAtHome() {
+        UserDefaults.standard.set(true, forKey: homeBootstrapDoneKey)
+        UserDefaults.standard.synchronize()
+    }
+
+    /// 闸门：仅在「已同意隐私 + 已有 ATT 结果」时，才初始化 SDK 并触发一次广告加载
+    private func bootstrapAdsIfAllowed(moment: String) {
+        guard hasConsent() else { return }
+        guard hasATTResult() else {
+            GVLogger.log("SDK", "ATT 结果未就绪，跳过初始化/加载（闸门）")
+            return
+        }
+        guard !hasBootstrappedAtHome() else { return }
+        markBootstrappedAtHome()
+        GVSDKBootstrap.shared.startIfNeeded()
+        GVAdCoordinator.shared.prepareAll(moment: moment)
     }
     
     var body: some Scene {
@@ -69,6 +113,8 @@ struct GreenVPNApp: App {
                             setupComplete = true
                             // 启动结束后，如果还没同意隐私，则展示协议闸门
                             checkAndShowPolicyIfNeeded()
+                            // 老用户：进入主页时补一次加载（闸门会确保 ATT 已有结果才执行）
+                            bootstrapAdsIfAllowed(moment: GVAdTrigger.appSplash)
                         },
                         onFinishWithAd: {
                             introActive = false
@@ -79,6 +125,8 @@ struct GreenVPNApp: App {
                             }
                             // 启动结束后，如果还没同意隐私，则展示协议闸门
                             checkAndShowPolicyIfNeeded()
+                            // 老用户：进入主页时补一次加载（闸门会确保 ATT 已有结果才执行）
+                            bootstrapAdsIfAllowed(moment: GVAdTrigger.appSplash)
                         }
                     )
                     .environmentObject(appLanguage)
@@ -90,7 +138,9 @@ struct GreenVPNApp: App {
                     GVPolicyGate(
                         onAccept: {
                             UserDefaults.standard.set(true, forKey: consentKey)
-                            policyActive = false
+                            UserDefaults.standard.synchronize()
+                            // 新用户：同意隐私后先请求 ATT，等结果返回后再初始化与进入主页
+                            requestATTThenBootstrapAndEnter()
                         },
                         onDecline: {
                             // 保持与参考项目一致的"直接退出"行为
@@ -135,7 +185,10 @@ struct GreenVPNApp: App {
     private func handleSceneUpdate(_ newPhase: ScenePhase) {
         switch newPhase {
         case .active:
-            requestTrackingAccess()
+            // 老用户：保持原流程（启动即初始化+加载），这里仅补一次 ATT 请求，不改变广告加载顺序
+            if hasConsent() && !hasRequestedATT() {
+                requestATTOnly()
+            }
             enterActiveMode()
         case .inactive:
             break
@@ -178,25 +231,69 @@ struct GreenVPNApp: App {
         backgroundFlag = true
     }
     
-    /// 请求 ATT 追踪权限
-    private func requestTrackingAccess() {
-        if #available(iOS 14, *) {
-            // 延迟一点时间，确保应用完全启动
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                ATTrackingManager.requestTrackingAuthorization { status in
-                    switch status {
-                    case .authorized:
-                        GVLogger.log("App", "ATT 权限已授权")
-                    case .denied:
-                        GVLogger.log("App", "ATT 权限被拒绝")
-                    case .notDetermined:
-                        GVLogger.log("App", "ATT 权限未确定")
-                    case .restricted:
-                        GVLogger.log("App", "ATT 权限受限")
-                    @unknown default:
-                        GVLogger.log("App", "ATT 权限未知状态")
-                    }
-                }
+    private func requestATTThenBootstrapAndEnter() {
+        requestATTThenProceed {
+            // 新用户：必须点完 ATT 才进入主页；进入后再按闸门触发一次初始化/加载
+            policyActive = false
+            bootstrapAdsIfAllowed(moment: GVAdTrigger.appSplash)
+        }
+    }
+
+    private func requestATTOnly() {
+        guard #available(iOS 14, *) else { return }
+        guard !hasRequestedATT() else { return }
+
+        markATTRequested()
+        ATTrackingManager.requestTrackingAuthorization { status in
+            self.saveATTStatus(status)
+            switch status {
+            case .authorized:
+                GVLogger.log("App", "ATT 权限已授权")
+            case .denied:
+                GVLogger.log("App", "ATT 权限被拒绝")
+            case .restricted:
+                GVLogger.log("App", "ATT 权限受限")
+            case .notDetermined:
+                GVLogger.log("App", "ATT 权限未确定")
+            @unknown default:
+                GVLogger.log("App", "ATT 权限未知状态")
+            }
+        }
+    }
+
+    private func requestATTThenProceed(onFinish: (() -> Void)? = nil) {
+        // iOS 14 以下没有 ATT：直接继续（并记录一个“已完成 ATT”占位，满足闸门）
+        guard #available(iOS 14, *) else {
+            // 低版本没有 ATT，认为闸门已满足
+            UserDefaults.standard.set(1, forKey: attStatusKey)
+            UserDefaults.standard.synchronize()
+            onFinish?()
+            return
+        }
+
+        if hasRequestedATT() {
+            onFinish?()
+            return
+        }
+
+        markATTRequested()
+        ATTrackingManager.requestTrackingAuthorization { status in
+            self.saveATTStatus(status)
+            switch status {
+            case .authorized:
+                GVLogger.log("App", "ATT 权限已授权")
+            case .denied:
+                GVLogger.log("App", "ATT 权限被拒绝")
+            case .restricted:
+                GVLogger.log("App", "ATT 权限受限")
+            case .notDetermined:
+                GVLogger.log("App", "ATT 权限未确定")
+            @unknown default:
+                GVLogger.log("App", "ATT 权限未知状态")
+            }
+
+            DispatchQueue.main.async {
+                onFinish?()
             }
         }
     }

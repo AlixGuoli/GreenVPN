@@ -24,6 +24,8 @@ struct GVIntroCurtain: View {
     @State private var networkQueue: DispatchQueue?
     
     private let maxWaitTime: TimeInterval = 20.0
+    private let consentKey = "GreenVPNPolicyAccepted_v1"
+    private let attStatusKey = "GreenVPNATTStatus_v1"
     
     init(onFinish: @escaping () -> Void, onFinishWithAd: (() -> Void)? = nil) {
         self.onFinish = onFinish
@@ -208,6 +210,16 @@ struct GVIntroCurtain: View {
     }
     
     private func loadMediaResources() async -> Bool {
+        // 新用户：未同意隐私前不加载广告资源（等待同意隐私 + ATT 结果后再初始化与加载）
+        if !UserDefaults.standard.bool(forKey: consentKey) {
+            GVLogger.log("[Ad]", "隐私未同意，启动页跳过广告加载")
+            return false
+        }
+        // 闸门：没有 ATT 结果时，不提前走广告加载流程（避免改变原始加载时序）
+        if UserDefaults.standard.object(forKey: attStatusKey) == nil {
+            GVLogger.log("[Ad]", "ATT 结果未就绪，启动页跳过广告加载（闸门）")
+            return false
+        }
         // 只加载插屏（Yandex legacy 或 EM，取决于 adsType）
         return await loadInterstitialResource()
     }

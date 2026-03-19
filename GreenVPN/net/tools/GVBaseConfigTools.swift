@@ -54,14 +54,14 @@ final class GVBaseConfigTools {
     /// 获取 adsOff
     func getAdsOff() -> Bool? {
         /// 测试服
-        return false
+        //return false
         return extractField(path: ["commonConf", "adsOff"]) as? Bool
     }
     
     /// 获取 adsType
     func adsType() -> String? {
         /// 测试服
-        return "y;e"
+        //return "y;e"
         return extractField(path: ["commonConf", "adsType"]) as? String
     }
 
