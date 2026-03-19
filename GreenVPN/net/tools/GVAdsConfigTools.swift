@@ -69,8 +69,8 @@ final class GVAdsConfigTools {
     /// - 返回值为以分号分隔的 key 串，例如："R-M-18442340-1;R-M-18442340-2"
     /// - 当配置中不存在对应字段时，返回空字符串，交由上层根据 adsType 决定是否可用
     func emInterstitialUnit() -> String {
-        /// 测试服 - 默认key还没
-        return extractAdKey(byName: "Yandex_EMInt_List") ?? ""
+        /// 测试服
+        return extractAdKey(byName: "Yandex_EMInt_List") ?? "R-M-18952155-1"
     }
     
     /// 获取 AdMob 广告单元（带默认值）
