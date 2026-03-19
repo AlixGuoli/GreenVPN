@@ -101,6 +101,12 @@ final class GVAdCoordinator {
     func prepareAll(moment: String? = nil) {
         GVLogger.log("[Ad]", "加载插屏广告 | moment: \(moment ?? "nil") | mode: \(yandexModeLabel)")
         
+        // 展示过程中不再加载下一条，避免“边展示边加载”带来的顺序问题
+        if isPresenting {
+            GVLogger.log("[Ad]", "当前有广告正在展示，跳过本次预热")
+            return
+        }
+
         guard isAdsEnabled else {
             GVLogger.log("[Ad]", "广告已禁用，跳过加载")
             return
@@ -124,6 +130,12 @@ final class GVAdCoordinator {
     ///   - onAdFailed: 加载失败回调
     func prepareYa(onAdReady: (() -> Void)? = nil, onAdFailed: (() -> Void)? = nil) {
         GVLogger.log("[Ad]", "加载插屏 | mode: \(yandexModeLabel)")
+        
+        // 展示过程中不再加载下一条，保持“关闭后再拉下一条”的语义
+        if isPresenting {
+            GVLogger.log("[Ad]", "当前有广告正在展示，跳过本次预热")
+            return
+        }
 
         guard isAdsEnabled, isYandexInterstitialEnabled else {
             onAdReady?()
