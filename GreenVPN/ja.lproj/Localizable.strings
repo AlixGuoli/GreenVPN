@@ -1,5 +1,5 @@
 /* Intro curtain */
-"gv_intro_title" = "Cool VPN";
+"gv_intro_title" = "Супер VPN";
 "gv_intro_subtitle" = "安全 · 安定 · さりげなく";
 "gv_intro_progress" = "接続環境を準備中 %d%%";
 

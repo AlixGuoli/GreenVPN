@@ -33,8 +33,8 @@ class GVSystem {
             if managers.count == 0 {
                 let providerManager = NETunnelProviderManager()
                 providerManager.protocolConfiguration = NETunnelProviderProtocol()
-                providerManager.localizedDescription = "Cool VPN"
-                providerManager.protocolConfiguration?.serverAddress = "Cool VPN"
+                providerManager.localizedDescription = "Супер VPN"
+                providerManager.protocolConfiguration?.serverAddress = "Супер VPN"
                 providerManager.saveToPreferences { error in
                     guard error == nil else {
                         completion(error)
