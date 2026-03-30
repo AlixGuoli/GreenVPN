@@ -18,69 +18,69 @@ struct ContentView: View {
     var body: some View {
         NavigationStack(path: $routeCoordinator.path) {
             HomeScreen()
-            .navigationDestination(for: GVRoute.self) { route in
-                switch route {
-                case .connecting:
-                    ConnectingView()
-                case .result(let result):
-                    ResultView(
-                        result: result,
-                        onClose: {
-                            // 关闭结果页
-                            routeCoordinator.reset()
-                            homeSession.clearOutcome()
-                        }
-                    )
-                case .nodeList:
-                    GVNodeListView()
-                case .settings:
-                    GVSettingsView()
-                case .toolbox:
-                    GVToolboxView()
-                case .purchase:
-                    GVPurchaseView()
+                .navigationDestination(for: GVRoute.self) { route in
+                    switch route {
+                    case .connecting:
+                        ConnectingView()
+                    case .result(let result):
+                        ResultView(
+                            result: result,
+                            onClose: {
+                                // 关闭结果页
+                                routeCoordinator.reset()
+                                homeSession.clearOutcome()
+                            }
+                        )
+                    case .nodeList:
+                        GVNodeListView()
+                    case .settings:
+                        GVSettingsView()
+                    case .toolbox:
+                        GVToolboxView()
+                    case .purchase:
+                        GVPurchaseView()
+                    }
                 }
-            }
             // 根据 ViewModel 状态自动跳转
-            .onChange(of: homeSession.showingProgress) { show in
-                if show {
-                    routeCoordinator.showConnecting()
-                } else {
-                    routeCoordinator.dismissConnectingIfNeeded()
+                .onChange(of: homeSession.showingProgress) { show in
+                    if show {
+                        routeCoordinator.showConnecting()
+                    } else {
+                        routeCoordinator.dismissConnectingIfNeeded()
+                    }
                 }
-            }
-            .onChange(of: homeSession.outcome) { newValue in
-                if let r = newValue {
-                    // 只在"本轮第一次"结果变化时跳转，避免重复 push 同一个结果页
-                    if lastOutcomeShown != r {
-                        lastOutcomeShown = r
-                        routeCoordinator.showResult(r)
-                        
-                        // 根据结果类型展示媒体
-                        switch r {
-                        case .connectSuccess:
-                            displayMedia(moment: GVAdTrigger.connect)
-                        case .disconnectSuccess:
-                            displayMedia(moment: GVAdTrigger.disconnect)
-                        case .connectFail:
-                            // 连接失败不出媒体
-                            break
+                .onChange(of: homeSession.outcome) { newValue in
+                    if let r = newValue {
+                        // 只在"本轮第一次"结果变化时跳转，避免重复 push 同一个结果页
+                        if lastOutcomeShown != r {
+                            lastOutcomeShown = r
+                            routeCoordinator.showResult(r)
+                            
+                            // 根据结果类型展示媒体
+                            switch r {
+                            case .connectSuccess:
+                                displayMedia(moment: GVAdTrigger.connect)
+                            case .disconnectSuccess:
+                                displayMedia(moment: GVAdTrigger.disconnect)
+                            case .connectFail:
+                                // 连接失败不出媒体
+                                break
+                            }
+                        }
+                    } else {
+                        // 结果被清空（例如在结果页点击关闭）后，重置标记，下一轮可以再次展示
+                        lastOutcomeShown = nil
+                    }
+                }
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        NavigationLink {
+                            GVLanguageView()
+                        } label: {
+                            Image(systemName: "globe")
                         }
                     }
-                } else {
-                    // 结果被清空（例如在结果页点击关闭）后，重置标记，下一轮可以再次展示
-                    lastOutcomeShown = nil
                 }
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    NavigationLink {
-                        GVLanguageView()
-                    } label: {
-                        Image(systemName: "globe")
-                    }
-                }
-            }
         }
     }
     
@@ -116,82 +116,66 @@ private struct HomeScreen: View {
     
     var body: some View {
         ZStack {
-            // 背景：深色径向渐变 + 轻微噪点纹理
-            ZStack {
-                RadialGradient(
-                    colors: [
-                        Color(red: 6/255, green: 40/255, blue: 45/255),
-                        Color(red: 2/255, green: 10/255, blue: 16/255)
-                    ],
-                    center: .center,
-                    startRadius: 0,
-                    endRadius: UIScreen.main.bounds.height * 0.8
-                )
+            Image((homeSession.phase == .inProgress || homeSession.phase == .online) ? .bgConnect : .bgBase)
+                .resizable()
                 .ignoresSafeArea()
-                
-                NoiseOverlay()
-                    .ignoresSafeArea()
-                    .blendMode(.overlay)
-                    .opacity(0.10)
-            }
             
             ScrollView {
-                VStack(spacing: 20) {
-                    // 顶部栏：Logo + 标题 + 右侧设置入口
-                    HStack(spacing: 12) {
-                        Image("logo")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 34, height: 34)
-                            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-                            .shadow(color: Color.black.opacity(0.35), radius: 8, x: 0, y: 5)
-                        
-                        VStack(alignment: .leading, spacing: 2) {
+                VStack(spacing: 0) {
+                    // 顶部栏：标题 + 右侧入口
+                    HStack(alignment: .top) {
+                        VStack(alignment: .leading, spacing: 5) {
                             Text(GVAppInfo.displayName)
-                                .font(.system(size: 20, weight: .semibold, design: .rounded))
-                                .foregroundColor(.white)
-                    Text(statusText)
-                                .font(.system(size: 13, weight: .medium))
-                                .foregroundColor(Color.white.opacity(0.85))
-                }
-                
-                Spacer()
-                
-                // 右上角按钮：Premium 入口 + 设置入口
-                HStack(spacing: 8) {
-                    // Premium 入口（钻石图标）
-                    Button {
-                        routeCoordinator.showPurchase()
-                    } label: {
-                        Image("vip")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 22, height: 22)
-                            .padding(5)
-                            .background(
-                                Circle()
-                                    .fill(Color.white.opacity(0.10))
-                            )
-                    }
-                    
-                    // 设置按钮
-                    Button {
-                        routeCoordinator.showSettings()
-                    } label: {
-                        Image(systemName: "gearshape.fill")
-                            .font(.system(size: 20, weight: .semibold))
-                            .foregroundColor(.white.opacity(0.9))
-                            .frame(width: 32, height: 32)
-                            .background(
-                                Circle()
-                                    .fill(Color.white.opacity(0.10))
-                            )
-                    }
-                }
+                                .font(.system(size: 14, weight: .medium, design: .rounded))
+                                .foregroundColor(.white.opacity(0.7))
+                            
+                            Text(statusText)
+                                .font(.system(size: 14, weight: .bold))
+                                .foregroundColor(Color.white)
+                        }
+                        
+                        Spacer()
+                        
+                        // 右上角按钮：Premium 入口 + 设置入口
+                        HStack(spacing: 12) {
+                            // Premium 入口（钻石图标）
+                            Button {
+                                routeCoordinator.showPurchase()
+                            } label: {
+                                Image("vip")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 40, height: 30)
+                            }
+                            
+                            // 设置按钮
+                            Button {
+                                routeCoordinator.showSettings()
+                            } label: {
+                                Image("setting")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 30, height: 30)
+                            }
+                        }
                     }
                     .padding(.horizontal, 20)
                     .padding(.top, 10)
-                    .padding(.bottom, 8)
+                    .padding(.bottom, 30)
+
+                    // 顶部提示条（背景白色 10% 透明度）
+                    Text(topHintText)
+                        .font(.system(size: 13, weight: .regular))
+                        .foregroundColor(topHintColor)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 16)
+                        .padding(.horizontal, 18)
+                        .background(
+                            RoundedRectangle(cornerRadius: 33, style: .continuous)
+                                .fill(Color.white.opacity(0.10))
+                        )
+                        .padding(.horizontal, 20)
+                        .padding(.bottom, 10)
                     
                     // 卡片1：连接状态卡片（大卡片，包含圆环和按钮）
                     ConnectionStatusCard(
@@ -200,47 +184,58 @@ private struct HomeScreen: View {
                         detailText: detailText,
                         buttonText: buttonText,
                         onButtonTap: {
-                    homeSession.handlePrimaryAction()
+                            homeSession.handlePrimaryAction()
                         }
                     )
-                    .padding(.horizontal, 20)
                     
-                    // 卡片2：当前节点卡片
-                    if let selectedNode = nodeManager.selectedNode {
-                        CurrentNodeCard(
-                            node: selectedNode,
-                            onSwitchNodeAlert: {
-                                showSwitchNodeAlert = true
+                    // 下方区域：下段图作为顶部背景，节点等功能在其上方正常布局
+                    ZStack(alignment: .top) {
+                        Image(lowerConnectorImageName)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(maxWidth: .infinity)
+                            .allowsHitTesting(false)
+                        
+                        VStack(spacing: 20) {
+                            // 卡片2：当前节点卡片
+                            if let selectedNode = nodeManager.selectedNode {
+                                CurrentNodeCard(
+                                    node: selectedNode,
+                                    onSwitchNodeAlert: {
+                                        showSwitchNodeAlert = true
+                                    }
+                                )
+                                .padding(.horizontal, 20)
                             }
-                        )
+                            
+                            // 卡片3：功能入口（2x2 网格）
+                            FunctionGridCard(
+                                onNodeListTap: {
+                                    // 如果已连接，显示提示
+                                    if homeSession.phase == .online {
+                                        showSwitchNodeAlert = true
+                                    } else {
+                                        routeCoordinator.showNodeList()
+                                    }
+                                }
+                            )
+                            .padding(.horizontal, 20)
+                            
+                            // 卡片4：工具箱入口卡片
+                            ToolboxEntryCard()
+                                .padding(.horizontal, 20)
+                            
+                            // 卡片5：连接统计卡片（直接展示总时长 / 次数 / 今日时长）
+                            ConnectionStatsCard(
+                                totalDuration: statsManager.totalDuration,
+                                totalConnections: statsManager.totalConnections,
+                                todayDuration: statsManager.todayDuration
+                            )
                             .padding(.horizontal, 20)
                         }
-                    
-                    // 卡片3：功能入口（2x2 网格）
-                    FunctionGridCard(
-                        onNodeListTap: {
-                            // 如果已连接，显示提示
-                            if homeSession.phase == .online {
-                                showSwitchNodeAlert = true
-                            } else {
-                                routeCoordinator.showNodeList()
-                            }
+                        .padding(.top, 30)
                     }
-                    )
-                    .padding(.horizontal, 20)
                     
-                    // 卡片4：工具箱入口卡片
-                    ToolboxEntryCard()
-                        .padding(.horizontal, 20)
-                    
-                    // 卡片5：连接统计卡片（直接展示总时长 / 次数 / 今日时长）
-                    ConnectionStatsCard(
-                        totalDuration: statsManager.totalDuration,
-                        totalConnections: statsManager.totalConnections,
-                        todayDuration: statsManager.todayDuration
-                    )
-                    .padding(.horizontal, 20)
-                                        
                     // 底部留白，避免被系统手势栏遮挡
                     Spacer()
                         .frame(height: 40)
@@ -320,6 +315,30 @@ private struct HomeScreen: View {
         case .failed:
             return appLanguage.localized("gv_home_status_failed", comment: "Status failed")
         }
+    }
+
+    private var topHintText: String {
+        switch homeSession.phase {
+        case .idle, .failed:
+            return "Tap the button below to start connecting."
+        case .inProgress:
+            return "Connecting… Please wait."
+        case .online:
+            return "VPN is connected successfully."
+        }
+    }
+
+    private var topHintColor: Color {
+        switch homeSession.phase {
+        case .idle, .failed:
+            return Color(red: 255/255, green: 166/255, blue: 0/255) // #FFA600
+        case .inProgress, .online:
+            return Color(red: 0/255, green: 255/255, blue: 172/255) // #00FFAC
+        }
+    }
+
+    private var lowerConnectorImageName: String {
+        (homeSession.phase == .inProgress || homeSession.phase == .online) ? "connected_down" : "connect_down"
     }
     
     // 详细状态
@@ -410,7 +429,7 @@ private struct DisconnectConfirmView: View {
                         .multilineTextAlignment(.center)
                 }
                 .padding(.horizontal, 8)
-            
+                
                 // 按钮：上下排列
                 VStack(spacing: 10) {
                     Button {
@@ -435,12 +454,12 @@ private struct DisconnectConfirmView: View {
                     }
                     
                     Button {
-                    onCancel()
+                        onCancel()
                     } label: {
                         Text(appLanguage.localized("gv_common_cancel", comment: "Cancel"))
                             .font(.system(size: 16, weight: .medium))
-                .frame(maxWidth: .infinity)
-                .frame(height: 44)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 44)
                             .background(Color.white.opacity(0.08))
                             .foregroundColor(Color.white.opacity(0.92))
                             .cornerRadius(12)
@@ -555,7 +574,7 @@ private struct LaurelRingView: Shape {
                     height: leafHeight
                 )
                 path.addRoundedRect(in: leafRect, cornerSize: CGSize(width: leafHeight / 2, height: leafHeight / 2))
-                }
+            }
         }
         
         addSide(1)
@@ -903,7 +922,7 @@ private struct SwitchNodeAlertView: View {
                         .multilineTextAlignment(.center)
                 }
                 .padding(.horizontal, 8)
-            
+                
                 // 按钮：上下排列
                 VStack(spacing: 10) {
                     Button {

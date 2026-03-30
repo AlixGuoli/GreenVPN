@@ -113,7 +113,14 @@ private struct NodeRowView: View {
                     )
                     .frame(width: 50, height: 50)
                 
-                GVFlagIcon(countryCode: node.countryCode, size: 28)
+                if node.id == -1 {
+                    Image("world")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 28, height: 28)
+                } else {
+                    GVFlagIcon(countryCode: node.countryCode, size: 28)
+                }
             }
             
             // 节点信息

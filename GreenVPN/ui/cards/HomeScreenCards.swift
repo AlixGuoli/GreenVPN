@@ -17,80 +17,46 @@ struct ConnectionStatusCard: View {
     @EnvironmentObject private var appLanguage: GVAppLanguage
     
     var body: some View {
-        VStack(spacing: 24) {
-            // 圆环（中间灰圆预留给状态图标）
-            CoreOrbView(phase: phase)
-                .frame(width: 210, height: 210)
-            
-            // 连接时长显示：放在圆外面，但通过透明度保持占位
-            Group {
-                let displayText = connectionDuration > 0
-                    ? formatDuration(connectionDuration)
-                    : formatDuration(0)
+        // 上半段（可点击）
+        Button(action: onButtonTap) {
+            ZStack {
+                Image(upperImageName)
+                    .resizable()
+                    .scaledToFit()
                 
-                Text(displayText)
-                    .font(.system(size: 18, weight: .semibold))
-                    .foregroundColor(Color.white.opacity(0.9))
-                    .monospacedDigit()
-                    .opacity(phase == .online && connectionDuration > 0 ? 1 : 0)
-            }
-            // 文案说明
-            Text(detailText)
-                .font(.system(size: 15))
-                .foregroundColor(Color.white.opacity(0.8))
-                .multilineTextAlignment(.center)
-            
-            // 主按钮
-            Button(action: onButtonTap) {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 30, style: .continuous)
-                        .fill(
-                            LinearGradient(
-                                colors: phase == .online
-                                ? [Color.red, Color.orange]
-                                : [Color(red: 0/255, green: 180/255, blue: 120/255),
-                                   Color(red: 0/255, green: 210/255, blue: 150/255)],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
-                        .shadow(color: Color.black.opacity(0.25), radius: 12, x: 0, y: 8)
+                VStack {
+                    Spacer()
                     
-                    HStack(spacing: 10) {
-                        if phase == .inProgress {
-                            ProgressView()
-                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                                .scaleEffect(0.9)
-                        } else {
-                            KeyGlyphView(isOn: phase == .online)
-                                .frame(width: 20, height: 20)
-                                .foregroundColor(.white)
-                        }
-                        
-                        Text(buttonText)
-                            .font(.system(size: 17, weight: .semibold))
-                            .foregroundColor(.white)
-                    }
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 14)
+                    Text(centerDisplayText)
+                        .font(.system(size: 24, weight: .regular))
+                        .foregroundColor(.white)
+                        .monospacedDigit()
+                        .padding(.bottom, 20)
                 }
-                .frame(maxWidth: .infinity)
-                .frame(height: 60)
             }
-            .disabled(phase == .inProgress)
+            .frame(maxWidth: .infinity)
         }
-        .padding(.vertical, 32)
-        .padding(.horizontal, 24)
-        .background(cardBackground)
+        .buttonStyle(.plain)
+        .disabled(phase == .inProgress)
     }
-    
-    private var cardBackground: some View {
-        RoundedRectangle(cornerRadius: 24, style: .continuous)
-            .fill(Color.white.opacity(0.08))
-            .overlay(
-                RoundedRectangle(cornerRadius: 24, style: .continuous)
-                    .stroke(Color.white.opacity(0.12), lineWidth: 1)
-            )
+
+    private var upperImageName: String {
+        isConnectedStyle ? "connected_up" : "connect_up"
+    }
+
+    private var isConnectedStyle: Bool {
+        phase == .inProgress || phase == .online
+    }
+
+    private var centerDisplayText: String {
+        switch phase {
+        case .online:
+            return formatDuration(connectionDuration)
+        case .inProgress:
+            return "Connecting..."
+        case .idle, .failed:
+            return "Connect VPN"
+        }
     }
     
     private func formatDuration(_ duration: TimeInterval) -> String {
@@ -127,23 +93,15 @@ struct CurrentNodeCard: View {
             HStack(spacing: 16) {
                 // 国旗图标
                 ZStack {
-                    RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .fill(
-                            LinearGradient(
-                                colors: [
-                                    Color(red: 0/255, green: 180/255, blue: 120/255).opacity(0.2),
-                                    Color(red: 0/255, green: 140/255, blue: 100/255).opacity(0.2)
-                                ],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .fill(Color.white.opacity(0.24))
                         .frame(width: 60, height: 60)
                     
                     if node.id == -1 {
-                        Image(systemName: "globe.asia.australia.fill")
-                            .font(.system(size: 28, weight: .medium))
-                            .foregroundColor(.white)
+                        Image("world")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 32, height: 32)
                     } else {
                         GVFlagIcon(countryCode: node.countryCode, size: 32)
                     }
@@ -160,7 +118,7 @@ struct CurrentNodeCard: View {
                         // 如果本地化字符串不存在（返回的是 key），则使用接口返回的 name
                         return localized == key ? node.name : localized
                     }())
-                        .font(.system(size: 18, weight: .semibold))
+                        .font(.system(size: 16, weight: .semibold))
                         .foregroundColor(.white)
                     
                     if node.id != -1 {
@@ -177,13 +135,13 @@ struct CurrentNodeCard: View {
                                 Image(systemName: "chart.bar.fill")
                                     .font(.system(size: 12))
                                 Text(loadText)
-                                    .font(.system(size: 14))
+                                    .font(.system(size: 12))
                             }
                             .foregroundColor(loadColor)
                         }
                     } else {
                         Text(appLanguage.localized("gv_node_auto_desc", comment: "Auto node description"))
-                            .font(.system(size: 14))
+                            .font(.system(size: 12))
                             .foregroundColor(.white.opacity(0.7))
                             .multilineTextAlignment(.leading)
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -191,14 +149,11 @@ struct CurrentNodeCard: View {
                 }
                 
                 Spacer()
-                
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundColor(.white.opacity(0.4))
             }
             .padding(20)
+            .background(cardBackground)
         }
-        .background(cardBackground)
+        
     }
     
     private var loadText: String {
@@ -223,10 +178,10 @@ struct CurrentNodeCard: View {
     
     private var cardBackground: some View {
         RoundedRectangle(cornerRadius: 20, style: .continuous)
-            .fill(Color.white.opacity(0.08))
-            .overlay(
-                RoundedRectangle(cornerRadius: 20, style: .continuous)
-                    .stroke(Color.white.opacity(0.12), lineWidth: 1)
+            .fill(.ultraThinMaterial.opacity(0.1))
+            .background(
+                Image(.bgNode)
+                    .resizable()
             )
     }
 }
@@ -254,7 +209,7 @@ private struct SwitchNodeAlertView: View {
                 // 标题 & 文案
                 VStack(spacing: 8) {
                     Text(appLanguage.localized("gv_node_switch_title", comment: "Switch node alert title"))
-                        .font(.system(size: 18, weight: .semibold))
+                        .font(.system(size: 16, weight: .semibold))
                         .foregroundColor(.white)
                     
                     Text(appLanguage.localized("gv_node_switch_message", comment: "Switch node alert message"))
@@ -322,7 +277,7 @@ struct FunctionGridCard: View {
         VStack(spacing: 12) {
             HStack(spacing: 12) {
                 FunctionButton(
-                    icon: "globe.asia.australia.fill",
+                    icon: "nodelist",
                     title: appLanguage.localized("gv_node_list_title", comment: "Node list"),
                     action: {
                         // 需求调整：节点锁放到列表内部，入口始终可以进入节点页
@@ -334,7 +289,7 @@ struct FunctionGridCard: View {
                     GVLanguageView()
                 } label: {
                     FunctionButtonContent(
-                        icon: "globe",
+                        icon: "language",
                         title: appLanguage.localized("gv_lang_nav_title", comment: "Language")
                     )
                 }
@@ -363,27 +318,27 @@ private struct FunctionButtonContent: View {
     
     var body: some View {
         VStack(spacing: 12) {
-            ZStack {
-                Circle()
-                    .fill(
-                        LinearGradient(
-                            colors: [
-                                Color(red: 0/255, green: 180/255, blue: 120/255).opacity(0.2),
-                                Color(red: 0/255, green: 140/255, blue: 100/255).opacity(0.2)
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .frame(width: 56, height: 56)
-                
-                Image(systemName: icon)
-                    .font(.system(size: 24, weight: .medium))
-                    .foregroundColor(.white)
+            Group {
+                if icon == "nodelist" || icon == "language" {
+                    // 资源图自带背景，不再套圆形灰底
+                    Image(icon)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 56, height: 56)
+                } else {
+                    ZStack {
+                        Circle()
+                            .fill(Color(red: 45/255, green: 49/255, blue: 52/255))
+                            .frame(width: 50, height: 50)
+                        Image(systemName: icon)
+                            .font(.system(size: 24, weight: .medium))
+                            .foregroundColor(.white)
+                    }
+                }
             }
             
             Text(title)
-                .font(.system(size: 14, weight: .medium))
+                .font(.system(size: 16, weight: .medium))
                 .foregroundColor(.white.opacity(0.9))
                 .lineLimit(1)
                 .minimumScaleFactor(0.8)
@@ -392,10 +347,10 @@ private struct FunctionButtonContent: View {
         .padding(.vertical, 20)
         .background(
             RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .fill(Color.white.opacity(0.08))
+                .fill(Color(red: 13/255, green: 14/255, blue: 14/255)) // #0D0E0E
                 .overlay(
                     RoundedRectangle(cornerRadius: 18, style: .continuous)
-                        .stroke(Color.white.opacity(0.12), lineWidth: 1)
+                        .stroke(Color.white.opacity(0.10), lineWidth: 1)
                 )
         )
     }
@@ -409,32 +364,26 @@ struct ConnectionStatsCard: View {
     @EnvironmentObject private var appLanguage: GVAppLanguage
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: 20) {
             Text(appLanguage.localized("gv_settings_stats", comment: "Connection stats"))
                 .font(.system(size: 16, weight: .semibold))
                 .foregroundColor(.white)
             
-            VStack(spacing: 12) {
+            VStack(spacing: 22) {
                 StatRow(
-                    icon: "clock.fill",
+                    imageName: "totalDur",
                     title: appLanguage.localized("gv_stats_total_duration", comment: "Total duration"),
                     value: formatDuration(totalDuration)
                 )
                 
-                Divider()
-                    .background(Color.white.opacity(0.1))
-                
                 StatRow(
-                    icon: "arrow.triangle.2.circlepath",
+                    imageName: "totalCon",
                     title: appLanguage.localized("gv_stats_total_connections", comment: "Total connections"),
                     value: "\(totalConnections)"
                 )
-                
-                Divider()
-                    .background(Color.white.opacity(0.1))
-                
+
                 StatRow(
-                    icon: "calendar",
+                    imageName: "todayDur",
                     title: appLanguage.localized("gv_stats_today_duration", comment: "Today duration"),
                     value: formatDuration(todayDuration)
                 )
@@ -443,10 +392,10 @@ struct ConnectionStatsCard: View {
         .padding(20)
         .background(
             RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .fill(Color.white.opacity(0.08))
+                .fill(Color(red: 13/255, green: 14/255, blue: 14/255)) // #0D0E0E
                 .overlay(
                     RoundedRectangle(cornerRadius: 20, style: .continuous)
-                        .stroke(Color.white.opacity(0.12), lineWidth: 1)
+                        .stroke(Color.white.opacity(0.10), lineWidth: 1)
                 )
         )
     }
@@ -476,28 +425,15 @@ struct ToolboxEntryCard: View {
             routeCoordinator.showToolbox()
         } label: {
             HStack(spacing: 16) {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 20, style: .continuous)
-                        .fill(
-                            LinearGradient(
-                                colors: [
-                                    Color(red: 0/255, green: 210/255, blue: 150/255),
-                                    Color(red: 0/255, green: 160/255, blue: 120/255)
-                                ],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                        .frame(width: 64, height: 64)
-                    
-                    Image(systemName: "wrench.and.screwdriver.fill")
-                        .font(.system(size: 28, weight: .semibold))
-                        .foregroundColor(.white)
-                }
+                // 资源图自带背景，不再套灰色圆角底
+                Image("toolbox")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 60, height: 60)
                 
                 VStack(alignment: .leading, spacing: 6) {
                     Text(appLanguage.localized("gv_toolbox_title", comment: "Toolbox title"))
-                        .font(.system(size: 18, weight: .semibold))
+                        .font(.system(size: 16, weight: .semibold))
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     
@@ -510,44 +446,41 @@ struct ToolboxEntryCard: View {
                 
                 Spacer()
                 
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundColor(.white.opacity(0.4))
             }
             .padding(20)
         }
         .background(
             RoundedRectangle(cornerRadius: 24, style: .continuous)
-                .fill(Color.white.opacity(0.08))
+                .fill(Color(red: 13/255, green: 14/255, blue: 14/255)) // #0D0E0E
                 .overlay(
                     RoundedRectangle(cornerRadius: 24, style: .continuous)
-                        .stroke(Color.white.opacity(0.12), lineWidth: 1)
+                        .stroke(Color.white.opacity(0.10), lineWidth: 1)
                 )
         )
     }
 }
 
-/// 统计行
+/// 统计行（左侧为带背景的资源图，不另加底）
 private struct StatRow: View {
-    let icon: String
+    let imageName: String
     let title: String
     let value: String
     
     var body: some View {
         HStack(spacing: 12) {
-            Image(systemName: icon)
-                .font(.system(size: 16))
-                .foregroundColor(Color(red: 0/255, green: 210/255, blue: 150/255))
-                .frame(width: 24)
+            Image(imageName)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 16, height: 16)
             
             Text(title)
-                .font(.system(size: 15))
+                .font(.system(size: 13))
                 .foregroundColor(.white.opacity(0.85))
             
             Spacer()
             
             Text(value)
-                .font(.system(size: 15, weight: .semibold))
+                .font(.system(size: 13, weight: .semibold))
                 .foregroundColor(.white)
         }
     }
