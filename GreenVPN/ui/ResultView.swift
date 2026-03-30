@@ -3,7 +3,7 @@
 //  GreenVPN
 //
 //  连接结果页面：成功 / 失败 / 断开成功
-//  布局：结果提示 + 两个功能卡片（分享 App / 加入我们）+ 底部关闭按钮
+//  全屏背景图自带顶部状态图案；分享/加入卡片用 bgResultCard + 资源图标
 //
 
 import SwiftUI
@@ -19,53 +19,40 @@ struct ResultView: View {
     
     var body: some View {
         ZStack {
-            // 深色背景，与主页/连接页统一
-            RadialGradient(
-                colors: [
-                    Color(red: 6/255, green: 40/255, blue: 45/255),
-                    Color(red: 2/255, green: 10/255, blue: 16/255)
-                ],
-                center: .center,
-                startRadius: 0,
-                endRadius: UIScreen.main.bounds.height * 0.9
-            )
-            .ignoresSafeArea()
+            Image(resultBackgroundAsset)
+                .resizable()
+                .scaledToFill()
+                .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
+                .clipped()
+                .ignoresSafeArea()
             
             VStack(spacing: 24) {
-                // 顶部结果图标 + 提示
                 VStack(spacing: 12) {
-                    ResultStatusIcon(result: result)
-                    
-            Text(title)
-                        .font(.system(size: 22, weight: .semibold))
+                    Text(title.uppercased())
+                        .font(.system(size: 26, weight: .semibold))
                         .foregroundColor(.white)
                     
-            Text(message)
-                        .font(.system(size: 14))
-                        .foregroundColor(Color.white.opacity(0.7))
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 32)
+//                    Text(message)
+//                        .font(.system(size: 14))
+//                        .foregroundColor(Color.white.opacity(0.7))
+//                        .multilineTextAlignment(.center)
+//                        .padding(.horizontal, 32)
                 }
-                .padding(.top, 40)
+                .padding(.top, 150)
                 
-                // 功能卡片区域
-                VStack(spacing: 16) {
-                    // 分享 App 卡片
+                VStack(spacing: 20) {
                     ResultActionCard(
                         title: appLanguage.localized("gv_result_share_title", comment: "Share app title"),
                         subtitle: appLanguage.localized("gv_result_share_subtitle", comment: "Share app subtitle"),
-                        systemImage: "square.and.arrow.up",
-                        accentColor: Color.green.opacity(0.9)
+                        leadingAsset: "resultShare"
                     ) {
                         showShareSheet = true
                     }
                     
-                    // 加入我们（跳转 TG）卡片
                     ResultActionCard(
                         title: appLanguage.localized("gv_result_join_title", comment: "Join us title"),
                         subtitle: appLanguage.localized("gv_result_join_subtitle", comment: "Join us subtitle"),
-                        systemImage: "paperplane.fill",
-                        accentColor: Color.blue.opacity(0.9)
+                        leadingAsset: "resultTg"
                     ) {
                         if let url = URL(string: "https://t.me/+GHEEsuLHJ0I1YTU1") {
                             openURL(url)
@@ -76,35 +63,40 @@ struct ResultView: View {
                 
                 Spacer()
                 
-                // 评价提示卡片
-                ReviewPromptCard()
-                    .padding(.horizontal, 20)
-                
-                // 底部关闭按钮（自定义，而不是系统返回）
-            Button(action: {
-                onClose()
-            }) {
-                    Text(appLanguage.localized("gv_common_close", comment: "Close button"))
-                        .font(.system(size: 17, weight: .semibold))
+                if result != .connectFail {
+                    ReviewPromptCard()
+                        .padding(.horizontal, 20)
+                        .padding(.bottom, 24)
+                }
+            }
+        }
+        .overlay(alignment: .topTrailing) {
+            Button(action: { onClose() }) {
+                Image(systemName: "xmark")
+                    .font(.system(size: 30, weight: .semibold))
                     .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                        .frame(height: 48)
-                    .background(primaryColor)
-                        .cornerRadius(24)
             }
-                .padding(.horizontal, 20)
-                .padding(.bottom, 24)
-            }
+            .buttonStyle(.plain)
+            .padding(.trailing, 18)
+            .padding(.top, 12)
         }
         .sheet(isPresented: $showShareSheet) {
             ShareSheet(activityItems: [shareURL])
         }
-        // 结果页不使用系统导航返回
         .navigationBarBackButtonHidden(true)
         .toolbar(.hidden, for: .navigationBar)
     }
     
-    // MARK: - 文案 & 配色
+    private var resultBackgroundAsset: String {
+        switch result {
+        case .connectSuccess:
+            return "bgResultSuccess"
+        case .disconnectSuccess:
+            return "bgResultDisconnect"
+        case .connectFail:
+            return "bgResultFail"
+        }
+    }
     
     private var title: String {
         switch result {
@@ -128,63 +120,8 @@ struct ResultView: View {
         }
     }
     
-    private var primaryColor: Color {
-        switch result {
-        case .connectSuccess: return Color.green
-        case .disconnectSuccess: return Color.blue
-        case .connectFail: return Color.red
-        }
-    }
-    
     private var shareURL: URL {
-        // 直接分享 App Store 应用链接
-        return URL(string: "https://apps.apple.com/app/id6756861853")!
-    }
-}
-
-// MARK: - 顶部结果图标
-
-private struct ResultStatusIcon: View {
-    let result: SessionOutcome
-    
-    var body: some View {
-        ZStack {
-            Circle()
-                .fill(outerColor.opacity(0.18))
-                .frame(width: 74, height: 74)
-                .blur(radius: 1.0)
-            
-            Circle()
-                .fill(
-                    LinearGradient(
-                        colors: [outerColor.opacity(0.85), outerColor.opacity(0.55)],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
-                .frame(width: 56, height: 56)
-                .shadow(color: outerColor.opacity(0.6), radius: 14, x: 0, y: 10)
-            
-            Image(systemName: iconName)
-                .font(.system(size: 26, weight: .bold))
-                .foregroundColor(.white)
-        }
-    }
-    
-    private var outerColor: Color {
-        switch result {
-        case .connectSuccess: return .green
-        case .disconnectSuccess: return .blue
-        case .connectFail: return .red
-        }
-    }
-    
-    private var iconName: String {
-        switch result {
-        case .connectSuccess: return "checkmark"
-        case .disconnectSuccess: return "power"
-        case .connectFail: return "xmark"
-        }
+        URL(string: "https://apps.apple.com/app/id6756861853")!
     }
 }
 
@@ -193,21 +130,16 @@ private struct ResultStatusIcon: View {
 private struct ResultActionCard: View {
     let title: String
     let subtitle: String
-    let systemImage: String
-    let accentColor: Color
+    let leadingAsset: String
     let action: () -> Void
     
     var body: some View {
         Button(action: action) {
-            HStack(spacing: 14) {
-                ZStack {
-                    Circle()
-                        .fill(accentColor.opacity(0.16))
-                        .frame(width: 42, height: 42)
-                    Image(systemName: systemImage)
-                        .font(.system(size: 18, weight: .semibold))
-                        .foregroundColor(accentColor)
-                }
+            HStack(alignment: .center, spacing: 14) {
+                Image(leadingAsset)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 48, height: 48)
                 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(title)
@@ -216,25 +148,22 @@ private struct ResultActionCard: View {
                     Text(subtitle)
                         .font(.system(size: 13))
                         .foregroundColor(Color.white.opacity(0.65))
+                        .multilineTextAlignment(.leading)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
                 
-                Spacer()
-                
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundColor(Color.white.opacity(0.6))
+                Spacer(minLength: 0)
             }
             .padding(16)
-            .background(
-                RoundedRectangle(cornerRadius: 18, style: .continuous)
-                    .fill(Color.white.opacity(0.05))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 18, style: .continuous)
-                            .stroke(Color.white.opacity(0.12), lineWidth: 0.5)
-                    )
-            )
+            .frame(height: 120)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background {
+                Image("bgResultCard")
+                    .resizable()
+                    .scaledToFill()
+            }
         }
-        .buttonStyle(PlainButtonStyle())
+        .buttonStyle(.plain)
     }
 }
 
@@ -249,5 +178,3 @@ private struct ShareSheet: UIViewControllerRepresentable {
     
     func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
-
-

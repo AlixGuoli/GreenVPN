@@ -29,10 +29,11 @@
 "gv_home_detail_connecting" = "接続を確立しています…";
 "gv_home_detail_idle" = "下のボタンをタップして接続を開始します。";
 "gv_home_detail_failed" = "接続に失敗しました。もう一度お試しください。";
+"gv_home_top_hint_connecting" = "接続中です…しばらくお待ちください。";
 
 "gv_home_button_disconnect" = "切断";
 "gv_home_button_connecting" = "接続中...";
-"gv_home_button_connect" = "VPN に接続";
+"gv_home_button_connect" = "接続";
 
 "gv_node_list_title" = "ノード一覧";
 "gv_node_auto_desc" = "最適なノードを自動的に選択";
@@ -75,9 +76,10 @@
 "gv_node_load_medium" = "中負荷";
 "gv_node_load_high" = "高負荷";
 
-"gv_disconnect_title" = "VPN を切断しますか？";
+"gv_disconnect_title" = "本当に切断しますか？";
 "gv_disconnect_message" = "切断すると、再度接続しない限り VPN を利用できません。";
 "gv_disconnect_action" = "切断する";
+"gv_disconnect_yes" = "はい";
 "gv_disconnect_nav_title" = "切断";
 
 "gv_common_cancel" = "キャンセル";

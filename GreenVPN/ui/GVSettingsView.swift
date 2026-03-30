@@ -34,17 +34,9 @@ struct GVSettingsView: View {
     
     var body: some View {
         ZStack {
-            // 背景：与主页一致的深色渐变
-            RadialGradient(
-                colors: [
-                    Color(red: 6/255, green: 40/255, blue: 45/255),
-                    Color(red: 2/255, green: 10/255, blue: 16/255)
-                ],
-                center: .center,
-                startRadius: 0,
-                endRadius: UIScreen.main.bounds.height * 0.8
-            )
-            .ignoresSafeArea()
+            Image(.allbg)
+                .resizable()
+                .ignoresSafeArea()
             
             VStack(spacing: 0) {
                 // 顶部标题栏
@@ -79,7 +71,7 @@ struct GVSettingsView: View {
                                 GVPurchaseView()
                             } label: {
                                 SettingsNavRow(
-                                    icon: "vip",
+                                    icon: "viplogo",
                                     title: appLanguage.localized("gv_premium_title", comment: ""),
                                     subtitle: purchaseSubtitle
                                 )
@@ -281,8 +273,8 @@ private struct SettingsNavRow: View {
     // 判断是 SF Symbol 还是图片资源
     private var isSystemIcon: Bool {
         // 如果是系统图标，通常不包含图片资源名称
-        // 这里简单判断：如果 icon 是 "vip"，使用图片资源，否则使用 SF Symbol
-        return icon != "vip" && icon != "logoAd" && icon != "logoCon" && icon != "logoWorld"
+        // 图片资源名走 Asset，其余按 SF Symbol
+        return icon != "viplogo" && icon != "logoAd" && icon != "logoCon" && icon != "logoWorld"
     }
     
     var body: some View {

@@ -12,24 +12,10 @@ struct GVBackgroundSplashView: View {
     
     var body: some View {
         ZStack {
-            // 与启动页一致的背景
-            ZStack {
-                RadialGradient(
-                    colors: [
-                        Color(red: 6/255, green: 40/255, blue: 45/255),
-                        Color(red: 2/255, green: 10/255, blue: 16/255)
-                    ],
-                    center: .center,
-                    startRadius: 0,
-                    endRadius: UIScreen.main.bounds.height * 0.9
-                )
+            // 与冷启动启动页、各通用内页一致
+            Image(.allbg)
+                .resizable()
                 .ignoresSafeArea()
-                
-                NoiseOverlay()
-                    .ignoresSafeArea()
-                    .blendMode(.overlay)
-                    .opacity(0.10)
-            }
             
             VStack(spacing: 16) {
                 Image("logo")

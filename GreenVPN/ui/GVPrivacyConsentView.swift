@@ -15,24 +15,9 @@ struct GVPolicyGate: View {
     
     var body: some View {
         ZStack {
-            // 与主页统一的深色渐变 + 噪点，完全覆盖后台内容
-            ZStack {
-                RadialGradient(
-                    colors: [
-                        Color(red: 6/255, green: 40/255, blue: 45/255),
-                        Color(red: 2/255, green: 10/255, blue: 16/255)
-                    ],
-                    center: .center,
-                    startRadius: 0,
-                    endRadius: UIScreen.main.bounds.height * 0.9
-                )
+            Image(.allbg)
+                .resizable()
                 .ignoresSafeArea()
-                
-                NoiseOverlay()
-                    .ignoresSafeArea()
-                    .blendMode(.overlay)
-                    .opacity(0.10)
-            }
             
             VStack(alignment: .leading, spacing: 18) {
                 // 顶部标题区域

@@ -160,7 +160,6 @@ struct GreenVPNApp: App {
                     GVBackgroundSplashView {
                         resumeOverlayActive = false
                     }
-                    .background(Color(UIColor.systemBackground).opacity(1.0))
                     .ignoresSafeArea()
                     .onAppear {
                         GVLogger.log("[Ad]", "后台启动页显示")

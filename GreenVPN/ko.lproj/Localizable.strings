@@ -29,10 +29,11 @@
 "gv_home_detail_connecting" = "연결을 설정하는 중입니다...";
 "gv_home_detail_idle" = "아래 버튼을 탭하여 연결을 시작하세요.";
 "gv_home_detail_failed" = "연결에 실패했습니다. 다시 시도해 주세요.";
+"gv_home_top_hint_connecting" = "연결 중입니다… 잠시만 기다려 주세요.";
 
 "gv_home_button_disconnect" = "연결 해제";
 "gv_home_button_connecting" = "연결 중...";
-"gv_home_button_connect" = "VPN 연결";
+"gv_home_button_connect" = "연결";
 
 "gv_node_list_title" = "노드 목록";
 "gv_node_auto_desc" = "가장 좋은 노드를 자동으로 선택";
@@ -75,9 +76,10 @@
 "gv_node_load_medium" = "중간 부하";
 "gv_node_load_high" = "높은 부하";
 
-"gv_disconnect_title" = "VPN 연결을 해제할까요?";
+"gv_disconnect_title" = "연결을 해제하시겠습니까?";
 "gv_disconnect_message" = "연결을 해제하면, 다시 연결하기 전까지 VPN을 사용할 수 없습니다.";
 "gv_disconnect_action" = "연결 해제";
+"gv_disconnect_yes" = "예";
 "gv_disconnect_nav_title" = "연결 해제";
 
 "gv_common_cancel" = "취소";

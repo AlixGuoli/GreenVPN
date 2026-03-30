@@ -205,6 +205,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/VGSLFundamentals/VGSLFundamentals.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/VGSLNetworking/VGSLNetworking.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/VGSLUI/VGSLUI.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/lottie-ios/Lottie.framework"
   install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/AppLovinSDK/AppLovinSDK.framework"
   install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/InMobiSDK/InMobiSDK.framework"
 fi
@@ -238,6 +239,7 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/VGSLFundamentals/VGSLFundamentals.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/VGSLNetworking/VGSLNetworking.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/VGSLUI/VGSLUI.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/lottie-ios/Lottie.framework"
   install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/AppLovinSDK/AppLovinSDK.framework"
   install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/InMobiSDK/InMobiSDK.framework"
 fi

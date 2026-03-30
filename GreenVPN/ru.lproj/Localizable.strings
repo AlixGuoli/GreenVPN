@@ -29,10 +29,11 @@
 "gv_home_detail_connecting" = "Устанавливается соединение...";
 "gv_home_detail_idle" = "Нажмите кнопку ниже, чтобы начать подключение.";
 "gv_home_detail_failed" = "Подключение не удалось, попробуйте ещё раз.";
+"gv_home_top_hint_connecting" = "Подключение… Пожалуйста, подождите.";
 
 "gv_home_button_disconnect" = "Отключить";
 "gv_home_button_connecting" = "Подключение...";
-"gv_home_button_connect" = "Подключить VPN";
+"gv_home_button_connect" = "Подключить";
 
 "gv_node_list_title" = "Список узлов";
 "gv_node_auto_desc" = "Автоматически выбирать лучший узел";
@@ -75,9 +76,10 @@
 "gv_node_load_medium" = "Средняя нагрузка";
 "gv_node_load_high" = "Высокая нагрузка";
 
-"gv_disconnect_title" = "Отключиться от VPN?";
+"gv_disconnect_title" = "Вы уверены, что хотите отключиться?";
 "gv_disconnect_message" = "После отключения вам нужно будет снова подключиться, чтобы пользоваться VPN.";
 "gv_disconnect_action" = "Отключить";
+"gv_disconnect_yes" = "Да";
 "gv_disconnect_nav_title" = "Отключение";
 
 "gv_common_cancel" = "Отмена";

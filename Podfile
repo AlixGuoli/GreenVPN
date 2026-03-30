@@ -7,6 +7,7 @@ target 'GreenVPN' do
 
   # Pods for GreenVPN
   pod 'Alamofire'
+  pod 'lottie-ios'
   
 #  pod 'Google-Mobile-Ads-SDK'
 #  pod 'YandexMobileAds', '7.18.1'

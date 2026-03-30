@@ -9,6 +9,9 @@ import SwiftUI
 import StoreKit
 import UIKit
 
+/// 订阅页强调色 #03CA8F
+private let gvPurchaseAccent = Color(red: 3 / 255, green: 202 / 255, blue: 143 / 255)
+
 struct GVPurchaseView: View {
     @EnvironmentObject private var appLanguage: GVAppLanguage
     @Environment(\.dismiss) private var dismiss
@@ -97,31 +100,9 @@ struct GVPurchaseView: View {
     var body: some View {
         ZStack {
             // 背景：与主页一致的深色渐变 + 噪点
-            ZStack {
-                RadialGradient(
-                    colors: [
-                        Color(red: 6/255, green: 40/255, blue: 45/255),
-                        Color(red: 2/255, green: 10/255, blue: 16/255)
-                    ],
-                    center: .center,
-                    startRadius: 0,
-                    endRadius: UIScreen.main.bounds.height * 0.8
-                )
+            Image("bgvip")
+                .resizable()
                 .ignoresSafeArea()
-                
-                NoiseOverlay()
-                    .ignoresSafeArea()
-                    .blendMode(.overlay)
-                    .opacity(0.10)
-                
-                // 装饰背景图
-                Image("bgvip")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
-                    .opacity(0.3)
-                    .ignoresSafeArea()
-            }
             
             VStack(spacing: 0) {
                 // 顶部返回按钮
@@ -150,11 +131,11 @@ struct GVPurchaseView: View {
                             HStack(alignment: .center, spacing: 8) {
                                 Text(appLanguage.localized("gv_premium_title", comment: ""))
                                     .font(.system(size: 28, weight: .bold))
-                                    .foregroundColor(Color.green)
+                                    .foregroundColor(gvPurchaseAccent)
                                 
                                 Spacer()
                                 
-                                Image("vip")
+                                Image("viplogo")
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 32, height: 32)
@@ -227,7 +208,7 @@ struct GVPurchaseView: View {
                             } label: {
                                 Image(systemName: isAgreementChecked ? "checkmark.square.fill" : "square")
                                     .font(.system(size: 18))
-                                    .foregroundColor(isAgreementChecked ? Color.green : Color.white.opacity(0.5))
+                                    .foregroundColor(isAgreementChecked ? gvPurchaseAccent : Color.white.opacity(0.5))
                             }
                             
                             AgreementTextView(
@@ -286,7 +267,7 @@ struct GVPurchaseView: View {
                             .background(
                                 RoundedRectangle(cornerRadius: 14, style: .continuous)
                                     .fill(isAgreementChecked && !purchaseManager.isPurchasing
-                                          ? Color.green
+                                          ? gvPurchaseAccent
                                           : Color.gray.opacity(0.5))
                             )
                         }
@@ -510,7 +491,7 @@ private struct SubscriptionPlanCard: View {
                     if let product = product {
                         Text(product.displayPrice)
                             .font(.system(size: 18, weight: .bold))
-                            .foregroundColor(Color.green)
+                            .foregroundColor(gvPurchaseAccent)
                     } else {
                         // 加载中占位文案，这里直接用本地化 key，走统一语言机制
                         Text("gv_premium_button_loading")
@@ -550,7 +531,7 @@ private struct SubscriptionPlanCard: View {
                     .fill(Color.white.opacity(0.06))
                     .overlay(
                         RoundedRectangle(cornerRadius: 12, style: .continuous)
-                            .stroke(isSelected ? Color.green : Color.clear, lineWidth: 2)
+                            .stroke(isSelected ? gvPurchaseAccent : Color.clear, lineWidth: 2)
                     )
             )
         }

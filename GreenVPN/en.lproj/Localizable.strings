@@ -29,10 +29,11 @@
 "gv_home_detail_connecting" = "Establishing connection...";
 "gv_home_detail_idle" = "Tap the button below to start connecting.";
 "gv_home_detail_failed" = "Connection failed, please try again.";
+"gv_home_top_hint_connecting" = "Connecting… Please wait.";
 
 "gv_home_button_disconnect" = "Disconnect";
 "gv_home_button_connecting" = "Connecting...";
-"gv_home_button_connect" = "Connect VPN";
+"gv_home_button_connect" = "Connect";
 
 "gv_node_list_title" = "Node List";
 "gv_node_auto_desc" = "Automatically select the best node";
@@ -75,9 +76,10 @@
 "gv_node_load_medium" = "Medium Load";
 "gv_node_load_high" = "High Load";
 
-"gv_disconnect_title" = "Disconnect from VPN?";
+"gv_disconnect_title" = "Are you sure you want to disconnect?";
 "gv_disconnect_message" = "After disconnecting, you will need to reconnect to continue using VPN.";
 "gv_disconnect_action" = "Disconnect";
+"gv_disconnect_yes" = "Yes";
 "gv_disconnect_nav_title" = "Disconnect";
 
 "gv_common_cancel" = "Cancel";

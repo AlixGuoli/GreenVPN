@@ -29,10 +29,11 @@
 "gv_home_detail_connecting" = "Connexion en cours…";
 "gv_home_detail_idle" = "Touchez le bouton ci‑dessous pour commencer la connexion.";
 "gv_home_detail_failed" = "La connexion a échoué, veuillez réessayer.";
+"gv_home_top_hint_connecting" = "Connexion en cours… Veuillez patienter.";
 
 "gv_home_button_disconnect" = "Déconnecter";
 "gv_home_button_connecting" = "Connexion…";
-"gv_home_button_connect" = "Connecter le VPN";
+"gv_home_button_connect" = "Connecter";
 
 "gv_node_list_title" = "Liste des nœuds";
 "gv_node_auto_desc" = "Sélectionner automatiquement le meilleur nœud";
@@ -75,9 +76,10 @@
 "gv_node_load_medium" = "Charge moyenne";
 "gv_node_load_high" = "Charge élevée";
 
-"gv_disconnect_title" = "Se déconnecter du VPN ?";
+"gv_disconnect_title" = "Voulez-vous vraiment vous déconnecter ?";
 "gv_disconnect_message" = "Après la déconnexion, vous devrez vous reconnecter pour continuer à utiliser le VPN.";
 "gv_disconnect_action" = "Déconnecter";
+"gv_disconnect_yes" = "Oui";
 "gv_disconnect_nav_title" = "Déconnexion";
 
 "gv_common_cancel" = "Annuler";

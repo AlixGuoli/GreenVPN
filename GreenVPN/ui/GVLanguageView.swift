@@ -14,24 +14,9 @@ struct GVLanguageView: View {
     
     var body: some View {
         ZStack {
-            // 与主界面统一的深色渐变 + 噪点背景
-            ZStack {
-                RadialGradient(
-                    colors: [
-                        Color(red: 6/255, green: 40/255, blue: 45/255),
-                        Color(red: 2/255, green: 10/255, blue: 16/255)
-                    ],
-                    center: .center,
-                    startRadius: 0,
-                    endRadius: UIScreen.main.bounds.height * 0.9
-                )
+            Image(.allbg)
+                .resizable()
                 .ignoresSafeArea()
-                
-                NoiseOverlay()
-                    .ignoresSafeArea()
-                    .blendMode(.overlay)
-                    .opacity(0.10)
-            }
             
             VStack(spacing: 0) {
                 // 顶部标题栏（与设置 / 节点列表统一）

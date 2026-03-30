@@ -16,17 +16,9 @@ struct GVNodeListView: View {
     
     var body: some View {
         ZStack {
-            // 背景：与主页一致的深色渐变
-            RadialGradient(
-                colors: [
-                    Color(red: 6/255, green: 40/255, blue: 45/255),
-                    Color(red: 2/255, green: 10/255, blue: 16/255)
-                ],
-                center: .center,
-                startRadius: 0,
-                endRadius: UIScreen.main.bounds.height * 0.8
-            )
-            .ignoresSafeArea()
+            Image(.allbg)
+                .resizable()
+                .ignoresSafeArea()
             
             VStack(spacing: 0) {
                 // 顶部标题栏

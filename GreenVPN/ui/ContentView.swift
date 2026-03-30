@@ -254,7 +254,7 @@ private struct HomeScreen: View {
                         homeSession.confirmDisconnect()
                     }
                 )
-                .padding(.horizontal, 24)
+                .padding(.horizontal, 28)
             }
             
             // 切换节点提示弹窗
@@ -320,11 +320,11 @@ private struct HomeScreen: View {
     private var topHintText: String {
         switch homeSession.phase {
         case .idle, .failed:
-            return "Tap the button below to start connecting."
+            return appLanguage.localized("gv_home_detail_idle", comment: "Top hint idle")
         case .inProgress:
-            return "Connecting… Please wait."
+            return appLanguage.localized("gv_home_top_hint_connecting", comment: "Top hint connecting")
         case .online:
-            return "VPN is connected successfully."
+            return appLanguage.localized("gv_home_detail_connected", comment: "Top hint connected")
         }
     }
 
@@ -404,91 +404,75 @@ private struct DisconnectConfirmView: View {
     let onConfirm: () -> Void
     @EnvironmentObject private var appLanguage: GVAppLanguage
     
+    /// 右侧「Yes」按钮荧光绿 #00FFA3
+    private let confirmGreen = Color(red: 0/255, green: 255/255, blue: 163/255)
+    
     var body: some View {
-        ZStack {
-            VStack(spacing: 18) {
-                // 顶部图标：用更克制的红色点缀，保持整体偏冷的深色风格
-                ZStack {
-                    Circle()
-                        .fill(Color(red: 0.5, green: 0.1, blue: 0.1).opacity(0.28))
-                        .frame(width: 60, height: 60)
-                    Image(systemName: "power")
-                        .font(.system(size: 24, weight: .bold))
-                        .foregroundColor(Color(red: 0.98, green: 0.36, blue: 0.36))
-                }
+        ZStack(alignment: .topTrailing) {
+            VStack(spacing: 20) {
+                Image("dialogDisLogo")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 104, height: 104)
                 
-                // 标题 & 文案
-                VStack(spacing: 8) {
-                    Text(appLanguage.localized("gv_disconnect_title", comment: "Disconnect confirm title"))
-                        .font(.system(size: 18, weight: .semibold))
-                        .foregroundColor(.white)
-                    
-                    Text(appLanguage.localized("gv_disconnect_message", comment: "Disconnect confirm message"))
-                        .font(.system(size: 14))
-                        .foregroundColor(Color.white.opacity(0.8))
-                        .multilineTextAlignment(.center)
-                }
-                .padding(.horizontal, 8)
+                Text(appLanguage.localized("gv_disconnect_title", comment: "Disconnect confirm single line"))
+                    .font(.system(size: 17, weight: .bold))
+                    .foregroundColor(.white)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.horizontal, 12)
                 
-                // 按钮：上下排列
-                VStack(spacing: 10) {
-                    Button {
-                        onConfirm()
-                    } label: {
-                        Text(appLanguage.localized("gv_disconnect_action", comment: "Disconnect action"))
-                            .font(.system(size: 16, weight: .semibold))
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 46)
-                            .background(
-                                LinearGradient(
-                                    colors: [
-                                        Color(red: 0.95, green: 0.32, blue: 0.32),
-                                        Color(red: 0.82, green: 0.12, blue: 0.24)
-                                    ],
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                )
-                            )
-                            .foregroundColor(.white)
-                            .cornerRadius(12)
-                    }
-                    
+                HStack(spacing: 14) {
                     Button {
                         onCancel()
                     } label: {
                         Text(appLanguage.localized("gv_common_cancel", comment: "Cancel"))
-                            .font(.system(size: 16, weight: .medium))
+                            .font(.system(size: 15, weight: .semibold))
+                            .foregroundColor(Color(white: 0.12))
                             .frame(maxWidth: .infinity)
-                            .frame(height: 44)
-                            .background(Color.white.opacity(0.08))
-                            .foregroundColor(Color.white.opacity(0.92))
-                            .cornerRadius(12)
+                            .frame(height: 45)
+                            .background(Color.white.opacity(0.2))
+                            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
                     }
+                    .buttonStyle(.plain)
+                    
+                    Button {
+                        onConfirm()
+                    } label: {
+                        Text(appLanguage.localized("gv_disconnect_yes", comment: "Disconnect confirm Yes"))
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundColor(Color(white: 0.12))
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 45)
+                            .background(confirmGreen)
+                            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                    }
+                    .buttonStyle(.plain)
                 }
-                .padding(.top, 4)
+                .padding(.top, 6)
+                .padding(.horizontal, 10)
             }
-            .padding(.vertical, 20)
-            .padding(.horizontal, 18)
-            .background(
-                RoundedRectangle(cornerRadius: 18, style: .continuous)
-                    .fill(
-                        LinearGradient(
-                            colors: [
-                                Color(red: 9/255, green: 48/255, blue: 54/255).opacity(0.96),
-                                Color(red: 3/255, green: 18/255, blue: 24/255).opacity(0.96)
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 18, style: .continuous)
-                            .stroke(Color.white.opacity(0.10), lineWidth: 0.6)
-                    )
-            )
-            .shadow(color: Color.black.opacity(0.55), radius: 18, x: 0, y: 10)
+            .padding(.top, 44)
+            .padding(.bottom, 26)
+            .padding(.horizontal, 10)
+            .frame(maxWidth: .infinity)
+            .background {
+                Image("bgDialogDis")
+                    .resizable()
+            }
+            .shadow(color: Color.black.opacity(0.5), radius: 22, x: 0, y: 14)
+            
+            Button {
+                onCancel()
+            } label: {
+                Image(systemName: "xmark")
+                    .font(.system(size: 20, weight: .medium))
+                    .foregroundColor(Color.white.opacity(0.45))
+            }
+            .buttonStyle(.plain)
+            .padding(.trailing, 16)
+            .padding(.top, 16)
         }
-        // 居中弹窗，由外层遮罩负责全屏对齐
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
     }
 }

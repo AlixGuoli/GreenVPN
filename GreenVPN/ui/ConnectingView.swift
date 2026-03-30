@@ -2,117 +2,50 @@
 //  ConnectingView.swift
 //  GreenVPN
 //
-//  连接中页面：统一深色渐变 + 中央圆环 + 过渡动画
+//  连接中页面：与主页连接态相同背景 + Lottie 动效（资源 anim/connecting.json）
 //
 
 import SwiftUI
+import UIKit
+import Lottie
 
 struct ConnectingView: View {
     @EnvironmentObject private var appLanguage: GVAppLanguage
     @EnvironmentObject private var homeSession: GVHomeSessionModel
     
-    // 轻微呼吸
-    @State private var orbScale: CGFloat = 1.0
-    // 旋转高亮环
-    @State private var ringRotation: Double = 0
-    // 背景光晕闪动
-    @State private var haloOpacity: Double = 0.35
-    // 超时任务
     @State private var timeoutTask: DispatchWorkItem?
     
     var body: some View {
         ZStack {
-            // 背景：与首页统一的深色径向渐变 + 噪点
-            ZStack {
-                RadialGradient(
-                    colors: [
-                        Color(red: 6/255, green: 40/255, blue: 45/255),
-                        Color(red: 2/255, green: 10/255, blue: 16/255)
-                    ],
-                    center: .center,
-                    startRadius: 0,
-                    endRadius: UIScreen.main.bounds.height * 0.8
-                )
+            Image(.bgConnect)
+                .resizable()
+                .scaledToFill()
+                .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
+                .clipped()
                 .ignoresSafeArea()
-                
-                // 细噪点
-                ConnectingNoiseOverlay()
-                    .ignoresSafeArea()
-                    .blendMode(.overlay)
-                    .opacity(0.10)
-            }
             
             VStack(spacing: 28) {
                 Spacer()
                 
-                ZStack {
-                    // 柔和光晕：轻微闪动
-                    Circle()
-                        .fill(
-                            RadialGradient(
-                                colors: [
-                                    Color.green.opacity(0.25),
-                                    Color.clear
-                                ],
-                                center: .center,
-                                startRadius: 10,
-                                endRadius: 180
-                            )
-                        )
-                        .frame(width: 260, height: 260)
-                        .opacity(haloOpacity)
-                    
-                    // 旋转高亮环
-                    Circle()
-                        .strokeBorder(
-                            AngularGradient(
-                                gradient: Gradient(colors: [
-                                    Color.white.opacity(0.0),
-                                    Color.white.opacity(0.45),
-                                    Color.white.opacity(0.0)
-                                ]),
-                                center: .center
-                            ),
-                            lineWidth: 3
-                        )
-                        .frame(width: 240, height: 240)
-                        .rotationEffect(.degrees(ringRotation))
-                        .blur(radius: 0.5)
-                        .opacity(0.9)
-                    
-                    // 中央 3D 圆：使用 inProgress 状态，整体略微呼吸
-                    CoreOrbView(phase: .inProgress)
-                        .frame(width: 220, height: 220)
-                        .scaleEffect(orbScale)
-                }
+                GVLottieLoopView(resourceName: "connecting")
+                    .frame(width: connectingLottieSide, height: connectingLottieSide)
                 
-                // 提示文案
                 Text(appLanguage.localized("gv_connecting_message", comment: "Connecting message"))
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundColor(.white)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 32)
                 
-                // 小号进度指示（去掉多余的小点，只保留简洁的转圈）
-            ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                    .scaleEffect(1.0)
-                
                 Spacer()
                 
-                // 评价提示卡片
                 ReviewPromptCard()
                     .padding(.horizontal, 20)
                     .padding(.bottom, 24)
             }
         }
-        // 连接流程由状态驱动，页面不提供系统返回
         .navigationBarBackButtonHidden(true)
         .toolbar(.hidden, for: .navigationBar)
         .onAppear {
-            startAnimations()
-            
-            // 启动40秒超时计时器
             GVLogger.log("ConnectingView", "onAppear - 启动40秒超时计时器")
             let task = DispatchWorkItem {
                 GVLogger.log("ConnectingView", "40秒超时，自动关闭连接页")
@@ -128,44 +61,97 @@ struct ConnectingView: View {
         }
     }
     
-    private func startAnimations() {
-        // 中央轻微呼吸（幅度小，不打扰主视觉）
-        withAnimation(.easeInOut(duration: 1.8).repeatForever(autoreverses: true)) {
-            orbScale = 1.04
-        }
-        // 旋转高亮环
-        withAnimation(.linear(duration: 4.0).repeatForever(autoreverses: false)) {
-            ringRotation = 360
-        }
-        // 光晕轻微闪烁
-        withAnimation(.easeInOut(duration: 3.0).repeatForever(autoreverses: true)) {
-            haloOpacity = 0.55
-        }
+    /// 与 UI 稿一致：圆形动效约屏宽 50%～60%，并限制高度避免顶到评价卡
+    private var connectingLottieSide: CGFloat {
+        let w = UIScreen.main.bounds.width
+        let h = UIScreen.main.bounds.height
+        let fromWidth = w * 0.56
+        let maxByHeight = h * 0.42
+        let maxBySafeMargin = w - 40
+        return min(fromWidth, maxByHeight, maxBySafeMargin)
     }
 }
 
-/// 连接页专用噪点覆盖（和首页风格一致）
-private struct ConnectingNoiseOverlay: View {
-    var body: some View {
-        Canvas { context, size in
-            let cols = Int(size.width / 8)
-            let rows = Int(size.height / 8)
-            for x in 0...cols {
-                for y in 0...rows {
-                    let alpha = Double.random(in: 0.02...0.08)
-                    let rect = CGRect(
-                        x: CGFloat(x) * 8 + CGFloat.random(in: -2...2),
-                        y: CGFloat(y) * 8 + CGFloat.random(in: -2...2),
-                        width: 1.0,
-                        height: 1.0
-                    )
-                    context.fill(
-                        Path(ellipseIn: rect),
-                        with: .color(Color.white.opacity(alpha))
-                    )
-    }
-}
+// MARK: - Lottie（仅 UI，供连接页使用）
+
+private enum GVLottieConnectingResources {
+    /// 同步进 App 的资源可能是 `anim/connecting.json`，也可能被扁平成根目录 `connecting.json`，都试一遍。
+    static func animation(named name: String) -> LottieAnimation? {
+        let bundle = Bundle.main
+        let paths: [(subdir: String?, label: String)] = [
+            ("anim", "anim/connecting.json"),
+            (nil, "根目录 connecting.json"),
+        ]
+        for (subdir, label) in paths {
+            if let url = bundle.url(forResource: name, withExtension: "json", subdirectory: subdir) {
+                do {
+                    let data = try Data(contentsOf: url)
+                    let anim = try JSONDecoder().decode(LottieAnimation.self, from: data)
+                    GVLogger.log("ConnectingView", "Lottie 已加载 (\(label)) path=\(url.lastPathComponent)")
+                    return anim
+                } catch {
+                    GVLogger.log("ConnectingView", "Lottie JSON 解析失败 (\(label)): \(error.localizedDescription)")
+                }
+            }
         }
+        if let anim = LottieAnimation.named(name, bundle: bundle, subdirectory: "anim") {
+            GVLogger.log("ConnectingView", "Lottie 已通过 named(subdir: anim) 加载")
+            return anim
+        }
+        if let anim = LottieAnimation.named(name, bundle: bundle) {
+            GVLogger.log("ConnectingView", "Lottie 已通过 named(根目录) 加载")
+            return anim
+        }
+        GVLogger.log("ConnectingView", "Lottie 未找到 \(name).json：请确认文件已勾选 Target、且名为 connecting.json")
+        return nil
     }
 }
 
+private struct GVLottieLoopView: UIViewRepresentable {
+    let resourceName: String
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator()
+    }
+    
+    /// `LottieAnimationView` 自带很大的 intrinsic size，直接交给 SwiftUI 会导致 frame 不生效；用容器 + 四边约束铺满 SwiftUI 给定的区域。
+    func makeUIView(context: Context) -> UIView {
+        let container = UIView()
+        container.backgroundColor = .clear
+        container.clipsToBounds = true
+        
+        let animationView = LottieAnimationView()
+        animationView.translatesAutoresizingMaskIntoConstraints = false
+        animationView.contentMode = .scaleAspectFit
+        animationView.loopMode = .loop
+        animationView.backgroundBehavior = .pauseAndRestore
+        
+        if let animation = GVLottieConnectingResources.animation(named: resourceName) {
+            animationView.animation = animation
+            animationView.play()
+        }
+        
+        container.addSubview(animationView)
+        NSLayoutConstraint.activate([
+            animationView.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+            animationView.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            animationView.topAnchor.constraint(equalTo: container.topAnchor),
+            animationView.bottomAnchor.constraint(equalTo: container.bottomAnchor),
+        ])
+        
+        context.coordinator.animationView = animationView
+        return container
+    }
+    
+    func updateUIView(_ uiView: UIView, context: Context) {
+        guard let av = context.coordinator.animationView else { return }
+        guard av.animation != nil else { return }
+        if !av.isAnimationPlaying {
+            av.play()
+        }
+    }
+    
+    final class Coordinator {
+        var animationView: LottieAnimationView?
+    }
+}

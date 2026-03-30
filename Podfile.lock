@@ -146,6 +146,7 @@ PODS:
   - IronSourceYandexMobileAdsAdapters (8.11.0.2):
     - IronSourceSDK (~> 8.11.0.0)
     - YandexMobileAds (~> 7.18.0)
+  - lottie-ios (4.6.0)
   - MintegralAdSDK (7.7.9):
     - MintegralAdSDK/BannerAd (= 7.7.9)
     - MintegralAdSDK/BidBannerAd (= 7.7.9)
@@ -250,6 +251,7 @@ PODS:
 DEPENDENCIES:
   - Alamofire
   - GA-SDK-IOS (~> 4.11.0)
+  - lottie-ios
   - YandexMobileAdsMediationSpec
 
 SPEC REPOS:
@@ -306,6 +308,7 @@ SPEC REPOS:
     - IronSourceSDK
     - IronSourceUnityAdsAdapter
     - IronSourceYandexMobileAdsAdapters
+    - lottie-ios
     - MintegralAdSDK
     - MintegralYandexMobileAdsAdapters
     - myTargetSDK
@@ -378,6 +381,7 @@ SPEC CHECKSUMS:
   IronSourceSDK: 32eeb199f608b590112a8263028a485e50f8d1b7
   IronSourceUnityAdsAdapter: 7bf68ffe0c0a4a61bbf5f357c7da45c7a8cd2300
   IronSourceYandexMobileAdsAdapters: 8ba66091b6f075c0e169afd62f29738761db351e
+  lottie-ios: 8f959969761e9c45d70353667d00af0e5b9cadb3
   MintegralAdSDK: 054814f99bb7e967b8974fe635d9005b225cbe42
   MintegralYandexMobileAdsAdapters: c65ffd8cd8cccaebff89ba71b4aad7d8b7619323
   myTargetSDK: a61199b9bcdf2c40011a2076687cb29efd1e00da
@@ -397,6 +401,6 @@ SPEC CHECKSUMS:
   zMaticoo: bc9068737ce83bfeba6c3f4b4e7a49c238ac3f63
   zMaticooYandexMobileAdsAdapters: d48f62bbd1524ace5435c934e0696d618c51c4a6
 
-PODFILE CHECKSUM: d08cff1f258ee449371045239142370d9ffdea03
+PODFILE CHECKSUM: ce5b60d182eb9d69e64efa0b00657f9294089939
 
 COCOAPODS: 1.16.2

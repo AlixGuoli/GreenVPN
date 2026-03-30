@@ -53,9 +53,9 @@ struct ConnectionStatusCard: View {
         case .online:
             return formatDuration(connectionDuration)
         case .inProgress:
-            return "Connecting..."
+            return appLanguage.localized("gv_home_button_connecting", comment: "Connect button center connecting")
         case .idle, .failed:
-            return "Connect VPN"
+            return appLanguage.localized("gv_home_button_connect", comment: "Connect button center idle")
         }
     }
     
