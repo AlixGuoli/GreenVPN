@@ -177,12 +177,12 @@ struct CurrentNodeCard: View {
     }
     
     private var cardBackground: some View {
-        RoundedRectangle(cornerRadius: 20, style: .continuous)
-            .fill(.ultraThinMaterial.opacity(0.1))
-            .background(
-                Image(.bgNode)
-                    .resizable()
-            )
+        let image: ImageResource = (homeSession.phase == .inProgress || homeSession.phase == .online)
+            ? .bgnodeCon
+            : .bgnodeDis
+        
+        return Image(image)
+            .resizable()
     }
 }
 

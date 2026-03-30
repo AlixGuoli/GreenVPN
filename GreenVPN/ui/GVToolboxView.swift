@@ -51,7 +51,7 @@ struct GVToolboxView: View {
                             PingToolView()
                         } label: {
                             ToolboxRow(
-                                icon: "waveform.path.ecg",
+                                iconImageName: "toolping",
                                 title: appLanguage.localized("gv_toolbox_ping_title", comment: "Ping tool title"),
                                 subtitle: appLanguage.localized("gv_toolbox_ping_subtitle", comment: "Ping tool subtitle")
                             )
@@ -61,7 +61,7 @@ struct GVToolboxView: View {
                             PortCheckToolView()
                         } label: {
                             ToolboxRow(
-                                icon: "terminal.fill",
+                                iconImageName: "toolport",
                                 title: appLanguage.localized("gv_toolbox_port_title", comment: "Port tool title"),
                                 subtitle: appLanguage.localized("gv_toolbox_port_subtitle", comment: "Port tool subtitle")
                             )
@@ -71,7 +71,7 @@ struct GVToolboxView: View {
                             Base64ToolView()
                         } label: {
                             ToolboxRow(
-                                icon: "textformat.abc",
+                                iconImageName: "toolbase",
                                 title: appLanguage.localized("gv_toolbox_base64_title", comment: "Base64 tool title"),
                                 subtitle: appLanguage.localized("gv_toolbox_base64_subtitle", comment: "Base64 tool subtitle")
                             )
@@ -89,36 +89,19 @@ struct GVToolboxView: View {
 // MARK: - 工具箱行
 
 private struct ToolboxRow: View {
-    let icon: String
+    let iconImageName: String
     let title: String
     let subtitle: String
     
     var body: some View {
         HStack(spacing: 16) {
-            ZStack {
-                RoundedRectangle(cornerRadius: 18, style: .continuous)
-                    .fill(
-                        LinearGradient(
-                            colors: [
-                                Color(red: 0/255, green: 210/255, blue: 150/255),
-                                Color(red: 0/255, green: 160/255, blue: 120/255)
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .frame(width: 54, height: 54)
-                
-            }
+            Image(iconImageName)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 53, height: 52)
             
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 8) {
-                    if !icon.isEmpty {
-                        Image(systemName: icon)
-                            .font(.system(size: 18, weight: .semibold))
-                            .foregroundColor(.white)
-                    }
-                    
                     Text(title)
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundColor(.white)
